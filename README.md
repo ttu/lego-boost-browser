@@ -22,3 +22,5 @@ $ npm run build:browser
 Node module for controlling Lego Boost: https://github.com/hobbyquaker/node-movehub
 
 Angular implementation: https://github.com/BenjaminDobler/ng-lego-boost
+
+Buffer: https://github.com/feross/buffer

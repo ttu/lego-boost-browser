@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "build": "tsc",
-    "build:browser": "npx browserify ./src/browser.ts --debug -p [ tsify --noImplicitAny ] > ./dist/bundle.js",
+    "build:browser": "npx browserify ./src/browser.ts --debug -p [ tsify ] > ./dist/bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
