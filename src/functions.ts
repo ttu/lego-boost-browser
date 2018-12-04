@@ -1,6 +1,7 @@
 import { BoostConnector } from "./boostConnector";
 import { Scanner } from "./scanner";
 import { Hub } from "./hub/hub";
+// import { HubAsync } from "./hub/hubAsync";
 
 let hub: Hub;
 
