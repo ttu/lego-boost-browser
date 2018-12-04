@@ -16,7 +16,7 @@ export class Scanner {
     // const options = { filters: filters };
 
     log("Requesting Bluetooth Device...");
-    
+
     navigator.bluetooth
       .requestDevice(options)
       .then(device => {
@@ -25,8 +25,6 @@ export class Scanner {
         log("> UUIDs:            " + device.uuids.join("\n" + " ".repeat(20)));
         log("> Connected:        " + device.gatt.connected);
       })
-      .catch(error => {
-        log("Argh! " + error);
-      });
+      .catch(error => log(error));
   }
 }

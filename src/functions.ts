@@ -1,11 +1,20 @@
 import { BoostConnector } from "./boostConnector";
 import { Scanner } from "./scanner";
-import { Hub } from "./hub";
+import { Hub } from "./hub/hub";
+
+let hub: Hub;
 
 async function connect() : Promise<void> {
   try {
     const characteristic = await BoostConnector.connect();
-    this.hub = new Hub(characteristic);
+    hub = new Hub(characteristic);
+
+    hub.emitter.on('distance', (evt) => {
+      console.log(evt.type + ": " + evt.data);
+    });
+
+    hub.led("pink");
+    hub.motorTimeMulti(10, 10, 10);
   } catch (e) {
     console.log("Error from connect: " + e);
   }

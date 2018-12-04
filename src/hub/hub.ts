@@ -1,5 +1,5 @@
-import { EventEmitter } from "./helpers/eventEmitter";
-import { Buffer } from "./helpers/buffer";
+import { EventEmitter } from "../helpers/eventEmitter";
+import { Buffer } from "../helpers/buffer";
 
 export class Hub {
   emitter: EventEmitter<any> = new EventEmitter<any>();
@@ -7,7 +7,7 @@ export class Hub {
 
   log: (message?: any, ...optionalParams: any[]) => void;
 
-  autoSubscribe: boolean;
+  autoSubscribe: boolean = true;
   ports: any;
   num2type: any;
   port2num: any;
@@ -68,15 +68,21 @@ export class Hub {
       9: "red",
       10: "white"
     };
-    this.connect();
+
+    this.addListeners();
   }
 
-  connect() {
-    this.characteristic.startNotifications();
+  private addListeners() {
+    this.characteristic.addEventListener("gattserverdisconnected", event => {
+      // @ts-ignore
+      this.log(`Device ${event.target.name} is disconnected.`);
+      // TODO: Bluetooth api doesn't have connect on charasteristic
+    });
 
     this.characteristic.addEventListener(
       "characteristicvaluechanged",
       event => {
+        // https://googlechrome.github.io/samples/web-bluetooth/read-characteristic-value-changed.html
         // @ts-ignore
         const data = Buffer.from(event.target.value.buffer);
         this.parseMessage(data);
@@ -84,7 +90,7 @@ export class Hub {
     );
   }
 
-  parseMessage(data: any) {
+  private parseMessage(data: any) {
     switch (data[2]) {
       case 0x04: {
         clearTimeout(this.portInfoTimeout);
@@ -140,7 +146,7 @@ export class Hub {
     }
   }
 
-  parseSensor(data: any) {
+  private parseSensor(data: any) {
     if (!this.ports[data[3]]) {
       this.log("parseSensor unknown port 0x" + data[3].toString(16));
       return;
@@ -213,7 +219,7 @@ export class Hub {
    */
   disconnect() {
     if (this.connected) {
-      //this.peripheral.disconnect();
+      //this.characteristic.disconnect();
       this.noReconnect = true;
     }
   }
@@ -418,6 +424,7 @@ export class Hub {
       data = Buffer.from(arr);
     }
 
+    // Original implementation passed secondArg to define if response is waited
     this.writeCue.push({
       data: data,
       secondArg: true,
@@ -431,11 +438,18 @@ export class Hub {
     if (this.writeCue.length > 0 && !this.isWritting) {
       let el: any = this.writeCue.shift();
       this.isWritting = true;
-      // @ts-ignore
-      this.characteristic.writeValue(el.data, true, el.callback).then(() => {
-        this.isWritting = false;
-        this.writeFromCue();
-      });
+      this.characteristic
+        .writeValue(el.data)
+        .then(() => {
+          this.isWritting = false;
+          if (typeof el.callback == "function") el.callback();
+          this.writeFromCue();
+        })
+        .catch(err => {
+          this.log(err);
+          // TODO: Notify of failure
+          this.writeFromCue();
+        });
     }
   }
 
