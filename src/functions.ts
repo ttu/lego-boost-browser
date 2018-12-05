@@ -1,16 +1,20 @@
 import { BoostConnector } from "./boostConnector";
 import { Scanner } from "./scanner";
-import { Hub } from "./hub/hub";
-// import { HubAsync } from "./hub/hubAsync";
+// import { Hub } from "./hub/hub";
+import { HubAsync } from "./hub/hubAsync";
 
-let hub: Hub;
+let hub: HubAsync;
 
-async function connect() : Promise<void> {
+async function connect(): Promise<void> {
   try {
     const characteristic = await BoostConnector.connect();
-    hub = new Hub(characteristic);
+    hub = new HubAsync(characteristic);
 
-    hub.emitter.on('distance', (evt) => {
+    hub.emitter.on("disconnect", async evt => {
+      await BoostConnector.reconnect();
+    });
+
+    hub.emitter.on("distance", evt => {
       console.log(evt.type + ": " + evt.data);
     });
 
@@ -21,7 +25,17 @@ async function connect() : Promise<void> {
   }
 }
 
-function scan() : void {
+async function changeLed(): Promise<void> {
+  if (!hub) return;
+  await hub.ledAsync('green');
+}
+
+async function drive(): Promise<void> {
+  if (!hub) return;
+  await hub.motorAngleMultiAsync(10, 10, 10);
+}
+
+function scan(): void {
   try {
     Scanner.run();
   } catch (e) {
@@ -29,7 +43,4 @@ function scan() : void {
   }
 }
 
-export {
-  connect,
-  scan
-}
+export { connect, scan, changeLed, drive };

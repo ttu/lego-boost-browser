@@ -76,7 +76,8 @@ export class Hub {
     this.characteristic.addEventListener("gattserverdisconnected", event => {
       // @ts-ignore
       this.log(`Device ${event.target.name} is disconnected.`);
-      // TODO: Bluetooth api doesn't have connect on charasteristic
+      
+      if (this.noReconnect === false) this.emit("disconnected");
     });
 
     this.characteristic.addEventListener(
