@@ -128,6 +128,11 @@ export class Hub {
         this.parseSensor(data);
         break;
       }
+      case 0x47: {
+        // 0x47 subscription acknowledgements
+        // https://github.com/JorgePe/BOOSTreveng/blob/master/Notifications.md
+        break;
+      }
       case 0x82: {
         /**
          * Fires on port changes
@@ -144,6 +149,7 @@ export class Hub {
       }
       default:
         this.log("unknown message type 0x" + data[2].toString(16));
+        this.log('<', data);
     }
   }
 
