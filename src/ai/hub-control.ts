@@ -1,7 +1,14 @@
-const manual = require('./states/manual');
-const { stop, back, drive, turn, seek } = require('./states/ai');
+import { manual } from './states/manual';
+import { stop, back, drive, turn, seek } from './states/ai';
 
 class HubControl {
+  hub: any;
+  device: any;
+  control: any;
+  prevControl: any;
+  states: { Turn: any; Drive: any; Stop: any; Back: any; Manual: any; Seek: any; };
+  currentState: any;
+  prevDevice: any;
   constructor(deviceInfo, controlData) {
     this.hub = null;
     this.device = deviceInfo;
