@@ -100,12 +100,12 @@ export class Hub {
            * Fires when a connection to the Move Hub is established
            * @event Hub#connect
            */
-          this.emit("connect");
-          this.connected = true;
-
           if (this.autoSubscribe) {
             this.subscribeAll();
           }
+
+          this.connected = true;
+          this.emit("connect");
         }, 1000);
 
         if (data[4] === 0x01) {

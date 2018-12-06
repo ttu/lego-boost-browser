@@ -18,8 +18,10 @@ async function connect(): Promise<void> {
       console.log(evt.type + ": " + evt.data);
     });
 
-    hub.led("pink");
-    hub.motorTimeMulti(10, 10, 10);
+    hub.emitter.on("connect", evt => {
+      hub.led("pink");
+      hub.motorTimeMulti(2, 10, 10);
+    });
   } catch (e) {
     console.log("Error from connect: " + e);
   }
@@ -32,7 +34,7 @@ async function changeLed(): Promise<void> {
 
 async function drive(): Promise<void> {
   if (!hub) return;
-  await hub.motorAngleMultiAsync(10, 10, 10);
+  await hub.motorAngleMultiAsync(2, 10, 10);
 }
 
 function scan(): void {
