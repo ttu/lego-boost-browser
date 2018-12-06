@@ -29,7 +29,14 @@ export class BoostConnector {
       await this.device.gatt.connect();
       return true;
     }
+    return false;
+  }
 
+  public static async disconnect(): Promise<boolean> {
+    if (this.device) {
+      await this.device.gatt.disconnect();
+      return true;
+    }
     return false;
   }
 }

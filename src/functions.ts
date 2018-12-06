@@ -4,6 +4,7 @@ import { Scanner } from "./scanner";
 import { HubAsync } from "./hub/hubAsync";
 
 let hub: HubAsync;
+let color: string;
 
 async function connect(): Promise<void> {
   try {
@@ -18,9 +19,8 @@ async function connect(): Promise<void> {
       console.log(evt.type + ": " + evt.data);
     });
 
-    hub.emitter.on("connect", evt => {
-      hub.led("pink");
-      hub.motorTimeMulti(2, 10, 10);
+    hub.emitter.on("connect", async evt => {
+      await hub.ledAsync("green");
     });
   } catch (e) {
     console.log("Error from connect: " + e);
@@ -28,13 +28,20 @@ async function connect(): Promise<void> {
 }
 
 async function changeLed(): Promise<void> {
-  if (!hub) return;
-  await hub.ledAsync('green');
+  if (!hub || hub.connected === false) return;
+  color = color === 'pink' ? 'orange' : 'pink';
+  await hub.ledAsync(color);
 }
 
 async function drive(): Promise<void> {
-  if (!hub) return;
-  await hub.motorAngleMultiAsync(2, 10, 10);
+  if (!hub || hub.connected === false) return;
+  await hub.motorTimeMultiAsync(2, 10, 10);
+}
+
+async function disconnect(): Promise<void> {
+  if (!hub || hub.connected === false) return;
+  hub.disconnect();
+  await BoostConnector.disconnect();
 }
 
 function scan(): void {
@@ -45,4 +52,4 @@ function scan(): void {
   }
 }
 
-export { connect, scan, changeLed, drive };
+export { connect, scan, changeLed, drive, disconnect };
