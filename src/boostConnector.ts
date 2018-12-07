@@ -18,9 +18,6 @@ export class BoostConnector {
     const characteristic = await service.getCharacteristic(
       BOOST_CHARACTERISTIC_UUID
     );
-
-    await characteristic.startNotifications();
-
     return characteristic;
   }
 

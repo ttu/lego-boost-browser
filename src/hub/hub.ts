@@ -24,10 +24,7 @@ export class Hub {
   isWritting: boolean = false;
 
   private emit(type: string, data: any = null) {
-    this.emitter.emit(type, {
-      type: type,
-      data: data
-    });
+    this.emitter.emit(type, data);
   }
 
   constructor(characteristic: BluetoothRemoteGATTCharacteristic) {
@@ -76,7 +73,7 @@ export class Hub {
     this.characteristic.addEventListener("gattserverdisconnected", event => {
       // @ts-ignore
       this.log(`Device ${event.target.name} is disconnected.`);
-      
+
       if (this.noReconnect === false) this.emit("disconnected");
     });
 
@@ -87,8 +84,12 @@ export class Hub {
         // @ts-ignore
         const data = Buffer.from(event.target.value.buffer);
         this.parseMessage(data);
-      }
-    );
+      });
+
+    setTimeout(() => {
+      // Without timout missed first characteristicvaluechanged events
+      this.characteristic.startNotifications();
+    }, 1000);
   }
 
   private parseMessage(data: any) {
@@ -107,6 +108,8 @@ export class Hub {
           this.connected = true;
           this.emit("connect");
         }, 1000);
+
+        console.log('Found: ' + this.num2type[data[5]]);
 
         if (data[4] === 0x01) {
           this.ports[data[3]] = {
