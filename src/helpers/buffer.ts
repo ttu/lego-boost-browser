@@ -8,15 +8,13 @@
 
 'use strict'
 
-var base64 = require('base64-js')
-var ieee754 = require('ieee754')
+var base64 = import('base64-js')
+var ieee754 = import('ieee754')
 
-exports.Buffer = Buffer
-exports.SlowBuffer = SlowBuffer
-exports.INSPECT_MAX_BYTES = 50
+const INSPECT_MAX_BYTES = 50
 
 var K_MAX_LENGTH = 0x7fffffff
-exports.kMaxLength = K_MAX_LENGTH
+const kMaxLength = K_MAX_LENGTH
 
 /**
  * If `Buffer.TYPED_ARRAY_SUPPORT`:
@@ -46,7 +44,9 @@ function typedArraySupport () {
   // Can typed array instances can be augmented?
   try {
     var arr = new Uint8Array(1)
+    // @ts-ignore
     arr.__proto__ = { __proto__: Uint8Array.prototype, foo: function () { return 42 } }
+    // @ts-ignore
     return arr.foo() === 42
   } catch (e) {
     return false
@@ -75,6 +75,7 @@ function createBuffer (length) {
   }
   // Return an augmented `Uint8Array` instance
   var buf = new Uint8Array(length)
+  // @ts-ignore
   buf.__proto__ = Buffer.prototype
   return buf
 }
@@ -198,7 +199,8 @@ function alloc (size, fill, encoding) {
     // prevents accidentally sending in a number that would
     // be interpretted as a start offset.
     return typeof encoding === 'string'
-      ? createBuffer(size).fill(fill, encoding)
+      // @ts-ignore
+      ? createBuffer(size).fill(fill, encoding) 
       : createBuffer(size).fill(fill)
   }
   return createBuffer(size)
@@ -242,6 +244,7 @@ function fromString (string, encoding) {
   var length = byteLength(string, encoding) | 0
   var buf = createBuffer(length)
 
+  // @ts-ignore
   var actual = buf.write(string, encoding)
 
   if (actual !== length) {
@@ -325,6 +328,7 @@ function SlowBuffer (length) {
   if (+length != length) { // eslint-disable-line eqeqeq
     length = 0
   }
+// @ts-ignore
   return Buffer.alloc(+length)
 }
 
@@ -385,6 +389,7 @@ Buffer.concat = function concat (list, length) {
   }
 
   if (list.length === 0) {
+    // @ts-ignore
     return Buffer.alloc(0)
   }
 
@@ -401,6 +406,7 @@ Buffer.concat = function concat (list, length) {
   for (i = 0; i < list.length; ++i) {
     var buf = list[i]
     if (isInstance(buf, Uint8Array)) {
+      // @ts-ignore
       buf = Buffer.from(buf)
     }
     if (!Buffer.isBuffer(buf)) {
@@ -440,6 +446,7 @@ function byteLength (string, encoding) {
         return len
       case 'utf8':
       case 'utf-8':
+        // @ts-ignore
         return utf8ToBytes(string).length
       case 'ucs2':
       case 'ucs-2':
@@ -452,6 +459,7 @@ function byteLength (string, encoding) {
         return base64ToBytes(string).length
       default:
         if (loweredCase) {
+          // @ts-ignore
           return mustMatch ? -1 : utf8ToBytes(string).length // assume utf8
         }
         encoding = ('' + encoding).toLowerCase()
@@ -599,7 +607,7 @@ Buffer.prototype.equals = function equals (b) {
 
 Buffer.prototype.inspect = function inspect () {
   var str = ''
-  var max = exports.INSPECT_MAX_BYTES
+  var max = INSPECT_MAX_BYTES
   str = this.toString('hex', 0, max).replace(/(.{2})/g, '$1 ').trim()
   if (this.length > max) str += ' ... '
   return '<Buffer ' + str + '>'
@@ -710,6 +718,7 @@ function bidirectionalIndexOf (buffer, val, byteOffset, encoding, dir) {
 
   // Normalize val
   if (typeof val === 'string') {
+    // @ts-ignore
     val = Buffer.from(val, encoding)
   }
 
@@ -928,8 +937,10 @@ Buffer.prototype.toJSON = function toJSON () {
 
 function base64Slice (buf, start, end) {
   if (start === 0 && end === buf.length) {
+    // @ts-ignore
     return base64.fromByteArray(buf)
   } else {
+    // @ts-ignore
     return base64.fromByteArray(buf.slice(start, end))
   }
 }
@@ -1256,24 +1267,28 @@ Buffer.prototype.readInt32BE = function readInt32BE (offset, noAssert) {
 Buffer.prototype.readFloatLE = function readFloatLE (offset, noAssert) {
   offset = offset >>> 0
   if (!noAssert) checkOffset(offset, 4, this.length)
+  // @ts-ignore
   return ieee754.read(this, offset, true, 23, 4)
 }
 
 Buffer.prototype.readFloatBE = function readFloatBE (offset, noAssert) {
   offset = offset >>> 0
   if (!noAssert) checkOffset(offset, 4, this.length)
+  // @ts-ignore
   return ieee754.read(this, offset, false, 23, 4)
 }
 
 Buffer.prototype.readDoubleLE = function readDoubleLE (offset, noAssert) {
   offset = offset >>> 0
   if (!noAssert) checkOffset(offset, 8, this.length)
+  // @ts-ignore
   return ieee754.read(this, offset, true, 52, 8)
 }
 
 Buffer.prototype.readDoubleBE = function readDoubleBE (offset, noAssert) {
   offset = offset >>> 0
   if (!noAssert) checkOffset(offset, 8, this.length)
+  // @ts-ignore
   return ieee754.read(this, offset, false, 52, 8)
 }
 
@@ -1476,6 +1491,7 @@ function writeFloat (buf, value, offset, littleEndian, noAssert) {
   if (!noAssert) {
     checkIEEE754(buf, value, offset, 4, 3.4028234663852886e+38, -3.4028234663852886e+38)
   }
+  // @ts-ignore
   ieee754.write(buf, value, offset, littleEndian, 23, 4)
   return offset + 4
 }
@@ -1494,6 +1510,7 @@ function writeDouble (buf, value, offset, littleEndian, noAssert) {
   if (!noAssert) {
     checkIEEE754(buf, value, offset, 8, 1.7976931348623157E+308, -1.7976931348623157E+308)
   }
+  // @ts-ignore
   ieee754.write(buf, value, offset, littleEndian, 52, 8)
   return offset + 8
 }
@@ -1608,6 +1625,7 @@ Buffer.prototype.fill = function fill (val, start, end, encoding) {
   } else {
     var bytes = Buffer.isBuffer(val)
       ? val
+      // @ts-ignore
       : Buffer.from(val, encoding)
     var len = bytes.length
     if (len === 0) {
@@ -1752,6 +1770,7 @@ function utf16leToBytes (str, units) {
 }
 
 function base64ToBytes (str) {
+  // @ts-ignore
   return base64.toByteArray(base64clean(str))
 }
 
@@ -1775,3 +1794,5 @@ function numberIsNaN (obj) {
   // For IE11 support
   return obj !== obj // eslint-disable-line no-self-compare
 }
+
+export { Buffer, SlowBuffer, INSPECT_MAX_BYTES, kMaxLength }

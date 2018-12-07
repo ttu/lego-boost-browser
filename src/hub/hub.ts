@@ -14,7 +14,7 @@ export class Hub {
   num2port: any;
   num2action: any;
   num2color: any;
-  portInfoTimeout: number;
+  portInfoTimeout: any;
   noReconnect: boolean;
   connected: boolean;
   rssi: number;
@@ -311,6 +311,7 @@ export class Hub {
   //[0x09, 0x00, 0x81, 0x39, 0x11, 0x07, 0x00, 0x64, 0x03]
   encodeMotorPower(port, dutyCycle = 100) {
     let p = this.port2num[port];
+    // @ts-ignore
     const buf = Buffer.from([
       0x09,
       0x00,
@@ -358,6 +359,7 @@ export class Hub {
     }
 
     this.write(
+      // @ts-ignore
       Buffer.from([
         0x0a,
         0x00,
@@ -389,6 +391,7 @@ export class Hub {
       port = this.port2num[port];
     }
     this.write(
+      // @ts-ignore
       Buffer.from([
         0x0a,
         0x00,
@@ -431,6 +434,7 @@ export class Hub {
       data.split(" ").forEach(c => {
         arr.push(parseInt(c, 16));
       });
+      // @ts-ignore
       data = Buffer.from(arr);
     }
 
@@ -464,6 +468,7 @@ export class Hub {
   }
 
   encodeMotorTimeMulti(port, seconds, dutyCycleA = 100, dutyCycleB = -100) {
+    // @ts-ignore
     const buf = Buffer.from([
       0x0d,
       0x00,
@@ -486,6 +491,7 @@ export class Hub {
   }
 
   encodeMotorTime(port, seconds, dutyCycle = 100) {
+    // @ts-ignore
     const buf = Buffer.from([
       0x0c,
       0x00,
@@ -506,6 +512,7 @@ export class Hub {
   }
 
   encodeMotorAngleMulti(port, angle, dutyCycleA = 100, dutyCycleB = -100) {
+    // @ts-ignore
     const buf = Buffer.from([
       0x0f,
       0x00,
@@ -530,6 +537,7 @@ export class Hub {
   }
 
   encodeMotorAngle(port, angle, dutyCycle = 100) {
+    // @ts-ignore
     const buf = Buffer.from([
       0x0e,
       0x00,
@@ -573,6 +581,7 @@ export class Hub {
       ];
       color = colors.indexOf(color);
     }
+    // @ts-ignore
     return Buffer.from([0x08, 0x00, 0x81, 0x32, 0x11, 0x51, 0x00, color]);
   }
 }
