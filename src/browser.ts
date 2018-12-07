@@ -1,17 +1,19 @@
-import { connect, scan, changeLed, drive, disconnect, ai, stop } from "./functions";
+import { LegoBoost } from "./legoBoost";
+
+var boost = new LegoBoost();
 
 // Add as a window globals, so these can be called from HTML
 // @ts-ignore
-window.connect = connect;
+window.connect = boost.connect.bind(boost);
 // @ts-ignore
-window.scan = scan;
+window.scan = boost.scan.bind(boost);
 // @ts-ignore
-window.led = changeLed;
+window.led = boost.changeLed.bind(boost);
 // @ts-ignore
-window.drive = drive;
+window.drive = boost.drive.bind(boost);
 // @ts-ignore
-window.disconnect = disconnect;
+window.disconnect = boost.disconnect.bind(boost);
 // @ts-ignore
-window.ai = ai;
+window.ai = boost.ai.bind(boost);
 // @ts-ignore
-window.stop = stop;
+window.stop = boost.stop.bind(boost);

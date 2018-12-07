@@ -1,4 +1,5 @@
-import { connect, scan } from "./functions";
+import { LegoBoost } from "./legoBoost";
 
 console.log("Running");
-connect();
+var boost = new LegoBoost();
+boost.connect();
