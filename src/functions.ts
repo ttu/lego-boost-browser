@@ -18,7 +18,7 @@ const deviceInfo = {
     LED: { action: '', angle: 0 },
   },
   tilt: { roll: 0, pitch: 0 },
-  distance: 0,
+  distance: Number.MAX_SAFE_INTEGER,
   rssi: 0,
   color: '',
   error: '',
@@ -41,10 +41,6 @@ async function connect(): Promise<void> {
 
     hub.emitter.on("disconnect", async evt => {
       await BoostConnector.reconnect();
-    });
-
-    hub.emitter.on("distance", evt => {
-      console.log(evt);
     });
 
     hub.emitter.on("connect", async evt => {
