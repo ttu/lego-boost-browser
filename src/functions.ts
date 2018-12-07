@@ -70,16 +70,24 @@ async function disconnect(): Promise<void> {
 
 async function ai(): Promise<void> {
   if (!hub || hub.connected === false) return;
-  
-  hubControl = new HubControl(deviceInfo, controlData);
-  await hubControl.start(hub);
-  setInterval(() => {
-    hubControl.update();
-  }, 100);
+
+  if (!hubControl) {
+    hubControl = new HubControl(deviceInfo, controlData);
+    await hubControl.start(hub);
+    setInterval(() => {
+      hubControl.update();
+    }, 100);
+  } else {
+    hubControl.setNextState('Drive');
+  }
 }
 
 async function stop(): Promise<void> {
-
+  controlData.speed = 0;
+  controlData.turnAngle = 0;
+  hubControl.setNextState('Manual');
+  // control datas values might have always been 0, execute force stop
+  await hub.motorTimeMultiAsync(1, 0, 0);
 }
 
 function scan(): void {

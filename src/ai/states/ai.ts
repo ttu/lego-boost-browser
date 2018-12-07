@@ -5,9 +5,9 @@ const EXECUTE_TIME_SEC = 60;
 const CHECK_TIME_MS = 59000;
 
 // Speeds must be between -100 and 100
-const TURN_SPEED = 20;
+const TURN_SPEED = 30;
 const TURN_SPEED_OPPOSITE = -10;
-const DRIVE_SPEED = 20;
+const DRIVE_SPEED = 30;
 const REVERSE_SPEED = -15;
 
 function seek() {
