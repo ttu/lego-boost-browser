@@ -2,9 +2,37 @@ import { BoostConnector } from "./boostConnector";
 import { Scanner } from "./scanner";
 // import { Hub } from "./hub/hub";
 import { HubAsync } from "./hub/hubAsync";
+import { HubControl } from "./ai/hub-control";
 
 let hub: HubAsync;
 let color: string;
+let hubControl: HubControl;
+
+const deviceInfo = {
+  ports: {
+    A: { action: '', angle: 0 },
+    B: { action: '', angle: 0 },
+    AB: { action: '', angle: 0 },
+    C: { action: '', angle: 0 },
+    D: { action: '', angle: 0 },
+    LED: { action: '', angle: 0 },
+  },
+  tilt: { roll: 0, pitch: 0 },
+  distance: 0,
+  rssi: 0,
+  color: '',
+  error: '',
+  connected: false
+};
+
+const controlData = {
+  input: null,
+  speed: 0,
+  turnAngle: 0,
+  tilt: { roll: 0, pitch: 0 },
+  forceState: null,
+  updateInputMode: null
+};
 
 async function connect(): Promise<void> {
   try {
@@ -16,11 +44,11 @@ async function connect(): Promise<void> {
     });
 
     hub.emitter.on("distance", evt => {
-      console.log(evt.type + ": " + evt.data);
+      console.log(evt);
     });
 
     hub.emitter.on("connect", async evt => {
-      await hub.ledAsync("green");
+      await hub.ledAsync("purple");
     });
   } catch (e) {
     console.log("Error from connect: " + e);
@@ -44,6 +72,20 @@ async function disconnect(): Promise<void> {
   await BoostConnector.disconnect();
 }
 
+async function ai(): Promise<void> {
+  if (!hub || hub.connected === false) return;
+  
+  hubControl = new HubControl(deviceInfo, controlData);
+  await hubControl.start(hub);
+  setInterval(() => {
+    hubControl.update();
+  }, 100);
+}
+
+async function stop(): Promise<void> {
+
+}
+
 function scan(): void {
   try {
     Scanner.run();
@@ -52,4 +94,4 @@ function scan(): void {
   }
 }
 
-export { connect, scan, changeLed, drive, disconnect };
+export { connect, scan, changeLed, drive, disconnect, ai, stop };
