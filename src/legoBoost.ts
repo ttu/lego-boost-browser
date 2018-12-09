@@ -4,7 +4,7 @@ import { Scanner } from "./scanner";
 import { HubAsync } from "./hub/hubAsync";
 import { HubControl } from "./ai/hub-control";
 
-export class LegoBoost {
+export default class LegoBoost {
   hub: HubAsync;
   color: string;
   hubControl: HubControl;

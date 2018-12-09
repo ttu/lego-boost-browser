@@ -1,4 +1,4 @@
-import { LegoBoost } from "./legoBoost";
+import LegoBoost from "./legoBoost";
 
 var boost = new LegoBoost();
 
