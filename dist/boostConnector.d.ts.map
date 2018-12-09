@@ -1,0 +1,1 @@
+{"version":3,"file":"boostConnector.d.ts","sourceRoot":"","sources":["../src/boostConnector.ts"],"names":[],"mappings":";AAGA,qBAAa,cAAc;IACzB,OAAO,CAAC,MAAM,CAAC,MAAM,CAAkB;WAEnB,OAAO,IAAI,OAAO,CAAC,iCAAiC,CAAC;WAiBrD,SAAS,IAAI,OAAO,CAAC,OAAO,CAAC;WAQ7B,UAAU,IAAI,OAAO,CAAC,OAAO,CAAC;CAOnD"}

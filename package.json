@@ -2,7 +2,8 @@
   "name": "lego-boost-browser",
   "version": "0.1.0",
   "description": "",
-  "main": "./src/legoBoost.js",
+  "main": "dist/legoBoost.js",
+  "types": "dist/legoBoost.d.ts",
   "scripts": {
     "build": "rm -rf dist && tsc",
     "build:browser": "mkdirp dist && browserify ./src/browser.ts --debug -p [ tsify ] > ./dist/bundle.js",
