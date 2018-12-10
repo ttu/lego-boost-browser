@@ -46,7 +46,15 @@ export default class LegoBoost {
 
       this.hub.emitter.on("connect", async evt => {
         await this.hub.ledAsync("purple");
+
       });
+
+      this.hubControl = new HubControl(this.deviceInfo, this.controlData);
+      await this.hubControl.start(this.hub);
+      setInterval(() => {
+        this.hubControl.update();
+      }, 100);
+
     } catch (e) {
       console.log("Error from connect: " + e);
     }
@@ -71,16 +79,7 @@ export default class LegoBoost {
 
   async ai(): Promise<void> {
     if (!this.hub || this.hub.connected === false) return;
-
-    if (!this.hubControl) {
-      this.hubControl = new HubControl(this.deviceInfo, this.controlData);
-      await this.hubControl.start(this.hub);
-      setInterval(() => {
-        this.hubControl.update();
-      }, 100);
-    } else {
-      this.hubControl.setNextState('Drive');
-    }
+    this.hubControl.setNextState('Drive');
   }
 
   async stop(): Promise<void> {

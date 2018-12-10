@@ -62,7 +62,7 @@ var HubControl = /** @class */ (function () {
             Manual: manual_1.manual.bind(this),
             Seek: ai_1.seek.bind(this)
         };
-        this.currentState = this.states['Drive'];
+        this.currentState = this.states['Manual'];
     }
     HubControl.prototype.start = function (hub) {
         return __awaiter(this, void 0, void 0, function () {

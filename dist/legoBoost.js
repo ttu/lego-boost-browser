@@ -74,7 +74,7 @@ var LegoBoost = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
+                        _a.trys.push([0, 3, , 4]);
                         return [4 /*yield*/, boostConnector_1.BoostConnector.connect()];
                     case 1:
                         characteristic = _a.sent();
@@ -99,12 +99,19 @@ var LegoBoost = /** @class */ (function () {
                                 }
                             });
                         }); });
-                        return [3 /*break*/, 3];
+                        this.hubControl = new hub_control_1.HubControl(this.deviceInfo, this.controlData);
+                        return [4 /*yield*/, this.hubControl.start(this.hub)];
                     case 2:
+                        _a.sent();
+                        setInterval(function () {
+                            _this.hubControl.update();
+                        }, 100);
+                        return [3 /*break*/, 4];
+                    case 3:
                         e_1 = _a.sent();
                         console.log("Error from connect: " + e_1);
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -158,26 +165,11 @@ var LegoBoost = /** @class */ (function () {
     };
     LegoBoost.prototype.ai = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!this.hub || this.hub.connected === false)
-                            return [2 /*return*/];
-                        if (!!this.hubControl) return [3 /*break*/, 2];
-                        this.hubControl = new hub_control_1.HubControl(this.deviceInfo, this.controlData);
-                        return [4 /*yield*/, this.hubControl.start(this.hub)];
-                    case 1:
-                        _a.sent();
-                        setInterval(function () {
-                            _this.hubControl.update();
-                        }, 100);
-                        return [3 /*break*/, 3];
-                    case 2:
-                        this.hubControl.setNextState('Drive');
-                        _a.label = 3;
-                    case 3: return [2 /*return*/];
-                }
+                if (!this.hub || this.hub.connected === false)
+                    return [2 /*return*/];
+                this.hubControl.setNextState('Drive');
+                return [2 /*return*/];
             });
         });
     };

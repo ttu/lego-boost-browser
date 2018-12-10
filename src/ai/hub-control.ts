@@ -24,7 +24,7 @@ class HubControl {
       Seek: seek.bind(this)
     };
 
-    this.currentState = this.states['Drive'];
+    this.currentState = this.states['Manual'];
   }
 
   async start(hub) {
