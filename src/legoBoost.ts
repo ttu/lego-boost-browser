@@ -6,8 +6,8 @@ import { HubControl } from "./ai/hub-control";
 
 export default class LegoBoost {
   hub: HubAsync;
-  color: string;
   hubControl: HubControl;
+  color: string;
 
   deviceInfo = {
     ports: {
@@ -46,7 +46,6 @@ export default class LegoBoost {
 
       this.hub.emitter.on("connect", async evt => {
         await this.hub.ledAsync("purple");
-
       });
 
       this.hubControl = new HubControl(this.deviceInfo, this.controlData);
@@ -83,6 +82,7 @@ export default class LegoBoost {
   }
 
   async stop(): Promise<void> {
+    if (!this.hub || this.hub.connected === false) return;
     this.controlData.speed = 0;
     this.controlData.turnAngle = 0;
     this.hubControl.setNextState('Manual');
