@@ -97,7 +97,7 @@ var HubAsync = /** @class */ (function (_super) {
         _this.afterInitialization = function () {
             var _this = this;
             this.hubDisconnected = null;
-            this.ports = {
+            this.portData = {
                 A: { angle: 0 },
                 B: { angle: 0 },
                 AB: { angle: 0 },
@@ -107,7 +107,7 @@ var HubAsync = /** @class */ (function (_super) {
             };
             this.useMetric = true;
             this.modifier = 1;
-            this.emitter.on("rotation", function (rotation) { return (_this.ports[rotation.port].angle = rotation.angle); });
+            this.emitter.on("rotation", function (rotation) { return (_this.portData[rotation.port].angle = rotation.angle); });
             this.emitter.on("disconnect", function () { return (_this.hubDisconnected = true); });
             this.emitter.on("distance", function (distance) { return (_this.distance = distance); });
         };
@@ -195,13 +195,13 @@ var HubAsync = /** @class */ (function (_super) {
                                 beforeTurn = void 0;
                                 _a.label = 1;
                             case 1:
-                                beforeTurn = this.ports[port].angle;
+                                beforeTurn = this.portData[port].angle;
                                 return [4 /*yield*/, new Promise(function (res) { return setTimeout(res, CALLBACK_TIMEOUT_MS); })];
                             case 2:
                                 _a.sent();
                                 _a.label = 3;
                             case 3:
-                                if (this.ports[port].angle !== beforeTurn) return [3 /*break*/, 1];
+                                if (this.portData[port].angle !== beforeTurn) return [3 /*break*/, 1];
                                 _a.label = 4;
                             case 4:
                                 resolve();
@@ -241,13 +241,13 @@ var HubAsync = /** @class */ (function (_super) {
                                 beforeTurn = void 0;
                                 _a.label = 1;
                             case 1:
-                                beforeTurn = this.ports["AB"].angle;
+                                beforeTurn = this.portData["AB"].angle;
                                 return [4 /*yield*/, new Promise(function (res) { return setTimeout(res, CALLBACK_TIMEOUT_MS); })];
                             case 2:
                                 _a.sent();
                                 _a.label = 3;
                             case 3:
-                                if (this.ports["AB"].angle !== beforeTurn) return [3 /*break*/, 1];
+                                if (this.portData["AB"].angle !== beforeTurn) return [3 /*break*/, 1];
                                 _a.label = 4;
                             case 4:
                                 resolve();
