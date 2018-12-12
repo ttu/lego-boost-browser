@@ -36,7 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var boostConnector_1 = require("./boostConnector");
-var scanner_1 = require("./scanner");
 // import { Hub } from "./hub/hub";
 var hubAsync_1 = require("./hub/hubAsync");
 var hub_control_1 = require("./ai/hub-control");
@@ -92,7 +91,9 @@ var LegoBoost = /** @class */ (function () {
                         this.hub.emitter.on("connect", function (evt) { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0: return [4 /*yield*/, this.hub.ledAsync("purple")];
+                                    case 0:
+                                        this.hub.afterInitialization();
+                                        return [4 /*yield*/, this.hub.ledAsync("purple")];
                                     case 1:
                                         _a.sent();
                                         return [2 /*return*/];
@@ -132,36 +133,24 @@ var LegoBoost = /** @class */ (function () {
             });
         });
     };
-    LegoBoost.prototype.driveUntil = function (distance) {
-        if (distance === void 0) { distance = 0; }
+    LegoBoost.prototype.driveToDirection = function (direction) {
+        if (direction === void 0) { direction = 1; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!this.hub || this.hub.connected === false)
+                        if (!this.preCheck())
                             return [2 /*return*/];
-                        this.hubControl.setNextState('Manual');
-                        return [4 /*yield*/, this.hub.driveUntil(distance)];
+                        if (!(direction > 0)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.hub.driveUntil()];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    LegoBoost.prototype.turnUntil = function (direction) {
-        if (direction === void 0) { direction = 0; }
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!this.hub || this.hub.connected === false)
-                            return [2 /*return*/];
-                        this.hubControl.setNextState('Manual');
-                        return [4 /*yield*/, this.hub.turnUntil(direction)];
-                    case 1:
+                        return [3 /*break*/, 4];
+                    case 2: return [4 /*yield*/, this.hub.drive(-10000)];
+                    case 3:
                         _a.sent();
-                        return [2 /*return*/];
+                        _a.label = 4;
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -197,11 +186,10 @@ var LegoBoost = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!this.hub || this.hub.connected === false)
+                        if (!this.preCheck())
                             return [2 /*return*/];
                         this.controlData.speed = 0;
                         this.controlData.turnAngle = 0;
-                        this.hubControl.setNextState('Manual');
                         // control datas values might have always been 0, execute force stop
                         return [4 /*yield*/, this.hub.motorTimeMultiAsync(1, 0, 0)];
                     case 1:
@@ -212,16 +200,176 @@ var LegoBoost = /** @class */ (function () {
             });
         });
     };
-    LegoBoost.prototype.scan = function () {
-        try {
-            scanner_1.Scanner.run();
-        }
-        catch (e) {
-            console.log("Error from scan: " + e);
-        }
+    // Methods from Hub
+    LegoBoost.prototype.led = function (color) {
+        if (!this.preCheck())
+            return;
+        this.hub.led(color);
+    };
+    LegoBoost.prototype.ledAsync = function (color) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.preCheck())
+                            return [2 /*return*/];
+                        return [4 /*yield*/, this.hub.ledAsync(color)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    LegoBoost.prototype.motorTime = function (port, seconds, dutyCycle) {
+        if (dutyCycle === void 0) { dutyCycle = 100; }
+        if (!this.preCheck())
+            return;
+        this.hub.motorTime(port, seconds, dutyCycle);
+    };
+    LegoBoost.prototype.motorTimeAsync = function (port, seconds, dutyCycle, wait) {
+        if (dutyCycle === void 0) { dutyCycle = 100; }
+        if (wait === void 0) { wait = false; }
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.preCheck())
+                            return [2 /*return*/];
+                        return [4 /*yield*/, this.hub.motorTimeAsync(port, seconds, dutyCycle, wait)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    LegoBoost.prototype.motorTimeMulti = function (seconds, dutyCycleA, dutyCycleB) {
+        if (dutyCycleA === void 0) { dutyCycleA = 100; }
+        if (dutyCycleB === void 0) { dutyCycleB = 100; }
+        if (!this.preCheck())
+            return;
+        this.hub.motorTimeMulti(seconds, dutyCycleA, dutyCycleB);
+    };
+    LegoBoost.prototype.motorTimeMultiAsync = function (seconds, dutyCycleA, dutyCycleB, wait) {
+        if (dutyCycleA === void 0) { dutyCycleA = 100; }
+        if (dutyCycleB === void 0) { dutyCycleB = 100; }
+        if (wait === void 0) { wait = false; }
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.preCheck())
+                            return [2 /*return*/];
+                        return [4 /*yield*/, this.hub.motorTimeMultiAsync(seconds, dutyCycleA, dutyCycleB, wait)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    LegoBoost.prototype.motorAngle = function (port, angle, dutyCycle) {
+        if (dutyCycle === void 0) { dutyCycle = 100; }
+        if (!this.preCheck())
+            return;
+        this.hub.motorAngle(port, angle, dutyCycle);
+    };
+    LegoBoost.prototype.motorAngleAsync = function (port, angle, dutyCycle, wait) {
+        if (dutyCycle === void 0) { dutyCycle = 100; }
+        if (wait === void 0) { wait = false; }
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.preCheck())
+                            return [2 /*return*/];
+                        return [4 /*yield*/, this.hub.motorAngleAsync(port, angle, dutyCycle, wait)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    LegoBoost.prototype.motorAngleMulti = function (angle, dutyCycleA, dutyCycleB) {
+        if (dutyCycleA === void 0) { dutyCycleA = 100; }
+        if (dutyCycleB === void 0) { dutyCycleB = 100; }
+        if (!this.preCheck())
+            return;
+        this.hub.motorAngleMulti(angle, dutyCycleA, dutyCycleB);
+    };
+    LegoBoost.prototype.motorAngleMultiAsync = function (angle, dutyCycleA, dutyCycleB, wait) {
+        if (dutyCycleA === void 0) { dutyCycleA = 100; }
+        if (dutyCycleB === void 0) { dutyCycleB = 100; }
+        if (wait === void 0) { wait = false; }
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.preCheck())
+                            return [2 /*return*/];
+                        return [4 /*yield*/, this.hub.motorAngleMultiAsync(angle, dutyCycleA, dutyCycleB, wait)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    LegoBoost.prototype.drive = function (distance, wait) {
+        if (wait === void 0) { wait = true; }
+        if (!this.preCheck())
+            return;
+        this.hub.drive(distance, wait);
+    };
+    LegoBoost.prototype.turn = function (degrees, wait) {
+        if (wait === void 0) { wait = true; }
+        if (!this.preCheck())
+            return;
+        this.hub.turn(degrees, wait);
+    };
+    LegoBoost.prototype.driveUntil = function (distance, wait) {
+        if (distance === void 0) { distance = 0; }
+        if (wait === void 0) { wait = true; }
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.preCheck())
+                            return [2 /*return*/];
+                        return [4 /*yield*/, this.hub.driveUntil(distance, wait)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    LegoBoost.prototype.turnUntil = function (direction, wait) {
+        if (direction === void 0) { direction = 1; }
+        if (wait === void 0) { wait = true; }
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.preCheck())
+                            return [2 /*return*/];
+                        return [4 /*yield*/, this.hub.turnUntil(direction, wait)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    LegoBoost.prototype.preCheck = function () {
+        if (!this.hub || this.hub.connected === false)
+            return false;
+        this.hubControl.setNextState('Manual');
+        return true;
     };
     return LegoBoost;
 }());
 exports.default = LegoBoost;
-// export { connect, scan, changeLed, drive, disconnect, ai, stop };
 //# sourceMappingURL=legoBoost.js.map

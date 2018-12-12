@@ -107,9 +107,9 @@ var HubAsync = /** @class */ (function (_super) {
             };
             this.useMetric = true;
             this.modifier = 1;
-            this.on("rotation", function (rotation) { return (_this.ports[rotation.port].angle = rotation.angle); });
-            this.on("disconnect", function () { return (_this.hubDisconnected = true); });
-            this.on("distance", function (distance) { return (_this.distance = distance); });
+            this.emitter.on("rotation", function (rotation) { return (_this.ports[rotation.port].angle = rotation.angle); });
+            this.emitter.on("disconnect", function () { return (_this.hubDisconnected = true); });
+            this.emitter.on("distance", function (distance) { return (_this.distance = distance); });
         };
         /**
          * Control the LED on the Move Hub

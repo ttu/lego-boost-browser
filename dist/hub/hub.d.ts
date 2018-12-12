@@ -55,7 +55,7 @@ export declare class Hub {
      * rotation is counterclockwise.
      * @param {function} [callback]
      */
-    motorAngle(port: any, angle: any, dutyCycle: any, callback: any): void;
+    motorAngle(port: any, angle: any, dutyCycle: any, callback?: any): void;
     /**
      * Turn both motors (A and B) by specific angle
      * @param {number} angle degrees to turn from `0` to `2147483647`

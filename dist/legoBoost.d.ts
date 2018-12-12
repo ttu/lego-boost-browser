@@ -54,11 +54,24 @@ export default class LegoBoost {
     };
     connect(): Promise<void>;
     changeLed(): Promise<void>;
-    driveUntil(distance?: number): Promise<void>;
-    turnUntil(direction?: number): Promise<void>;
+    driveToDirection(direction?: number): Promise<void>;
     disconnect(): Promise<void>;
     ai(): Promise<void>;
     stop(): Promise<void>;
-    scan(): void;
+    led(color: any): void;
+    ledAsync(color: any): Promise<void>;
+    motorTime(port: any, seconds: any, dutyCycle?: number): void;
+    motorTimeAsync(port: any, seconds: any, dutyCycle?: number, wait?: boolean): Promise<void>;
+    motorTimeMulti(seconds: any, dutyCycleA?: number, dutyCycleB?: number): void;
+    motorTimeMultiAsync(seconds: any, dutyCycleA?: number, dutyCycleB?: number, wait?: boolean): Promise<void>;
+    motorAngle(port: any, angle: any, dutyCycle?: number): void;
+    motorAngleAsync(port: any, angle: any, dutyCycle?: number, wait?: boolean): Promise<void>;
+    motorAngleMulti(angle: any, dutyCycleA?: number, dutyCycleB?: number): void;
+    motorAngleMultiAsync(angle: any, dutyCycleA?: number, dutyCycleB?: number, wait?: boolean): Promise<void>;
+    drive(distance: any, wait?: boolean): void;
+    turn(degrees: any, wait?: boolean): void;
+    driveUntil(distance?: number, wait?: boolean): Promise<void>;
+    turnUntil(direction?: number, wait?: boolean): Promise<void>;
+    private preCheck;
 }
 //# sourceMappingURL=legoBoost.d.ts.map
