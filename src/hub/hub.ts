@@ -277,7 +277,7 @@ export class Hub {
    * rotation is counterclockwise.
    * @param {function} [callback]
    */
-  motorAngle(port, angle, dutyCycle, callback) {
+  motorAngle(port, angle, dutyCycle, callback?) {
     if (typeof dutyCycle === "function") {
       callback = dutyCycle;
       dutyCycle = 100;

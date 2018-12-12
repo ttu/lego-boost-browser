@@ -45,6 +45,7 @@ export default class LegoBoost {
       });
 
       this.hub.emitter.on("connect", async evt => {
+        this.hub.afterInitialization();
         await this.hub.ledAsync("purple");
       });
 
@@ -65,16 +66,12 @@ export default class LegoBoost {
     await this.hub.ledAsync(this.color);
   }
 
-  async driveUntil(distance = 0): Promise<void> {
-    if (!this.hub || this.hub.connected === false) return;
-    this.hubControl.setNextState('Manual');
-    await this.hub.driveUntil(distance);
-  }
-
-  async turnUntil(direction = 0): Promise<void> {
-    if (!this.hub || this.hub.connected === false) return;
-    this.hubControl.setNextState('Manual');
-    await this.hub.turnUntil(direction);
+  async driveToDirection(direction = 1): Promise<void> {
+    if (!this.preCheck()) return;
+    if (direction > 0)
+      await this.hub.driveUntil();
+    else
+      await this.hub.drive(-10000);
   }
 
   async disconnect(): Promise<void> {
@@ -89,21 +86,88 @@ export default class LegoBoost {
   }
 
   async stop(): Promise<void> {
-    if (!this.hub || this.hub.connected === false) return;
+    if (!this.preCheck()) return;
     this.controlData.speed = 0;
     this.controlData.turnAngle = 0;
-    this.hubControl.setNextState('Manual');
     // control datas values might have always been 0, execute force stop
     await this.hub.motorTimeMultiAsync(1, 0, 0);
   }
 
-  scan(): void {
-    try {
-      Scanner.run();
-    } catch (e) {
-      console.log("Error from scan: " + e);
-    }
+  // Methods from Hub
+
+  led(color) {
+    if (!this.preCheck()) return;
+    this.hub.led(color);
+  }
+
+  async ledAsync(color) {
+    if (!this.preCheck()) return;
+    await this.hub.ledAsync(color);
+  }
+
+  motorTime(port, seconds, dutyCycle = 100) {
+    if (!this.preCheck()) return;
+    this.hub.motorTime(port, seconds, dutyCycle);
+  }
+
+  async motorTimeAsync(port, seconds, dutyCycle = 100, wait = false) {
+    if (!this.preCheck()) return;
+    await this.hub.motorTimeAsync(port, seconds, dutyCycle, wait);
+  }
+
+  motorTimeMulti(seconds, dutyCycleA = 100, dutyCycleB = 100) {
+    if (!this.preCheck()) return;
+    this.hub.motorTimeMulti(seconds, dutyCycleA, dutyCycleB);
+  }
+
+  async motorTimeMultiAsync(seconds, dutyCycleA = 100, dutyCycleB = 100, wait = false) {
+    if (!this.preCheck()) return;
+    await this.hub.motorTimeMultiAsync(seconds, dutyCycleA, dutyCycleB, wait);
+  }
+
+  motorAngle(port, angle, dutyCycle = 100) {
+    if (!this.preCheck()) return;
+    this.hub.motorAngle(port, angle, dutyCycle);
+  }
+
+  async motorAngleAsync(port, angle, dutyCycle = 100, wait = false) {
+    if (!this.preCheck()) return;
+    await this.hub.motorAngleAsync(port, angle, dutyCycle, wait);
+  }
+
+  motorAngleMulti(angle, dutyCycleA = 100, dutyCycleB = 100) {
+    if (!this.preCheck()) return;
+    this.hub.motorAngleMulti(angle, dutyCycleA, dutyCycleB);
+  }
+
+  async motorAngleMultiAsync(angle, dutyCycleA = 100, dutyCycleB = 100, wait = false) {
+    if (!this.preCheck()) return;
+    await this.hub.motorAngleMultiAsync(angle, dutyCycleA, dutyCycleB, wait);
+  }
+
+  drive (distance, wait = true) {
+    if (!this.preCheck()) return;
+    this.hub.drive(distance, wait);
+  }
+
+  turn(degrees, wait = true) {
+    if (!this.preCheck()) return;
+    this.hub.turn(degrees, wait);
+  }
+
+  async driveUntil (distance = 0, wait = true) {
+    if (!this.preCheck()) return;
+    await this.hub.driveUntil(distance, wait);
+  }
+
+   async turnUntil  (direction = 1, wait = true) {
+    if (!this.preCheck()) return;
+    await this.hub.turnUntil(direction, wait);
+  }
+
+  private preCheck(): boolean {
+    if (!this.hub || this.hub.connected === false) return false;
+    this.hubControl.setNextState('Manual');
+    return true;
   }
 }
-
-// export { connect, scan, changeLed, drive, disconnect, ai, stop };

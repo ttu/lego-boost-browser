@@ -9,7 +9,7 @@ const TURN_SPEED = 20;
 const DEFAULT_STOP_DISTANCE = 105;
 const DEFAULT_CLEAR_DISTANCE = 120;
 
-const waitForValueToSet = function(
+const waitForValueToSet = function (
   valueName,
   compareFunc = valueName => this[valueName],
   timeoutMs = 0
@@ -34,7 +34,7 @@ export class HubAsync extends Hub {
    * @method Hub#disconnectAsync
    * @returns {Promise<boolean>} disconnection successful
    */
-  disconnectAsync = function() {
+  disconnectAsync = function () {
     this.disconnect();
     return waitForValueToSet.bind(this)("hubDisconnected");
   };
@@ -43,7 +43,7 @@ export class HubAsync extends Hub {
    * Execute this method after new instance of Hub is created
    * @method Hub#afterInitialization
    */
-  afterInitialization = function() {
+  afterInitialization = function () {
     this.hubDisconnected = null;
     this.ports = {
       A: { angle: 0 },
@@ -56,12 +56,12 @@ export class HubAsync extends Hub {
     this.useMetric = true;
     this.modifier = 1;
 
-    this.on(
+    this.emitter.on(
       "rotation",
       rotation => (this.ports[rotation.port].angle = rotation.angle)
     );
-    this.on("disconnect", () => (this.hubDisconnected = true));
-    this.on("distance", distance => (this.distance = distance));
+    this.emitter.on("disconnect", () => (this.hubDisconnected = true));
+    this.emitter.on("distance", distance => (this.distance = distance));
   };
 
   /**
@@ -73,7 +73,7 @@ export class HubAsync extends Hub {
    * `white`
    * @returns {Promise}
    */
-  ledAsync = function(color) {
+  ledAsync = function (color) {
     return new Promise((resolve, reject) => {
       this.led(color, () => {
         // Callback is executed when command is sent and it will take some time before MoveHub executes the command
@@ -92,7 +92,7 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=false] will promise wait unitll motorTime run time has elapsed
    * @returns {Promise}
    */
-  motorTimeAsync = function(port, seconds, dutyCycle = 100, wait = false) {
+  motorTimeAsync = function (port, seconds, dutyCycle = 100, wait = false) {
     return new Promise((resolve, reject) => {
       this.motorTime(port, seconds, dutyCycle, () => {
         setTimeout(
@@ -114,12 +114,7 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=false] will promise wait unitll motorTime run time has elapsed
    * @returns {Promise}
    */
-  motorTimeMultiAsync = function(
-    seconds,
-    dutyCycleA = 100,
-    dutyCycleB = 100,
-    wait = false
-  ) {
+  motorTimeMultiAsync = function (seconds, dutyCycleA = 100, dutyCycleB = 100, wait = false) {
     return new Promise((resolve, reject) => {
       this.motorTimeMulti(seconds, dutyCycleA, dutyCycleB, () => {
         setTimeout(
@@ -140,7 +135,7 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=false] will promise wait unitll motorAngle has turned
    * @returns {Promise}
    */
-  motorAngleAsync = function(port, angle, dutyCycle = 100, wait = false) {
+  motorAngleAsync = function (port, angle, dutyCycle = 100, wait = false) {
     return new Promise((resolve, reject) => {
       this.motorAngle(port, angle, dutyCycle, async () => {
         if (wait) {
@@ -168,12 +163,7 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=false] will promise wait unitll motorAngle has turned
    * @returns {Promise}
    */
-  motorAngleMultiAsync = function(
-    angle,
-    dutyCycleA = 100,
-    dutyCycleB = 100,
-    wait = false
-  ) {
+  motorAngleMultiAsync = function (angle, dutyCycleA = 100, dutyCycleB = 100, wait = false) {
     return new Promise((resolve, reject) => {
       this.motorAngleMulti(angle, dutyCycleA, dutyCycleB, async () => {
         if (wait) {
@@ -194,7 +184,7 @@ export class HubAsync extends Hub {
    * Use metric units (default)
    * @method Hub#useMetricUnits
    */
-  useMetricUnits = function() {
+  useMetricUnits = function () {
     this.useMetric = true;
   };
 
@@ -202,7 +192,7 @@ export class HubAsync extends Hub {
    * Use imperial units
    * @method Hub#useImperialUnits
    */
-  useImperialUnits = function() {
+  useImperialUnits = function () {
     this.useMetric = false;
   };
 
@@ -211,7 +201,7 @@ export class HubAsync extends Hub {
    * @method Hub#setFrictionModifier
    * @param {number} modifier friction modifier
    */
-  setFrictionModifier = function(modifier) {
+  setFrictionModifier = function (modifier) {
     this.modifier = modifier;
   };
 
@@ -222,7 +212,7 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=true] will promise wait untill the drive has completed.
    * @returns {Promise}
    */
-  drive = function(distance, wait = true) {
+  drive = function (distance, wait = true) {
     const angle =
       Math.abs(distance) *
       ((this.useMetric ? METRIC_MODIFIER : IMPERIAL_MODIFIER) * this.modifier);
@@ -238,7 +228,7 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=true] will promise wait untill the turn has completed.
    * @returns {Promise}
    */
-  turn = function(degrees, wait = true) {
+  turn = function (degrees, wait = true) {
     const angle = Math.abs(degrees) * TURN_MODIFIER;
     const dutyCycleA = TURN_SPEED * (degrees > 0 ? 1 : -1);
     const dutyCycleB = TURN_SPEED * (degrees > 0 ? -1 : 1);
@@ -253,7 +243,7 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=true] will promise wait untill the bot will stop.
    * @returns {Promise}
    */
-  driveUntil = async function(distance = 0, wait = true) {
+  driveUntil = async function (distance = 0, wait = true) {
     const distanceCheck =
       distance !== 0
         ? this.useMetric
@@ -281,7 +271,7 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=true] will promise wait untill the bot will stop.
    * @returns {Promise}
    */
-  turnUntil = async function(direction = 1, wait = true) {
+  turnUntil = async function (direction = 1, wait = true) {
     const directionModifier = direction > 0 ? 1 : -1;
     this.turn(360 * directionModifier, false);
     if (wait) {

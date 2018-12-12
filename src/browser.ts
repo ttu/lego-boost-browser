@@ -6,8 +6,6 @@ var boost = new LegoBoost();
 // @ts-ignore
 window.connect = boost.connect.bind(boost);
 // @ts-ignore
-window.scan = boost.scan.bind(boost);
-// @ts-ignore
 window.led = boost.changeLed.bind(boost);
 // @ts-ignore
 window.drive = boost.drive.bind(boost);
