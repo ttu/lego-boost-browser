@@ -2,8 +2,8 @@ import { HubAsync } from "./hub/hubAsync";
 import { HubControl } from "./ai/hub-control";
 export default class LegoBoost {
     hub: HubAsync;
-    color: string;
     hubControl: HubControl;
+    color: string;
     deviceInfo: {
         ports: {
             A: {
@@ -54,7 +54,8 @@ export default class LegoBoost {
     };
     connect(): Promise<void>;
     changeLed(): Promise<void>;
-    drive(): Promise<void>;
+    driveUntil(distance?: number): Promise<void>;
+    turnUntil(direction?: number): Promise<void>;
     disconnect(): Promise<void>;
     ai(): Promise<void>;
     stop(): Promise<void>;

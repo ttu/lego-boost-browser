@@ -65,9 +65,16 @@ export default class LegoBoost {
     await this.hub.ledAsync(this.color);
   }
 
-  async drive(): Promise<void> {
+  async driveUntil(distance = 0): Promise<void> {
     if (!this.hub || this.hub.connected === false) return;
-    await this.hub.motorTimeMultiAsync(2, 10, 10);
+    this.hubControl.setNextState('Manual');
+    await this.hub.driveUntil(distance);
+  }
+
+  async turnUntil(direction = 0): Promise<void> {
+    if (!this.hub || this.hub.connected === false) return;
+    this.hubControl.setNextState('Manual');
+    await this.hub.turnUntil(direction);
   }
 
   async disconnect(): Promise<void> {

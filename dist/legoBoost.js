@@ -132,14 +132,33 @@ var LegoBoost = /** @class */ (function () {
             });
         });
     };
-    LegoBoost.prototype.drive = function () {
+    LegoBoost.prototype.driveUntil = function (distance) {
+        if (distance === void 0) { distance = 0; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         if (!this.hub || this.hub.connected === false)
                             return [2 /*return*/];
-                        return [4 /*yield*/, this.hub.motorTimeMultiAsync(2, 10, 10)];
+                        this.hubControl.setNextState('Manual');
+                        return [4 /*yield*/, this.hub.driveUntil(distance)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    LegoBoost.prototype.turnUntil = function (direction) {
+        if (direction === void 0) { direction = 0; }
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.hub || this.hub.connected === false)
+                            return [2 /*return*/];
+                        this.hubControl.setNextState('Manual');
+                        return [4 /*yield*/, this.hub.turnUntil(direction)];
                     case 1:
                         _a.sent();
                         return [2 /*return*/];
@@ -178,6 +197,8 @@ var LegoBoost = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        if (!this.hub || this.hub.connected === false)
+                            return [2 /*return*/];
                         this.controlData.speed = 0;
                         this.controlData.turnAngle = 0;
                         this.hubControl.setNextState('Manual');
