@@ -1,43 +1,52 @@
 # Lego Boost in Browser
 
-> Work in progress
+Control Lego Boost from the browser without any installations.
 
-Control Lego Boost staigth from the browser without any installations.
+## Web Bluetooth API
 
-Uses [Web Bluetooth API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API). Works with Chrome and Opera.
+Application uses [Web Bluetooth API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API) to communicate with Lego Boost. 
+
+Web Bluetooth API works with __Windows, Mac, Linux__ and __Android__ devices with __Chrome__ and __Opera__ browsers. Unfortunately Apple iOS doesn't support Web Bluetooth. 
+
+[Supported devices](https://github.com/WebBluetoothCG/web-bluetooth/blob/master/implementation-status.md)
 
 ## Start
 
 ```sh
 $ npm run build:browser
-# Open index.html
 ```
 
-### Notes
+Open `index.html` from the root
 
-`hubAsync.ts` is copy from [movehub-async.js](https://github.com/ttu/node-movehub-async/blob/master/movehub-async.js).
+## Build distributable
 
-`ai`-implementation is copy from [lego-boost-ai](https://github.com/ttu/lego-boost-ai).
-
-#### Links
-
-* https://developers.google.com/web/updates/2015/07/interact-with-ble-devices-on-the-web
-* https://www.typescriptlang.org/docs/handbook/migrating-from-javascript.html
-* https://www.typescriptlang.org/docs/handbook/integrating-with-build-tools.html#browserify
-
-
-###### Testers
-
-* https://googlechrome.github.io/samples/web-bluetooth/read-characteristic-value-changed.html
-* https://googlechrome.github.io/samples/web-bluetooth/notifications.html
-* https://googlechrome.github.io/samples/web-bluetooth/notifications-async-await.html
+```sh
+$ npm run build
+```
 
 ## Credits
 
-Node module for controlling Lego Boost: https://github.com/hobbyquaker/node-movehub
+Communication and control code is ported from these libraries:
 
-Async implementation of Node module: https://github.com/ttu/node-movehub-async
+* Node module for controlling Lego Boost: https://github.com/hobbyquaker/node-movehub
+  * [hub.ts](./src/hub.ts)
+* Async implementation of Node module: https://github.com/ttu/node-movehub-async
+  * [hubAsync.ts](./src/hubAsync.ts)
+* Node application for controlling Lego Boost: https://github.com/ttu/lego-boost-ai
+  * [hubControl.ts](./src/ai/hubControl.ts)
+* Angular implementation: https://github.com/BenjaminDobler/ng-lego-boost
+* The buffer module from node.js, for the browser: https://github.com/feross/buffer
 
-Angular implementation: https://github.com/BenjaminDobler/ng-lego-boost
+## Contributing
 
-Buffer: https://github.com/feross/buffer
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+## Disclaimer
+
+LEGO and BOOST are Trademarks from The LEGO Company, which do not support this project. 
+
+Project maintainers are not responsible for any damage on your LEGO BOOST devices - use it at your own risk.
+
+## License
+
+Licensed under the [MIT](https://github.com/ttu/lego-boost-browser/blob/master/LICENSE) License.
