@@ -1,7 +1,7 @@
 import { BoostConnector } from "./boostConnector";
 import { Scanner } from "./scanner";
 // import { Hub } from "./hub/hub";
-import { HubAsync } from "./hub/hubAsync";
+import { HubAsync, IConfiguration } from "./hub/hubAsync";
 import { HubControl } from "./ai/hub-control";
 
 export default class LegoBoost {
@@ -35,10 +35,10 @@ export default class LegoBoost {
     updateInputMode: null
   };
 
-  async connect(): Promise<void> {
+  async connect(configuration?: IConfiguration): Promise<void> {
     try {
       const characteristic = await BoostConnector.connect();
-      this.hub = new HubAsync(characteristic);
+      this.hub = new HubAsync(characteristic, configuration);
 
       this.hub.emitter.on("disconnect", async evt => {
         await BoostConnector.reconnect();
@@ -66,7 +66,7 @@ export default class LegoBoost {
     await this.hub.ledAsync(this.color);
   }
 
-  async driveToDirection(direction = 1): Promise<void> {
+  async driveToDirection(direction = 1): Promise<{}> {
     if (!this.preCheck()) return;
     if (direction > 0)
       return await this.hub.driveUntil();
