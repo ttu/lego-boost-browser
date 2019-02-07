@@ -1,4 +1,4 @@
-import { Hub } from "./hub";
+import { Hub } from './hub';
 
 const  CALLBACK_TIMEOUT_MS = 1000 / 3;
 
@@ -26,7 +26,7 @@ const DEFAULT_CONFIG = {
 // const VALID_MOTORS = ['A', 'B'];
 
 
-const validateConfiguration = function(configuration : IConfiguration){
+const validateConfiguration = (configuration : IConfiguration) => {
 
   configuration.leftMotor = configuration.leftMotor || DEFAULT_CONFIG.LEFT_MOTOR;
   configuration.rightMotor = configuration.rightMotor || DEFAULT_CONFIG.RIGHT_MOTOR;
@@ -52,7 +52,7 @@ const validateConfiguration = function(configuration : IConfiguration){
 
 const waitForValueToSet = function (
   valueName,
-  compareFunc = valueName => this[valueName],
+  compareFunc = valueNameToCompare => this[valueNameToCompare],
   timeoutMs = 0
 ) {
   if (compareFunc.bind(this)(valueName))
@@ -101,7 +101,7 @@ export class HubAsync extends Hub {
    */
   disconnectAsync() {
     this.disconnect();
-    return waitForValueToSet.bind(this)("hubDisconnected");
+    return waitForValueToSet.bind(this)('hubDisconnected');
   };
 
   /**
@@ -122,11 +122,11 @@ export class HubAsync extends Hub {
     this.modifier = 1;
 
     this.emitter.on(
-      "rotation",
+      'rotation',
       rotation => (this.portData[rotation.port].angle = rotation.angle)
     );
-    this.emitter.on("disconnect", () => (this.hubDisconnected = true));
-    this.emitter.on("distance", distance => (this.distance = distance));
+    this.emitter.on('disconnect', () => (this.hubDisconnected = true));
+    this.emitter.on('distance', distance => (this.distance = distance));
   };
 
   /**
@@ -234,9 +234,9 @@ export class HubAsync extends Hub {
         if (wait) {
           let beforeTurn;
           do {
-            beforeTurn = this.portData["AB"].angle;
+            beforeTurn = this.portData['AB'].angle;
             await new Promise(res => setTimeout(res, CALLBACK_TIMEOUT_MS));
-          } while (this.portData["AB"].angle !== beforeTurn);
+          } while (this.portData['AB'].angle !== beforeTurn);
           resolve();
         } else {
           setTimeout(resolve, CALLBACK_TIMEOUT_MS);
@@ -320,13 +320,13 @@ export class HubAsync extends Hub {
     this.motorTimeMulti(60, this.configuration.driveSpeed, this.configuration.driveSpeed);
     if (wait) {
       await waitForValueToSet.bind(this)(
-        "distance",
+        'distance',
         () => distanceCheck >= this.distance
       );
       await this.motorAngleMultiAsync(0);
     } else {
       return waitForValueToSet
-        .bind(this)("distance", () => distanceCheck >= this.distance)
+        .bind(this)('distance', () => distanceCheck >= this.distance)
         .then(_ => this.motorAngleMulti(0, 0, 0));
     }
   };
@@ -343,13 +343,13 @@ export class HubAsync extends Hub {
     this.turn(360 * directionModifier, false);
     if (wait) {
       await waitForValueToSet.bind(this)(
-        "distance",
+        'distance',
         () => this.distance >= this.configuration.defaultClearDistance
       );
       await this.turn(0, false);
     } else {
       return waitForValueToSet
-        .bind(this)("distance", () => this.distance >= this.configuration.defaultClearDistance)
+        .bind(this)('distance', () => this.distance >= this.configuration.defaultClearDistance)
         .then(_ => this.turn(0, false));
     }
   };

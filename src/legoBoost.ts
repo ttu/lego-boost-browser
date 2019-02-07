@@ -1,8 +1,8 @@
-import { BoostConnector } from "./boostConnector";
-import { Scanner } from "./scanner";
-// import { Hub } from "./hub/hub";
-import { HubAsync, IConfiguration } from "./hub/hubAsync";
-import { HubControl } from "./ai/hub-control";
+import { BoostConnector } from './boostConnector';
+import { Scanner } from './scanner';
+// import { Hub } from './hub/hub';
+import { HubAsync, IConfiguration } from './hub/hubAsync';
+import { HubControl } from './ai/hub-control';
 
 export default class LegoBoost {
   hub: HubAsync;
@@ -40,13 +40,13 @@ export default class LegoBoost {
       const characteristic = await BoostConnector.connect();
       this.hub = new HubAsync(characteristic, configuration);
 
-      this.hub.emitter.on("disconnect", async evt => {
+      this.hub.emitter.on('disconnect', async evt => {
         await BoostConnector.reconnect();
       });
 
-      this.hub.emitter.on("connect", async evt => {
+      this.hub.emitter.on('connect', async evt => {
         this.hub.afterInitialization();
-        await this.hub.ledAsync("purple");
+        await this.hub.ledAsync('purple');
       });
 
       this.hubControl = new HubControl(this.deviceInfo, this.controlData);
@@ -56,7 +56,7 @@ export default class LegoBoost {
       }, 100);
 
     } catch (e) {
-      console.log("Error from connect: " + e);
+      console.log('Error from connect: ' + e);
     }
   }
 
@@ -71,7 +71,7 @@ export default class LegoBoost {
     if (direction > 0)
       return await this.hub.driveUntil();
     else
-    return await this.hub.drive(-10000);
+      return await this.hub.drive(-10000);
   }
 
   async disconnect(): Promise<boolean> {
@@ -95,72 +95,72 @@ export default class LegoBoost {
 
   // Methods from Hub
 
-  led(color) {
+  led(color): void {
     if (!this.preCheck()) return;
     this.hub.led(color);
   }
 
-  async ledAsync(color) : Promise<{}> {
+  async ledAsync(color): Promise<{}> {
     if (!this.preCheck()) return;
     return await this.hub.ledAsync(color);
   }
 
-  motorTime(port, seconds, dutyCycle = 100) {
+  motorTime(port, seconds, dutyCycle = 100): void {
     if (!this.preCheck()) return;
     this.hub.motorTime(port, seconds, dutyCycle);
   }
 
-  async motorTimeAsync(port, seconds, dutyCycle = 100, wait = true) {
+  async motorTimeAsync(port, seconds, dutyCycle = 100, wait = true): Promise<void> {
     if (!this.preCheck()) return;
     await this.hub.motorTimeAsync(port, seconds, dutyCycle, wait);
   }
 
-  motorTimeMulti(seconds, dutyCycleA = 100, dutyCycleB = 100) {
+  motorTimeMulti(seconds, dutyCycleA = 100, dutyCycleB = 100): void {
     if (!this.preCheck()) return;
     this.hub.motorTimeMulti(seconds, dutyCycleA, dutyCycleB);
   }
 
-  async motorTimeMultiAsync(seconds, dutyCycleA = 100, dutyCycleB = 100, wait = true) {
+  async motorTimeMultiAsync(seconds, dutyCycleA = 100, dutyCycleB = 100, wait = true): Promise<void> {
     if (!this.preCheck()) return;
     await this.hub.motorTimeMultiAsync(seconds, dutyCycleA, dutyCycleB, wait);
   }
 
-  motorAngle(port, angle, dutyCycle = 100) {
+  motorAngle(port, angle, dutyCycle = 100): void {
     if (!this.preCheck()) return;
     this.hub.motorAngle(port, angle, dutyCycle);
   }
 
-  async motorAngleAsync(port, angle, dutyCycle = 100, wait = true) {
+  async motorAngleAsync(port, angle, dutyCycle = 100, wait = true): Promise<void> {
     if (!this.preCheck()) return;
     await this.hub.motorAngleAsync(port, angle, dutyCycle, wait);
   }
 
-  motorAngleMulti(angle, dutyCycleA = 100, dutyCycleB = 100) {
+  motorAngleMulti(angle, dutyCycleA = 100, dutyCycleB = 100): void {
     if (!this.preCheck()) return;
     this.hub.motorAngleMulti(angle, dutyCycleA, dutyCycleB);
   }
 
-  async motorAngleMultiAsync(angle, dutyCycleA = 100, dutyCycleB = 100, wait = true) {
+  async motorAngleMultiAsync(angle, dutyCycleA = 100, dutyCycleB = 100, wait = true): Promise<void> {
     if (!this.preCheck()) return;
     await this.hub.motorAngleMultiAsync(angle, dutyCycleA, dutyCycleB, wait);
   }
 
-  async drive (distance, wait = true) {
+  async drive (distance, wait = true): Promise<{}> {
     if (!this.preCheck()) return;
     return await this.hub.drive(distance, wait);
   }
 
-  async turn(degrees, wait = true) {
+  async turn(degrees, wait = true): Promise<{}> {
     if (!this.preCheck()) return;
     return await this.hub.turn(degrees, wait);
   }
 
-  async driveUntil (distance = 0, wait = true) {
+  async driveUntil(distance = 0, wait = true): Promise<any> {
     if (!this.preCheck()) return;
     return await this.hub.driveUntil(distance, wait);
   }
 
-   async turnUntil  (direction = 1, wait = true) {
+  async turnUntil(direction = 1, wait = true): Promise<any> {
     if (!this.preCheck()) return;
     return await this.hub.turnUntil(direction, wait);
   }

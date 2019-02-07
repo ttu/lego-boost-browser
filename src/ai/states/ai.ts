@@ -40,8 +40,8 @@ function turn() {
   }
 
   if (!this.control.driveInput || Date.now() - this.control.driveInput > CHECK_TIME_MS) {
-    const motorA = this.control.turnDirection == 'right' ? TURN_SPEED : TURN_SPEED_OPPOSITE;
-    const motorB = this.control.turnDirection == 'right' ? TURN_SPEED_OPPOSITE : TURN_SPEED;
+    const motorA = this.control.turnDirection === 'right' ? TURN_SPEED : TURN_SPEED_OPPOSITE;
+    const motorB = this.control.turnDirection === 'right' ? TURN_SPEED_OPPOSITE : TURN_SPEED;
 
     this.control.driveInput = Date.now();
     this.hub.motorTimeMulti(EXECUTE_TIME_SEC, motorA, motorB);

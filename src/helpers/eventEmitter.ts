@@ -9,7 +9,7 @@ export class EventEmitter<T extends string> {
   private readonly events: IEvents = {};
 
   public on(event: string, listener: Listener): () => void {
-    if (typeof this.events[event] !== "object") {
+    if (typeof this.events[event] !== 'object') {
       this.events[event] = [];
     }
 
@@ -18,7 +18,7 @@ export class EventEmitter<T extends string> {
   }
 
   public removeListener(event: string, listener: Listener): void {
-    if (typeof this.events[event] !== "object") {
+    if (typeof this.events[event] !== 'object') {
       return;
     }
 
@@ -35,7 +35,7 @@ export class EventEmitter<T extends string> {
   }
 
   public emit(event: string, ...args: any[]): void {
-    if (typeof this.events[event] !== "object") {
+    if (typeof this.events[event] !== 'object') {
       return;
     }
 
