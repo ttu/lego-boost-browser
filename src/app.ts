@@ -1,5 +1,5 @@
-import LegoBoost from "./legoBoost";
+import LegoBoost from './legoBoost';
 
-console.log("Running");
-var boost = new LegoBoost();
+console.log('Running');
+const boost = new LegoBoost();
 boost.connect();

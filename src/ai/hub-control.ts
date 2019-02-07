@@ -9,6 +9,7 @@ class HubControl {
   states: { Turn: any; Drive: any; Stop: any; Back: any; Manual: any; Seek: any; };
   currentState: any;
   prevDevice: any;
+  
   constructor(deviceInfo, controlData) {
     this.hub = null;
     this.device = deviceInfo;

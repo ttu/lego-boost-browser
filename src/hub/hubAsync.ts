@@ -1,17 +1,58 @@
-import { Hub } from "./hub";
+import { Hub } from './hub';
 
 const CALLBACK_TIMEOUT_MS = 1000 / 3;
-const METRIC_MODIFIER = 28.5;
-const IMPERIAL_MODIFIER = METRIC_MODIFIER / 4;
-const TURN_MODIFIER = 2.56;
-const DRIVE_SPEED = 25;
-const TURN_SPEED = 20;
-const DEFAULT_STOP_DISTANCE = 105;
-const DEFAULT_CLEAR_DISTANCE = 120;
+
+const DEFAULT_CONFIG = {
+  METRIC_MODIFIER: 28.5,
+  TURN_MODIFIER: 2.56,
+  DRIVE_SPEED: 25,
+  TURN_SPEED: 20,
+  DEFAULT_STOP_DISTANCE: 105,
+  DEFAULT_CLEAR_DISTANCE: 120,
+  LEFT_MOTOR: 'B',
+  RIGHT_MOTOR: 'A',
+  VALID_MOTORS: ['A', 'B']
+}
+
+// const METRIC_MODIFIER = 28.5;
+// const IMPERIAL_MODIFIER = METRIC_MODIFIER / 4;
+// const TURN_MODIFIER = 2.56;
+// const DRIVE_SPEED = 25;
+// const TURN_SPEED = 20;
+// const DEFAULT_STOP_DISTANCE = 105;
+// const DEFAULT_CLEAR_DISTANCE = 120;
+// const LEFT_MOTOR = 'B';
+// const RIGHT_MOTOR = 'A';
+// const VALID_MOTORS = ['A', 'B'];
+
+
+const validateConfiguration = (configuration : IConfiguration) => {
+
+  configuration.leftMotor = configuration.leftMotor || DEFAULT_CONFIG.LEFT_MOTOR;
+  configuration.rightMotor = configuration.rightMotor || DEFAULT_CONFIG.RIGHT_MOTOR;
+
+  // @ts-ignore
+  if (!VALID_MOTORS.includes(configuration.leftMotor))
+    throw Error('Define left port port correctly');
+
+  // @ts-ignore
+  if (!VALID_MOTORS.includes(configuration.rightMotor))
+    throw Error('Define right port port correctly');
+
+  if (configuration.leftMotor === configuration.rightMotor)
+    throw Error('Left and right motor can not be same');
+
+  configuration.distanceModifier = configuration.distanceModifier || DEFAULT_CONFIG.METRIC_MODIFIER;
+  configuration.turnModifier = configuration.turnModifier || DEFAULT_CONFIG.TURN_MODIFIER;
+  configuration.driveSpeed = configuration.driveSpeed || DEFAULT_CONFIG.DRIVE_SPEED;
+  configuration.turnSpeed = configuration.turnSpeed || DEFAULT_CONFIG.TURN_SPEED;
+  configuration.defaultStopDistance = configuration.defaultStopDistance || DEFAULT_CONFIG.DEFAULT_STOP_DISTANCE;
+  configuration.defaultClearDistance = configuration.defaultClearDistance || DEFAULT_CONFIG.DEFAULT_CLEAR_DISTANCE;
+}
 
 const waitForValueToSet = function (
   valueName,
-  compareFunc = valueName => this[valueName],
+  compareFunc = valueNameToCompare => this[valueNameToCompare],
   timeoutMs = 0
 ) {
   if (compareFunc.bind(this)(valueName))
@@ -28,22 +69,46 @@ const waitForValueToSet = function (
   });
 };
 
+export interface IConfiguration {
+  distanceModifier?: any;
+  turnModifier?: any;
+  defaultClearDistance?: any;
+  defaultStopDistance?: any;
+  leftMotor?: string;
+  rightMotor?: string;
+  driveSpeed?: number;
+  turnSpeed?: number;
+}
+
 export class HubAsync extends Hub {
+
+  hubDisconnected: boolean;
+  configuration: IConfiguration;
+  portData: any;
+  useMetric: boolean;
+  modifier: number;
+  distance: number;
+
+  constructor(charasteristics: BluetoothRemoteGATTCharacteristic, configuration: IConfiguration) { 
+    super(charasteristics);
+    validateConfiguration(configuration);
+    this.configuration = configuration;
+  }
   /**
    * Disconnect Hub
    * @method Hub#disconnectAsync
    * @returns {Promise<boolean>} disconnection successful
    */
-  disconnectAsync = function () {
+  disconnectAsync() {
     this.disconnect();
-    return waitForValueToSet.bind(this)("hubDisconnected");
+    return waitForValueToSet.bind(this)('hubDisconnected');
   };
 
   /**
    * Execute this method after new instance of Hub is created
    * @method Hub#afterInitialization
    */
-  afterInitialization = function () {
+  afterInitialization() {
     this.hubDisconnected = null;
     this.portData = {
       A: { angle: 0 },
@@ -57,11 +122,11 @@ export class HubAsync extends Hub {
     this.modifier = 1;
 
     this.emitter.on(
-      "rotation",
+      'rotation',
       rotation => (this.portData[rotation.port].angle = rotation.angle)
     );
-    this.emitter.on("disconnect", () => (this.hubDisconnected = true));
-    this.emitter.on("distance", distance => (this.distance = distance));
+    this.emitter.on('disconnect', () => (this.hubDisconnected = true));
+    this.emitter.on('distance', distance => (this.distance = distance));
   };
 
   /**
@@ -73,7 +138,7 @@ export class HubAsync extends Hub {
    * `white`
    * @returns {Promise}
    */
-  ledAsync = function (color) {
+  ledAsync(color) {
     return new Promise((resolve, reject) => {
       this.led(color, () => {
         // Callback is executed when command is sent and it will take some time before MoveHub executes the command
@@ -92,7 +157,7 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=false] will promise wait unitll motorTime run time has elapsed
    * @returns {Promise}
    */
-  motorTimeAsync = function (port, seconds, dutyCycle = 100, wait = false) {
+  motorTimeAsync(port, seconds, dutyCycle = 100, wait = false) {
     return new Promise((resolve, reject) => {
       this.motorTime(port, seconds, dutyCycle, () => {
         setTimeout(
@@ -114,7 +179,7 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=false] will promise wait unitll motorTime run time has elapsed
    * @returns {Promise}
    */
-  motorTimeMultiAsync = function (seconds, dutyCycleA = 100, dutyCycleB = 100, wait = false) {
+  motorTimeMultiAsync(seconds, dutyCycleA = 100, dutyCycleB = 100, wait = false) {
     return new Promise((resolve, reject) => {
       this.motorTimeMulti(seconds, dutyCycleA, dutyCycleB, () => {
         setTimeout(
@@ -135,7 +200,7 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=false] will promise wait unitll motorAngle has turned
    * @returns {Promise}
    */
-  motorAngleAsync = function (port, angle, dutyCycle = 100, wait = false) {
+  motorAngleAsync(port, angle, dutyCycle = 100, wait = false) {
     return new Promise((resolve, reject) => {
       this.motorAngle(port, angle, dutyCycle, async () => {
         if (wait) {
@@ -163,15 +228,15 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=false] will promise wait unitll motorAngle has turned
    * @returns {Promise}
    */
-  motorAngleMultiAsync = function (angle, dutyCycleA = 100, dutyCycleB = 100, wait = false) {
+  motorAngleMultiAsync(angle, dutyCycleA = 100, dutyCycleB = 100, wait = false) {
     return new Promise((resolve, reject) => {
       this.motorAngleMulti(angle, dutyCycleA, dutyCycleB, async () => {
         if (wait) {
           let beforeTurn;
           do {
-            beforeTurn = this.portData["AB"].angle;
+            beforeTurn = this.portData['AB'].angle;
             await new Promise(res => setTimeout(res, CALLBACK_TIMEOUT_MS));
-          } while (this.portData["AB"].angle !== beforeTurn);
+          } while (this.portData['AB'].angle !== beforeTurn);
           resolve();
         } else {
           setTimeout(resolve, CALLBACK_TIMEOUT_MS);
@@ -184,7 +249,7 @@ export class HubAsync extends Hub {
    * Use metric units (default)
    * @method Hub#useMetricUnits
    */
-  useMetricUnits = function () {
+  useMetricUnits() {
     this.useMetric = true;
   };
 
@@ -192,7 +257,7 @@ export class HubAsync extends Hub {
    * Use imperial units
    * @method Hub#useImperialUnits
    */
-  useImperialUnits = function () {
+  useImperialUnits() {
     this.useMetric = false;
   };
 
@@ -201,7 +266,7 @@ export class HubAsync extends Hub {
    * @method Hub#setFrictionModifier
    * @param {number} modifier friction modifier
    */
-  setFrictionModifier = function (modifier) {
+  setFrictionModifier(modifier) {
     this.modifier = modifier;
   };
 
@@ -212,12 +277,12 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=true] will promise wait untill the drive has completed.
    * @returns {Promise}
    */
-  drive = function (distance, wait = true) {
+  drive(distance, wait = true) {
     const angle =
       Math.abs(distance) *
-      ((this.useMetric ? METRIC_MODIFIER : IMPERIAL_MODIFIER) * this.modifier);
-    const dutyCycleA = DRIVE_SPEED * (distance > 0 ? 1 : -1);
-    const dutyCycleB = DRIVE_SPEED * (distance > 0 ? 1 : -1);
+      ((this.useMetric ? this.configuration.distanceModifier : (this.configuration.distanceModifier / 4)) * this.modifier);
+    const dutyCycleA = this.configuration.driveSpeed * (distance > 0 ? 1 : -1) * (this.configuration.leftMotor === 'A' ? 1 : -1);
+    const dutyCycleB = this.configuration.driveSpeed * (distance > 0 ? 1 : -1) * (this.configuration.leftMotor === 'A' ? 1 : -1);
     return this.motorAngleMultiAsync(angle, dutyCycleA, dutyCycleB, wait);
   };
 
@@ -228,10 +293,12 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=true] will promise wait untill the turn has completed.
    * @returns {Promise}
    */
-  turn = function (degrees, wait = true) {
-    const angle = Math.abs(degrees) * TURN_MODIFIER;
-    const dutyCycleA = TURN_SPEED * (degrees > 0 ? 1 : -1);
-    const dutyCycleB = TURN_SPEED * (degrees > 0 ? -1 : 1);
+  turn(degrees, wait = true) {
+    const angle = Math.abs(degrees) * this.configuration.turnModifier;
+    const leftTurn = this.configuration.turnSpeed * (degrees > 0 ? 1 : -1);
+    const rightTurn = this.configuration.turnSpeed * (degrees > 0 ? -1 : 1);
+    const dutyCycleA = this.configuration.leftMotor === 'A' ? leftTurn : rightTurn;
+    const dutyCycleB = this.configuration.leftMotor === 'A' ? rightTurn : leftTurn;
     return this.motorAngleMultiAsync(angle, dutyCycleA, dutyCycleB, wait);
   };
 
@@ -243,23 +310,23 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=true] will promise wait untill the bot will stop.
    * @returns {Promise}
    */
-  driveUntil = async function (distance = 0, wait = true) {
+  async driveUntil(distance = 0, wait = true) {
     const distanceCheck =
       distance !== 0
         ? this.useMetric
           ? distance
           : distance * 2.54
-        : DEFAULT_STOP_DISTANCE;
-    this.motorTimeMulti(60, DRIVE_SPEED, DRIVE_SPEED);
+        : this.configuration.defaultStopDistance;
+    this.motorTimeMulti(60, this.configuration.driveSpeed, this.configuration.driveSpeed);
     if (wait) {
       await waitForValueToSet.bind(this)(
-        "distance",
+        'distance',
         () => distanceCheck >= this.distance
       );
       await this.motorAngleMultiAsync(0);
     } else {
       return waitForValueToSet
-        .bind(this)("distance", () => distanceCheck >= this.distance)
+        .bind(this)('distance', () => distanceCheck >= this.distance)
         .then(_ => this.motorAngleMulti(0, 0, 0));
     }
   };
@@ -271,18 +338,18 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=true] will promise wait untill the bot will stop.
    * @returns {Promise}
    */
-  turnUntil = async function (direction = 1, wait = true) {
+  async turnUntil(direction = 1, wait = true) {
     const directionModifier = direction > 0 ? 1 : -1;
     this.turn(360 * directionModifier, false);
     if (wait) {
       await waitForValueToSet.bind(this)(
-        "distance",
-        () => this.distance >= DEFAULT_CLEAR_DISTANCE
+        'distance',
+        () => this.distance >= this.configuration.defaultClearDistance
       );
       await this.turn(0, false);
     } else {
       return waitForValueToSet
-        .bind(this)("distance", () => this.distance >= DEFAULT_CLEAR_DISTANCE)
+        .bind(this)('distance', () => this.distance >= this.configuration.defaultClearDistance)
         .then(_ => this.turn(0, false));
     }
   };

@@ -15,15 +15,15 @@ export class Scanner {
     const options = { acceptAllDevices: true };
     // const options = { filters: filters };
 
-    log("Requesting Bluetooth Device...");
+    log('Requesting Bluetooth Device...');
 
     navigator.bluetooth
       .requestDevice(options)
       .then(device => {
-        log("> Name:             " + device.name);
-        log("> Id:               " + device.id);
-        log("> UUIDs:            " + device.uuids.join("\n" + " ".repeat(20)));
-        log("> Connected:        " + device.gatt.connected);
+        log('> Name:             ' + device.name);
+        log('> Id:               ' + device.id);
+        log('> UUIDs:            ' + device.uuids.join('\n' + ' '.repeat(20)));
+        log('> Connected:        ' + device.gatt.connected);
       })
       .catch(error => log(error));
   }

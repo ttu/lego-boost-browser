@@ -1,5 +1,5 @@
-import { EventEmitter } from "../helpers/eventEmitter";
-import { Buffer } from "../helpers/buffer";
+import { EventEmitter } from '../helpers/eventEmitter';
+import { Buffer } from '../helpers/buffer';
 
 export class Hub {
   emitter: EventEmitter<any> = new EventEmitter<any>();
@@ -33,11 +33,11 @@ export class Hub {
     this.autoSubscribe = true;
     this.ports = {};
     this.num2type = {
-      23: "LED",
-      37: "DISTANCE",
-      38: "IMOTOR",
-      39: "MOTOR",
-      40: "TILT"
+      23: 'LED',
+      37: 'DISTANCE',
+      38: 'IMOTOR',
+      39: 'MOTOR',
+      40: 'TILT'
     };
     this.port2num = {
       C: 0x01,
@@ -53,32 +53,32 @@ export class Hub {
       this.num2port[this.port2num[p]] = p;
     });
     this.num2action = {
-      1: "start",
-      5: "conflict",
-      10: "stop"
+      1: 'start',
+      5: 'conflict',
+      10: 'stop'
     };
     this.num2color = {
-      0: "black",
-      3: "blue",
-      5: "green",
-      7: "yellow",
-      9: "red",
-      10: "white"
+      0: 'black',
+      3: 'blue',
+      5: 'green',
+      7: 'yellow',
+      9: 'red',
+      10: 'white'
     };
 
     this.addListeners();
   }
 
   private addListeners() {
-    this.characteristic.addEventListener("gattserverdisconnected", event => {
+    this.characteristic.addEventListener('gattserverdisconnected', event => {
       // @ts-ignore
       this.log(`Device ${event.target.name} is disconnected.`);
 
-      if (this.noReconnect === false) this.emit("disconnected");
+      if (this.noReconnect === false) this.emit('disconnected');
     });
 
     this.characteristic.addEventListener(
-      "characteristicvaluechanged",
+      'characteristicvaluechanged',
       event => {
         // https://googlechrome.github.io/samples/web-bluetooth/read-characteristic-value-changed.html
         // @ts-ignore
@@ -106,20 +106,20 @@ export class Hub {
           }
 
           this.connected = true;
-          this.emit("connect");
+          this.emit('connect');
         }, 1000);
 
         console.log('Found: ' + this.num2type[data[5]]);
 
         if (data[4] === 0x01) {
           this.ports[data[3]] = {
-            type: "port",
+            type: 'port',
             deviceType: this.num2type[data[5]],
             deviceTypeNum: data[5]
           };
         } else if (data[4] === 0x02) {
           this.ports[data[3]] = {
-            type: "group",
+            type: 'group',
             deviceType: this.num2type[data[5]],
             deviceTypeNum: data[5],
             members: [data[7], data[8]]
@@ -144,30 +144,30 @@ export class Hub {
          * @param port.port {string}
          * @param port.action {string}
          */
-        this.emit("port", {
+        this.emit('port', {
           port: this.num2port[data[3]],
           action: this.num2action[data[4]]
         });
         break;
       }
       default:
-        this.log("unknown message type 0x" + data[2].toString(16));
+        this.log('unknown message type 0x' + data[2].toString(16));
         this.log('<', data);
     }
   }
 
   private parseSensor(data: any) {
     if (!this.ports[data[3]]) {
-      this.log("parseSensor unknown port 0x" + data[3].toString(16));
+      this.log('parseSensor unknown port 0x' + data[3].toString(16));
       return;
     }
     switch (this.ports[data[3]].deviceType) {
-      case "DISTANCE": {
+      case 'DISTANCE': {
         /**
          * @event Hub#color
          * @param color {string}
          */
-        this.emit("color", this.num2color[data[4]]);
+        this.emit('color', this.num2color[data[4]]);
 
         // TODO improve distance calculation!
         let distance;
@@ -182,10 +182,10 @@ export class Hub {
          * @event Hub#distance
          * @param distance {number} distance in millimeters
          */
-        this.emit("distance", distance);
+        this.emit('distance', distance);
         break;
       }
-      case "TILT": {
+      case 'TILT': {
         const roll = data.readInt8(4);
         const pitch = data.readInt8(5);
 
@@ -195,11 +195,11 @@ export class Hub {
          * @param tilt.roll {number}
          * @param tilt.pitch {number}
          */
-        this.emit("tilt", { roll, pitch });
+        this.emit('tilt', { roll, pitch });
         break;
       }
-      case "MOTOR":
-      case "IMOTOR": {
+      case 'MOTOR':
+      case 'IMOTOR': {
         const angle = data.readInt32LE(4);
 
         /**
@@ -208,7 +208,7 @@ export class Hub {
          * @param rotation.port {string}
          * @param rotation.angle
          */
-        this.emit("rotation", {
+        this.emit('rotation', {
           port: this.num2port[data[3]],
           angle
         });
@@ -216,7 +216,7 @@ export class Hub {
       }
       default:
         this.log(
-          "unknown sensor type 0x" + data[3].toString(16),
+          'unknown sensor type 0x' + data[3].toString(16),
           data[3],
           this.ports[data[3]].deviceType
         );
@@ -243,11 +243,11 @@ export class Hub {
    * @param {function} [callback]
    */
   motorTime(port, seconds, dutyCycle, callback?) {
-    if (typeof dutyCycle === "function") {
+    if (typeof dutyCycle === 'function') {
       callback = dutyCycle;
       dutyCycle = 100;
     }
-    if (typeof port === "string") {
+    if (typeof port === 'string') {
       port = this.port2num[port];
     }
     this.write(this.encodeMotorTime(port, seconds, dutyCycle), callback);
@@ -278,11 +278,11 @@ export class Hub {
    * @param {function} [callback]
    */
   motorAngle(port, angle, dutyCycle, callback?) {
-    if (typeof dutyCycle === "function") {
+    if (typeof dutyCycle === 'function') {
       callback = dutyCycle;
       dutyCycle = 100;
     }
-    if (typeof port === "string") {
+    if (typeof port === 'string') {
       port = this.port2num[port];
     }
     this.write(this.encodeMotorAngle(port, angle, dutyCycle), callback);
@@ -310,7 +310,7 @@ export class Hub {
 
   //[0x09, 0x00, 0x81, 0x39, 0x11, 0x07, 0x00, 0x64, 0x03]
   encodeMotorPower(port, dutyCycle = 100) {
-    let p = this.port2num[port];
+    const p = this.port2num[port];
     // @ts-ignore
     const buf = Buffer.from([
       0x09,
@@ -350,11 +350,11 @@ export class Hub {
    * @param {function} [callback]
    */
   subscribe(port, option = 0, callback?) {
-    if (typeof option === "function") {
+    if (typeof option === 'function') {
       callback = option;
       option = 0x00;
     }
-    if (typeof port === "string") {
+    if (typeof port === 'string') {
       port = this.port2num[port];
     }
 
@@ -383,11 +383,11 @@ export class Hub {
    * @param {function} [callback]
    */
   unsubscribe(port, option = 0, callback) {
-    if (typeof option === "function") {
+    if (typeof option === 'function') {
       callback = option;
       option = 0x00;
     }
-    if (typeof port === "string") {
+    if (typeof port === 'string') {
       port = this.port2num[port];
     }
     this.write(
@@ -410,13 +410,13 @@ export class Hub {
 
   subscribeAll() {
     Object.keys(this.ports).forEach(port => {
-      if (this.ports[port].deviceType === "DISTANCE") {
+      if (this.ports[port].deviceType === 'DISTANCE') {
         this.subscribe(parseInt(port, 10), 8);
-      } else if (this.ports[port].deviceType === "TILT") {
+      } else if (this.ports[port].deviceType === 'TILT') {
         this.subscribe(parseInt(port, 10), 0);
-      } else if (this.ports[port].deviceType === "IMOTOR") {
+      } else if (this.ports[port].deviceType === 'IMOTOR') {
         this.subscribe(parseInt(port, 10), 2);
-      } else if (this.ports[port].deviceType === "MOTOR") {
+      } else if (this.ports[port].deviceType === 'MOTOR') {
         this.subscribe(parseInt(port, 10), 2);
       }
     });
@@ -429,9 +429,9 @@ export class Hub {
    * @param {function} callback
    */
   write(data, callback?) {
-    if (typeof data === "string") {
+    if (typeof data === 'string') {
       const arr = [];
-      data.split(" ").forEach(c => {
+      data.split(' ').forEach(c => {
         arr.push(parseInt(c, 16));
       });
       // @ts-ignore
@@ -440,9 +440,9 @@ export class Hub {
 
     // Original implementation passed secondArg to define if response is waited
     this.writeCue.push({
-      data: data,
+      data,
       secondArg: true,
-      callback: callback
+      callback
     });
 
     this.writeFromCue();
@@ -450,13 +450,13 @@ export class Hub {
 
   writeFromCue() {
     if (this.writeCue.length > 0 && !this.isWritting) {
-      let el: any = this.writeCue.shift();
+      const el: any = this.writeCue.shift();
       this.isWritting = true;
       this.characteristic
         .writeValue(el.data)
         .then(() => {
           this.isWritting = false;
-          if (typeof el.callback == "function") el.callback();
+          if (typeof el.callback === 'function') el.callback();
           this.writeFromCue();
         })
         .catch(err => {
@@ -561,23 +561,23 @@ export class Hub {
 
   encodeLed(color) {
     if (color === false) {
-      color = "off";
+      color = 'off';
     } else if (color === true) {
-      color = "white";
+      color = 'white';
     }
-    if (typeof color === "string") {
+    if (typeof color === 'string') {
       const colors = [
-        "off",
-        "pink",
-        "purple",
-        "blue",
-        "lightblue",
-        "cyan",
-        "green",
-        "yellow",
-        "orange",
-        "red",
-        "white"
+        'off',
+        'pink',
+        'purple',
+        'blue',
+        'lightblue',
+        'cyan',
+        'green',
+        'yellow',
+        'orange',
+        'red',
+        'white'
       ];
       color = colors.indexOf(color);
     }

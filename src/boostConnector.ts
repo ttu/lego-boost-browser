@@ -1,5 +1,5 @@
-const BOOST_HUB_SERVICE_UUID = "00001623-1212-efde-1623-785feabcd123";
-const BOOST_CHARACTERISTIC_UUID = "00001624-1212-efde-1623-785feabcd123";
+const BOOST_HUB_SERVICE_UUID = '00001623-1212-efde-1623-785feabcd123';
+const BOOST_CHARACTERISTIC_UUID = '00001624-1212-efde-1623-785feabcd123';
 
 export class BoostConnector {
   private static device: BluetoothDevice;
@@ -18,6 +18,7 @@ export class BoostConnector {
     const characteristic = await service.getCharacteristic(
       BOOST_CHARACTERISTIC_UUID
     );
+    
     return characteristic;
   }
 
