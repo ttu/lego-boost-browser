@@ -1,6 +1,5 @@
 import LegoBoost from './legoBoost';
 
-var boost = new LegoBoost();
 const boost = new LegoBoost();
 
 // Add as a window globals, so these can be called from HTML

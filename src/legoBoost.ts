@@ -1,6 +1,4 @@
 import { BoostConnector } from './boostConnector';
-import { Scanner } from './scanner';
-// import { Hub } from './hub/hub';
 import { HubAsync, IConfiguration } from './hub/hubAsync';
 import { HubControl } from './ai/hub-control';
 
