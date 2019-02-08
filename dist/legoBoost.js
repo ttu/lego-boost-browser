@@ -36,11 +36,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var boostConnector_1 = require("./boostConnector");
-// import { Hub } from "./hub/hub";
 var hubAsync_1 = require("./hub/hubAsync");
 var hub_control_1 = require("./ai/hub-control");
 var LegoBoost = /** @class */ (function () {
     function LegoBoost() {
+        /**
+         * Information from Lego Boost motos and sensors
+         * @property LegoBoost#deviceInfo
+         */
         this.deviceInfo = {
             ports: {
                 A: { action: '', angle: 0 },
@@ -57,6 +60,10 @@ var LegoBoost = /** @class */ (function () {
             error: '',
             connected: false
         };
+        /**
+         * Input data to used on manual control
+         * @property LegoBoost#controlData
+         */
         this.controlData = {
             input: null,
             speed: 0,
@@ -66,7 +73,13 @@ var LegoBoost = /** @class */ (function () {
             updateInputMode: null
         };
     }
-    LegoBoost.prototype.connect = function () {
+    /**
+     * Drive forward until wall is reaced or drive backwards 100meters
+     * @method LegoBoost#connect
+     * @param {IConfiguration} configuration Motor configuration
+     * @returns {Promise}
+     */
+    LegoBoost.prototype.connect = function (configuration) {
         return __awaiter(this, void 0, void 0, function () {
             var characteristic, e_1;
             var _this = this;
@@ -77,8 +90,8 @@ var LegoBoost = /** @class */ (function () {
                         return [4 /*yield*/, boostConnector_1.BoostConnector.connect()];
                     case 1:
                         characteristic = _a.sent();
-                        this.hub = new hubAsync_1.HubAsync(characteristic);
-                        this.hub.emitter.on("disconnect", function (evt) { return __awaiter(_this, void 0, void 0, function () {
+                        this.hub = new hubAsync_1.HubAsync(characteristic, configuration);
+                        this.hub.emitter.on('disconnect', function (evt) { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, boostConnector_1.BoostConnector.reconnect()];
@@ -88,12 +101,12 @@ var LegoBoost = /** @class */ (function () {
                                 }
                             });
                         }); });
-                        this.hub.emitter.on("connect", function (evt) { return __awaiter(_this, void 0, void 0, function () {
+                        this.hub.emitter.on('connect', function (evt) { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
                                         this.hub.afterInitialization();
-                                        return [4 /*yield*/, this.hub.ledAsync("purple")];
+                                        return [4 /*yield*/, this.hub.ledAsync('purple')];
                                     case 1:
                                         _a.sent();
                                         return [2 /*return*/];
@@ -110,13 +123,18 @@ var LegoBoost = /** @class */ (function () {
                         return [3 /*break*/, 4];
                     case 3:
                         e_1 = _a.sent();
-                        console.log("Error from connect: " + e_1);
+                        console.log('Error from connect: ' + e_1);
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
             });
         });
     };
+    /**
+     * Change the color of the led between pink and orange
+     * @method LegoBoost#changeLed
+     * @returns {Promise}
+     */
     LegoBoost.prototype.changeLed = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -133,6 +151,12 @@ var LegoBoost = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Drive forward until wall is reaced or drive backwards 100meters
+     * @method LegoBoost#driveToDirection
+     * @param {number} [direction=1] Direction to drive. 1 or positive is forward, 0 or negative is backwards.
+     * @returns {Promise}
+     */
     LegoBoost.prototype.driveToDirection = function (direction) {
         if (direction === void 0) { direction = 1; }
         return __awaiter(this, void 0, void 0, function () {
@@ -150,6 +174,11 @@ var LegoBoost = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Disconnect Lego Boost
+     * @method LegoBoost#disconnect
+     * @returns {Promise<boolean>}
+     */
     LegoBoost.prototype.disconnect = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -164,11 +193,21 @@ var LegoBoost = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Start AI mode
+     * @method LegoBoost#stop
+     * @returns {Promise}
+     */
     LegoBoost.prototype.ai = function () {
         if (!this.hub || this.hub.connected === false)
             return;
         this.hubControl.setNextState('Drive');
     };
+    /**
+     * Stop engines A and B
+     * @method LegoBoost#stop
+     * @returns {Promise}
+     */
     LegoBoost.prototype.stop = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -187,11 +226,28 @@ var LegoBoost = /** @class */ (function () {
         });
     };
     // Methods from Hub
+    /**
+     * Control the LED on the Move Hub
+     * @method LegoBoost#led
+     * @param {boolean|number|string} color
+     * If set to boolean `false` the LED is switched off, if set to `true` the LED will be white.
+     * Possible string values: `off`, `pink`, `purple`, `blue`, `lightblue`, `cyan`, `green`, `yellow`, `orange`, `red`,
+     * `white`
+     */
     LegoBoost.prototype.led = function (color) {
         if (!this.preCheck())
             return;
         this.hub.led(color);
     };
+    /**
+     * Control the LED on the Move Hub
+     * @method LegoBoost#ledAsync
+     * @param {boolean|number|string} color
+     * If set to boolean `false` the LED is switched off, if set to `true` the LED will be white.
+     * Possible string values: `off`, `pink`, `purple`, `blue`, `lightblue`, `cyan`, `green`, `yellow`, `orange`, `red`,
+     * `white`
+     * @returns {Promise}
+     */
     LegoBoost.prototype.ledAsync = function (color) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -205,12 +261,29 @@ var LegoBoost = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Run a motor for specific time
+     * @param {string|number} port possible string values: `A`, `B`, `AB`, `C`, `D`.
+     * @param {number} seconds
+     * @param {number} [dutyCycle=100] motor power percentage from `-100` to `100`. If a negative value is given rotation
+     * is counterclockwise.
+     */
     LegoBoost.prototype.motorTime = function (port, seconds, dutyCycle) {
         if (dutyCycle === void 0) { dutyCycle = 100; }
         if (!this.preCheck())
             return;
         this.hub.motorTime(port, seconds, dutyCycle);
     };
+    /**
+     * Run a motor for specific time
+     * @method LegoBoost#motorTimeAsync
+     * @param {string|number} port possible string values: `A`, `B`, `AB`, `C`, `D`.
+     * @param {number} seconds
+     * @param {number} [dutyCycle=100] motor power percentage from `-100` to `100`. If a negative value is given rotation
+     * is counterclockwise.
+     * @param {boolean} [wait=false] will promise wait unitll motorTime run time has elapsed
+     * @returns {Promise}
+     */
     LegoBoost.prototype.motorTimeAsync = function (port, seconds, dutyCycle, wait) {
         if (dutyCycle === void 0) { dutyCycle = 100; }
         if (wait === void 0) { wait = true; }
@@ -228,6 +301,15 @@ var LegoBoost = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Run both motors (A and B) for specific time
+     * @param {number} seconds
+     * @param {number} dutyCycleA motor power percentage from `-100` to `100`. If a negative value is given rotation
+     * is counterclockwise.
+     * @param {number} dutyCycleB motor power percentage from `-100` to `100`. If a negative value is given rotation
+     * is counterclockwise.
+     * @param {function} callback
+     */
     LegoBoost.prototype.motorTimeMulti = function (seconds, dutyCycleA, dutyCycleB) {
         if (dutyCycleA === void 0) { dutyCycleA = 100; }
         if (dutyCycleB === void 0) { dutyCycleB = 100; }
@@ -235,6 +317,17 @@ var LegoBoost = /** @class */ (function () {
             return;
         this.hub.motorTimeMulti(seconds, dutyCycleA, dutyCycleB);
     };
+    /**
+     * Run both motors (A and B) for specific time
+     * @method LegoBoost#motorTimeMultiAsync
+     * @param {number} seconds
+     * @param {number} [dutyCycleA=100] motor power percentage from `-100` to `100`. If a negative value is given rotation
+     * is counterclockwise.
+     * @param {number} [dutyCycleB=100] motor power percentage from `-100` to `100`. If a negative value is given rotation
+     * is counterclockwise.
+     * @param {boolean} [wait=false] will promise wait unitll motorTime run time has elapsed
+     * @returns {Promise}
+     */
     LegoBoost.prototype.motorTimeMultiAsync = function (seconds, dutyCycleA, dutyCycleB, wait) {
         if (dutyCycleA === void 0) { dutyCycleA = 100; }
         if (dutyCycleB === void 0) { dutyCycleB = 100; }
@@ -253,12 +346,29 @@ var LegoBoost = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Turn a motor by specific angle
+     * @param {string|number} port possible string values: `A`, `B`, `AB`, `C`, `D`.
+     * @param {number} angle - degrees to turn from `0` to `2147483647`
+     * @param {number} [dutyCycle=100] motor power percentage from `-100` to `100`. If a negative value is given
+     * rotation is counterclockwise.
+     */
     LegoBoost.prototype.motorAngle = function (port, angle, dutyCycle) {
         if (dutyCycle === void 0) { dutyCycle = 100; }
         if (!this.preCheck())
             return;
         this.hub.motorAngle(port, angle, dutyCycle);
     };
+    /**
+     * Turn a motor by specific angle
+     * @method LegoBoost#motorAngleAsync
+     * @param {string|number} port possible string values: `A`, `B`, `AB`, `C`, `D`.
+     * @param {number} angle - degrees to turn from `0` to `2147483647`
+     * @param {number} [dutyCycle=100] motor power percentage from `-100` to `100`. If a negative value is given
+     * rotation is counterclockwise.
+     * @param {boolean} [wait=false] will promise wait unitll motorAngle has turned
+     * @returns {Promise}
+     */
     LegoBoost.prototype.motorAngleAsync = function (port, angle, dutyCycle, wait) {
         if (dutyCycle === void 0) { dutyCycle = 100; }
         if (wait === void 0) { wait = true; }
@@ -276,6 +386,15 @@ var LegoBoost = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Turn both motors (A and B) by specific angle
+     * @method LegoBoost#motorAngleMulti
+     * @param {number} angle degrees to turn from `0` to `2147483647`
+     * @param {number} dutyCycleA motor power percentage from `-100` to `100`. If a negative value is given
+     * rotation is counterclockwise.
+     * @param {number} dutyCycleB motor power percentage from `-100` to `100`. If a negative value is given
+     * rotation is counterclockwise.
+     */
     LegoBoost.prototype.motorAngleMulti = function (angle, dutyCycleA, dutyCycleB) {
         if (dutyCycleA === void 0) { dutyCycleA = 100; }
         if (dutyCycleB === void 0) { dutyCycleB = 100; }
@@ -283,6 +402,17 @@ var LegoBoost = /** @class */ (function () {
             return;
         this.hub.motorAngleMulti(angle, dutyCycleA, dutyCycleB);
     };
+    /**
+     * Turn both motors (A and B) by specific angle
+     * @method LegoBoost#motorAngleMultiAsync
+     * @param {number} angle degrees to turn from `0` to `2147483647`
+     * @param {number} [dutyCycleA=100] motor power percentage from `-100` to `100`. If a negative value is given
+     * rotation is counterclockwise.
+     * @param {number} [dutyCycleB=100] motor power percentage from `-100` to `100`. If a negative value is given
+     * rotation is counterclockwise.
+     * @param {boolean} [wait=false] will promise wait unitll motorAngle has turned
+     * @returns {Promise}
+     */
     LegoBoost.prototype.motorAngleMultiAsync = function (angle, dutyCycleA, dutyCycleB, wait) {
         if (dutyCycleA === void 0) { dutyCycleA = 100; }
         if (dutyCycleB === void 0) { dutyCycleB = 100; }
@@ -301,6 +431,13 @@ var LegoBoost = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Drive specified distance
+     * @method LegoBoost#drive
+     * @param {number} distance distance in centimeters (default) or inches. Positive is forward and negative is backward.
+     * @param {boolean} [wait=true] will promise wait untill the drive has completed.
+     * @returns {Promise}
+     */
     LegoBoost.prototype.drive = function (distance, wait) {
         if (wait === void 0) { wait = true; }
         return __awaiter(this, void 0, void 0, function () {
@@ -315,6 +452,13 @@ var LegoBoost = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Turn robot specified degrees
+     * @method LegoBoost#turn
+     * @param {number} degrees degrees to turn. Negative is to the left and positive to the right.
+     * @param {boolean} [wait=true] will promise wait untill the turn has completed.
+     * @returns {Promise}
+     */
     LegoBoost.prototype.turn = function (degrees, wait) {
         if (wait === void 0) { wait = true; }
         return __awaiter(this, void 0, void 0, function () {
@@ -329,6 +473,14 @@ var LegoBoost = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Drive untill sensor shows object in defined distance
+     * @method LegoBoost#driveUntil
+     * @param {number} [distance=0] distance in centimeters (default) or inches when to stop. Distance sensor is not very sensitive or accurate.
+     * By default will stop when sensor notices wall for the first time. Sensor distance values are usualy between 110-50.
+     * @param {boolean} [wait=true] will promise wait untill the bot will stop.
+     * @returns {Promise}
+     */
     LegoBoost.prototype.driveUntil = function (distance, wait) {
         if (distance === void 0) { distance = 0; }
         if (wait === void 0) { wait = true; }
@@ -344,6 +496,13 @@ var LegoBoost = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Turn until there is no object in sensors sight
+     * @method LegoBoost#turnUntil
+     * @param {number} [direction=1] direction to turn to. 1 (or any positive) is to the right and 0 (or any negative) is to the left.
+     * @param {boolean} [wait=true] will promise wait untill the bot will stop.
+     * @returns {Promise}
+     */
     LegoBoost.prototype.turnUntil = function (direction, wait) {
         if (direction === void 0) { direction = 1; }
         if (wait === void 0) { wait = true; }

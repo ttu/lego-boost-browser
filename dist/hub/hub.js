@@ -14,11 +14,11 @@ var Hub = /** @class */ (function () {
         this.autoSubscribe = true;
         this.ports = {};
         this.num2type = {
-            23: "LED",
-            37: "DISTANCE",
-            38: "IMOTOR",
-            39: "MOTOR",
-            40: "TILT"
+            23: 'LED',
+            37: 'DISTANCE',
+            38: 'IMOTOR',
+            39: 'MOTOR',
+            40: 'TILT'
         };
         this.port2num = {
             C: 0x01,
@@ -34,17 +34,17 @@ var Hub = /** @class */ (function () {
             _this.num2port[_this.port2num[p]] = p;
         });
         this.num2action = {
-            1: "start",
-            5: "conflict",
-            10: "stop"
+            1: 'start',
+            5: 'conflict',
+            10: 'stop'
         };
         this.num2color = {
-            0: "black",
-            3: "blue",
-            5: "green",
-            7: "yellow",
-            9: "red",
-            10: "white"
+            0: 'black',
+            3: 'blue',
+            5: 'green',
+            7: 'yellow',
+            9: 'red',
+            10: 'white'
         };
         this.addListeners();
     }
@@ -54,13 +54,13 @@ var Hub = /** @class */ (function () {
     };
     Hub.prototype.addListeners = function () {
         var _this = this;
-        this.characteristic.addEventListener("gattserverdisconnected", function (event) {
+        this.characteristic.addEventListener('gattserverdisconnected', function (event) {
             // @ts-ignore
             _this.log("Device " + event.target.name + " is disconnected.");
             if (_this.noReconnect === false)
-                _this.emit("disconnected");
+                _this.emit('disconnected');
         });
-        this.characteristic.addEventListener("characteristicvaluechanged", function (event) {
+        this.characteristic.addEventListener('characteristicvaluechanged', function (event) {
             // https://googlechrome.github.io/samples/web-bluetooth/read-characteristic-value-changed.html
             // @ts-ignore
             var data = buffer_1.Buffer.from(event.target.value.buffer);
@@ -85,19 +85,19 @@ var Hub = /** @class */ (function () {
                         _this.subscribeAll();
                     }
                     _this.connected = true;
-                    _this.emit("connect");
+                    _this.emit('connect');
                 }, 1000);
                 console.log('Found: ' + this.num2type[data[5]]);
                 if (data[4] === 0x01) {
                     this.ports[data[3]] = {
-                        type: "port",
+                        type: 'port',
                         deviceType: this.num2type[data[5]],
                         deviceTypeNum: data[5]
                     };
                 }
                 else if (data[4] === 0x02) {
                     this.ports[data[3]] = {
-                        type: "group",
+                        type: 'group',
                         deviceType: this.num2type[data[5]],
                         deviceTypeNum: data[5],
                         members: [data[7], data[8]]
@@ -122,29 +122,29 @@ var Hub = /** @class */ (function () {
                  * @param port.port {string}
                  * @param port.action {string}
                  */
-                this.emit("port", {
+                this.emit('port', {
                     port: this.num2port[data[3]],
                     action: this.num2action[data[4]]
                 });
                 break;
             }
             default:
-                this.log("unknown message type 0x" + data[2].toString(16));
+                this.log('unknown message type 0x' + data[2].toString(16));
                 this.log('<', data);
         }
     };
     Hub.prototype.parseSensor = function (data) {
         if (!this.ports[data[3]]) {
-            this.log("parseSensor unknown port 0x" + data[3].toString(16));
+            this.log('parseSensor unknown port 0x' + data[3].toString(16));
             return;
         }
         switch (this.ports[data[3]].deviceType) {
-            case "DISTANCE": {
+            case 'DISTANCE': {
                 /**
                  * @event Hub#color
                  * @param color {string}
                  */
-                this.emit("color", this.num2color[data[4]]);
+                this.emit('color', this.num2color[data[4]]);
                 // TODO improve distance calculation!
                 var distance = void 0;
                 if (data[7] > 0 && data[5] < 2) {
@@ -160,10 +160,10 @@ var Hub = /** @class */ (function () {
                  * @event Hub#distance
                  * @param distance {number} distance in millimeters
                  */
-                this.emit("distance", distance);
+                this.emit('distance', distance);
                 break;
             }
-            case "TILT": {
+            case 'TILT': {
                 var roll = data.readInt8(4);
                 var pitch = data.readInt8(5);
                 /**
@@ -172,11 +172,11 @@ var Hub = /** @class */ (function () {
                  * @param tilt.roll {number}
                  * @param tilt.pitch {number}
                  */
-                this.emit("tilt", { roll: roll, pitch: pitch });
+                this.emit('tilt', { roll: roll, pitch: pitch });
                 break;
             }
-            case "MOTOR":
-            case "IMOTOR": {
+            case 'MOTOR':
+            case 'IMOTOR': {
                 var angle = data.readInt32LE(4);
                 /**
                  * @event Hub#rotation
@@ -184,14 +184,14 @@ var Hub = /** @class */ (function () {
                  * @param rotation.port {string}
                  * @param rotation.angle
                  */
-                this.emit("rotation", {
+                this.emit('rotation', {
                     port: this.num2port[data[3]],
                     angle: angle
                 });
                 break;
             }
             default:
-                this.log("unknown sensor type 0x" + data[3].toString(16), data[3], this.ports[data[3]].deviceType);
+                this.log('unknown sensor type 0x' + data[3].toString(16), data[3], this.ports[data[3]].deviceType);
         }
     };
     /**
@@ -213,11 +213,11 @@ var Hub = /** @class */ (function () {
      * @param {function} [callback]
      */
     Hub.prototype.motorTime = function (port, seconds, dutyCycle, callback) {
-        if (typeof dutyCycle === "function") {
+        if (typeof dutyCycle === 'function') {
             callback = dutyCycle;
             dutyCycle = 100;
         }
-        if (typeof port === "string") {
+        if (typeof port === 'string') {
             port = this.port2num[port];
         }
         this.write(this.encodeMotorTime(port, seconds, dutyCycle), callback);
@@ -243,11 +243,11 @@ var Hub = /** @class */ (function () {
      * @param {function} [callback]
      */
     Hub.prototype.motorAngle = function (port, angle, dutyCycle, callback) {
-        if (typeof dutyCycle === "function") {
+        if (typeof dutyCycle === 'function') {
             callback = dutyCycle;
             dutyCycle = 100;
         }
-        if (typeof port === "string") {
+        if (typeof port === 'string') {
             port = this.port2num[port];
         }
         this.write(this.encodeMotorAngle(port, angle, dutyCycle), callback);
@@ -308,11 +308,11 @@ var Hub = /** @class */ (function () {
      */
     Hub.prototype.subscribe = function (port, option, callback) {
         if (option === void 0) { option = 0; }
-        if (typeof option === "function") {
+        if (typeof option === 'function') {
             callback = option;
             option = 0x00;
         }
-        if (typeof port === "string") {
+        if (typeof port === 'string') {
             port = this.port2num[port];
         }
         this.write(
@@ -338,11 +338,11 @@ var Hub = /** @class */ (function () {
      */
     Hub.prototype.unsubscribe = function (port, option, callback) {
         if (option === void 0) { option = 0; }
-        if (typeof option === "function") {
+        if (typeof option === 'function') {
             callback = option;
             option = 0x00;
         }
-        if (typeof port === "string") {
+        if (typeof port === 'string') {
             port = this.port2num[port];
         }
         this.write(
@@ -363,16 +363,16 @@ var Hub = /** @class */ (function () {
     Hub.prototype.subscribeAll = function () {
         var _this = this;
         Object.keys(this.ports).forEach(function (port) {
-            if (_this.ports[port].deviceType === "DISTANCE") {
+            if (_this.ports[port].deviceType === 'DISTANCE') {
                 _this.subscribe(parseInt(port, 10), 8);
             }
-            else if (_this.ports[port].deviceType === "TILT") {
+            else if (_this.ports[port].deviceType === 'TILT') {
                 _this.subscribe(parseInt(port, 10), 0);
             }
-            else if (_this.ports[port].deviceType === "IMOTOR") {
+            else if (_this.ports[port].deviceType === 'IMOTOR') {
                 _this.subscribe(parseInt(port, 10), 2);
             }
-            else if (_this.ports[port].deviceType === "MOTOR") {
+            else if (_this.ports[port].deviceType === 'MOTOR') {
                 _this.subscribe(parseInt(port, 10), 2);
             }
         });
@@ -384,9 +384,9 @@ var Hub = /** @class */ (function () {
      * @param {function} callback
      */
     Hub.prototype.write = function (data, callback) {
-        if (typeof data === "string") {
+        if (typeof data === 'string') {
             var arr_1 = [];
-            data.split(" ").forEach(function (c) {
+            data.split(' ').forEach(function (c) {
                 arr_1.push(parseInt(c, 16));
             });
             // @ts-ignore
@@ -409,7 +409,7 @@ var Hub = /** @class */ (function () {
                 .writeValue(el_1.data)
                 .then(function () {
                 _this.isWritting = false;
-                if (typeof el_1.callback == "function")
+                if (typeof el_1.callback === 'function')
                     el_1.callback();
                 _this.writeFromCue();
             })
@@ -516,24 +516,24 @@ var Hub = /** @class */ (function () {
     };
     Hub.prototype.encodeLed = function (color) {
         if (color === false) {
-            color = "off";
+            color = 'off';
         }
         else if (color === true) {
-            color = "white";
+            color = 'white';
         }
-        if (typeof color === "string") {
+        if (typeof color === 'string') {
             var colors = [
-                "off",
-                "pink",
-                "purple",
-                "blue",
-                "lightblue",
-                "cyan",
-                "green",
-                "yellow",
-                "orange",
-                "red",
-                "white"
+                'off',
+                'pink',
+                'purple',
+                'blue',
+                'lightblue',
+                'cyan',
+                'green',
+                'yellow',
+                'orange',
+                'red',
+                'white'
             ];
             color = colors.indexOf(color);
         }

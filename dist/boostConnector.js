@@ -35,8 +35,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var BOOST_HUB_SERVICE_UUID = "00001623-1212-efde-1623-785feabcd123";
-var BOOST_CHARACTERISTIC_UUID = "00001624-1212-efde-1623-785feabcd123";
+var BOOST_HUB_SERVICE_UUID = '00001623-1212-efde-1623-785feabcd123';
+var BOOST_CHARACTERISTIC_UUID = '00001624-1212-efde-1623-785feabcd123';
 var BoostConnector = /** @class */ (function () {
     function BoostConnector() {
     }

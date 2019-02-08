@@ -7,14 +7,14 @@ var EventEmitter = /** @class */ (function () {
     }
     EventEmitter.prototype.on = function (event, listener) {
         var _this = this;
-        if (typeof this.events[event] !== "object") {
+        if (typeof this.events[event] !== 'object') {
             this.events[event] = [];
         }
         this.events[event].push(listener);
         return function () { return _this.removeListener(event, listener); };
     };
     EventEmitter.prototype.removeListener = function (event, listener) {
-        if (typeof this.events[event] !== "object") {
+        if (typeof this.events[event] !== 'object') {
             return;
         }
         var idx = this.events[event].indexOf(listener);
@@ -34,7 +34,7 @@ var EventEmitter = /** @class */ (function () {
         for (var _i = 1; _i < arguments.length; _i++) {
             args[_i - 1] = arguments[_i];
         }
-        if (typeof this.events[event] !== "object") {
+        if (typeof this.events[event] !== 'object') {
             return;
         }
         this.events[event].slice().forEach(function (listener) { return listener.apply(_this, args); });

@@ -1,16 +1,34 @@
-import { Hub } from "./hub";
+/// <reference types="web-bluetooth" />
+import { Hub } from './hub';
+export interface IConfiguration {
+    distanceModifier?: any;
+    turnModifier?: any;
+    defaultClearDistance?: any;
+    defaultStopDistance?: any;
+    leftMotor?: string;
+    rightMotor?: string;
+    driveSpeed?: number;
+    turnSpeed?: number;
+}
 export declare class HubAsync extends Hub {
+    hubDisconnected: boolean;
+    configuration: IConfiguration;
+    portData: any;
+    useMetric: boolean;
+    modifier: number;
+    distance: number;
+    constructor(charasteristics: BluetoothRemoteGATTCharacteristic, configuration: IConfiguration);
     /**
      * Disconnect Hub
      * @method Hub#disconnectAsync
      * @returns {Promise<boolean>} disconnection successful
      */
-    disconnectAsync: () => any;
+    disconnectAsync(): any;
     /**
      * Execute this method after new instance of Hub is created
      * @method Hub#afterInitialization
      */
-    afterInitialization: () => void;
+    afterInitialization(): void;
     /**
      * Control the LED on the Move Hub
      * @method Hub#ledAsync
@@ -20,7 +38,7 @@ export declare class HubAsync extends Hub {
      * `white`
      * @returns {Promise}
      */
-    ledAsync: (color: any) => Promise<{}>;
+    ledAsync(color: any): Promise<{}>;
     /**
      * Run a motor for specific time
      * @method Hub#motorTimeAsync
@@ -31,7 +49,7 @@ export declare class HubAsync extends Hub {
      * @param {boolean} [wait=false] will promise wait unitll motorTime run time has elapsed
      * @returns {Promise}
      */
-    motorTimeAsync: (port: any, seconds: any, dutyCycle?: number, wait?: boolean) => Promise<{}>;
+    motorTimeAsync(port: any, seconds: any, dutyCycle?: number, wait?: boolean): Promise<{}>;
     /**
      * Run both motors (A and B) for specific time
      * @method Hub#motorTimeMultiAsync
@@ -43,7 +61,7 @@ export declare class HubAsync extends Hub {
      * @param {boolean} [wait=false] will promise wait unitll motorTime run time has elapsed
      * @returns {Promise}
      */
-    motorTimeMultiAsync: (seconds: any, dutyCycleA?: number, dutyCycleB?: number, wait?: boolean) => Promise<{}>;
+    motorTimeMultiAsync(seconds: any, dutyCycleA?: number, dutyCycleB?: number, wait?: boolean): Promise<{}>;
     /**
      * Turn a motor by specific angle
      * @method Hub#motorAngleAsync
@@ -54,7 +72,7 @@ export declare class HubAsync extends Hub {
      * @param {boolean} [wait=false] will promise wait unitll motorAngle has turned
      * @returns {Promise}
      */
-    motorAngleAsync: (port: any, angle: any, dutyCycle?: number, wait?: boolean) => Promise<{}>;
+    motorAngleAsync(port: any, angle: any, dutyCycle?: number, wait?: boolean): Promise<{}>;
     /**
      * Turn both motors (A and B) by specific angle
      * @method Hub#motorAngleMultiAsync
@@ -66,23 +84,23 @@ export declare class HubAsync extends Hub {
      * @param {boolean} [wait=false] will promise wait unitll motorAngle has turned
      * @returns {Promise}
      */
-    motorAngleMultiAsync: (angle: any, dutyCycleA?: number, dutyCycleB?: number, wait?: boolean) => Promise<{}>;
+    motorAngleMultiAsync(angle: any, dutyCycleA?: number, dutyCycleB?: number, wait?: boolean): Promise<{}>;
     /**
      * Use metric units (default)
      * @method Hub#useMetricUnits
      */
-    useMetricUnits: () => void;
+    useMetricUnits(): void;
     /**
      * Use imperial units
      * @method Hub#useImperialUnits
      */
-    useImperialUnits: () => void;
+    useImperialUnits(): void;
     /**
      * Set friction modifier
      * @method Hub#setFrictionModifier
      * @param {number} modifier friction modifier
      */
-    setFrictionModifier: (modifier: any) => void;
+    setFrictionModifier(modifier: any): void;
     /**
      * Drive specified distance
      * @method Hub#drive
@@ -90,7 +108,7 @@ export declare class HubAsync extends Hub {
      * @param {boolean} [wait=true] will promise wait untill the drive has completed.
      * @returns {Promise}
      */
-    drive: (distance: any, wait?: boolean) => any;
+    drive(distance: any, wait?: boolean): Promise<{}>;
     /**
      * Turn robot specified degrees
      * @method Hub#turn
@@ -98,7 +116,7 @@ export declare class HubAsync extends Hub {
      * @param {boolean} [wait=true] will promise wait untill the turn has completed.
      * @returns {Promise}
      */
-    turn: (degrees: any, wait?: boolean) => any;
+    turn(degrees: any, wait?: boolean): Promise<{}>;
     /**
      * Drive untill sensor shows object in defined distance
      * @method Hub#driveUntil
@@ -107,7 +125,7 @@ export declare class HubAsync extends Hub {
      * @param {boolean} [wait=true] will promise wait untill the bot will stop.
      * @returns {Promise}
      */
-    driveUntil: (distance?: number, wait?: boolean) => Promise<any>;
+    driveUntil(distance?: number, wait?: boolean): Promise<any>;
     /**
      * Turn until there is no object in sensors sight
      * @method Hub#turnUntil
@@ -115,6 +133,6 @@ export declare class HubAsync extends Hub {
      * @param {boolean} [wait=true] will promise wait untill the bot will stop.
      * @returns {Promise}
      */
-    turnUntil: (direction?: number, wait?: boolean) => Promise<any>;
+    turnUntil(direction?: number, wait?: boolean): Promise<any>;
 }
 //# sourceMappingURL=hubAsync.d.ts.map

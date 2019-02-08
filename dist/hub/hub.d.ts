@@ -1,5 +1,5 @@
 /// <reference types="web-bluetooth" />
-import { EventEmitter } from "../helpers/eventEmitter";
+import { EventEmitter } from '../helpers/eventEmitter';
 export declare class Hub {
     emitter: EventEmitter<any>;
     characteristic: BluetoothRemoteGATTCharacteristic;
