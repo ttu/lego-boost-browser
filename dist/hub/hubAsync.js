@@ -50,7 +50,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var hub_1 = require("./hub");
 var CALLBACK_TIMEOUT_MS = 1000 / 3;
-var DEFAULT_CONFIG = {
+exports.DEFAULT_CONFIG = {
     METRIC_MODIFIER: 28.5,
     TURN_MODIFIER: 2.56,
     DRIVE_SPEED: 25,
@@ -72,8 +72,8 @@ var DEFAULT_CONFIG = {
 // const RIGHT_MOTOR = 'A';
 // const VALID_MOTORS = ['A', 'B'];
 var validateConfiguration = function (configuration) {
-    configuration.leftMotor = configuration.leftMotor || DEFAULT_CONFIG.LEFT_MOTOR;
-    configuration.rightMotor = configuration.rightMotor || DEFAULT_CONFIG.RIGHT_MOTOR;
+    configuration.leftMotor = configuration.leftMotor || exports.DEFAULT_CONFIG.LEFT_MOTOR;
+    configuration.rightMotor = configuration.rightMotor || exports.DEFAULT_CONFIG.RIGHT_MOTOR;
     // @ts-ignore
     if (!VALID_MOTORS.includes(configuration.leftMotor))
         throw Error('Define left port port correctly');
@@ -82,12 +82,12 @@ var validateConfiguration = function (configuration) {
         throw Error('Define right port port correctly');
     if (configuration.leftMotor === configuration.rightMotor)
         throw Error('Left and right motor can not be same');
-    configuration.distanceModifier = configuration.distanceModifier || DEFAULT_CONFIG.METRIC_MODIFIER;
-    configuration.turnModifier = configuration.turnModifier || DEFAULT_CONFIG.TURN_MODIFIER;
-    configuration.driveSpeed = configuration.driveSpeed || DEFAULT_CONFIG.DRIVE_SPEED;
-    configuration.turnSpeed = configuration.turnSpeed || DEFAULT_CONFIG.TURN_SPEED;
-    configuration.defaultStopDistance = configuration.defaultStopDistance || DEFAULT_CONFIG.DEFAULT_STOP_DISTANCE;
-    configuration.defaultClearDistance = configuration.defaultClearDistance || DEFAULT_CONFIG.DEFAULT_CLEAR_DISTANCE;
+    configuration.distanceModifier = configuration.distanceModifier || exports.DEFAULT_CONFIG.METRIC_MODIFIER;
+    configuration.turnModifier = configuration.turnModifier || exports.DEFAULT_CONFIG.TURN_MODIFIER;
+    configuration.driveSpeed = configuration.driveSpeed || exports.DEFAULT_CONFIG.DRIVE_SPEED;
+    configuration.turnSpeed = configuration.turnSpeed || exports.DEFAULT_CONFIG.TURN_SPEED;
+    configuration.defaultStopDistance = configuration.defaultStopDistance || exports.DEFAULT_CONFIG.DEFAULT_STOP_DISTANCE;
+    configuration.defaultClearDistance = configuration.defaultClearDistance || exports.DEFAULT_CONFIG.DEFAULT_CLEAR_DISTANCE;
 };
 var waitForValueToSet = function (valueName, compareFunc, timeoutMs) {
     var _this = this;

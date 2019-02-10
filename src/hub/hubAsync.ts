@@ -2,7 +2,7 @@ import { Hub } from './hub';
 
 const CALLBACK_TIMEOUT_MS = 1000 / 3;
 
-const DEFAULT_CONFIG = {
+export const DEFAULT_CONFIG = {
   METRIC_MODIFIER: 28.5,
   TURN_MODIFIER: 2.56,
   DRIVE_SPEED: 25,

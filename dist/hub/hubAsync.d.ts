@@ -1,5 +1,16 @@
 /// <reference types="web-bluetooth" />
 import { Hub } from './hub';
+export declare const DEFAULT_CONFIG: {
+    METRIC_MODIFIER: number;
+    TURN_MODIFIER: number;
+    DRIVE_SPEED: number;
+    TURN_SPEED: number;
+    DEFAULT_STOP_DISTANCE: number;
+    DEFAULT_CLEAR_DISTANCE: number;
+    LEFT_MOTOR: string;
+    RIGHT_MOTOR: string;
+    VALID_MOTORS: string[];
+};
 export interface IConfiguration {
     distanceModifier?: any;
     turnModifier?: any;
