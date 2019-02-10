@@ -9,8 +9,8 @@ export const DEFAULT_CONFIG = {
   TURN_SPEED: 20,
   DEFAULT_STOP_DISTANCE: 105,
   DEFAULT_CLEAR_DISTANCE: 120,
-  LEFT_MOTOR: 'B',
-  RIGHT_MOTOR: 'A',
+  LEFT_MOTOR: 'A',
+  RIGHT_MOTOR: 'B',
   VALID_MOTORS: ['A', 'B']
 }
 
@@ -32,11 +32,11 @@ const validateConfiguration = (configuration : IConfiguration) => {
   configuration.rightMotor = configuration.rightMotor || DEFAULT_CONFIG.RIGHT_MOTOR;
 
   // @ts-ignore
-  if (!VALID_MOTORS.includes(configuration.leftMotor))
+  if (!DEFAULT_CONFIG.VALID_MOTORS.includes(configuration.leftMotor))
     throw Error('Define left port port correctly');
 
   // @ts-ignore
-  if (!VALID_MOTORS.includes(configuration.rightMotor))
+  if (!DEFAULT_CONFIG.VALID_MOTORS.includes(configuration.rightMotor))
     throw Error('Define right port port correctly');
 
   if (configuration.leftMotor === configuration.rightMotor)

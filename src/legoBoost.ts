@@ -47,7 +47,7 @@ export default class LegoBoost {
    * @param {IConfiguration} configuration Motor configuration
    * @returns {Promise}
    */
-  async connect(configuration?: IConfiguration): Promise<void> {
+  async connect(configuration: IConfiguration = {}): Promise<void> {
     try {
       const characteristic = await BoostConnector.connect();
       this.hub = new HubAsync(characteristic, configuration);

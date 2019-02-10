@@ -57,8 +57,8 @@ exports.DEFAULT_CONFIG = {
     TURN_SPEED: 20,
     DEFAULT_STOP_DISTANCE: 105,
     DEFAULT_CLEAR_DISTANCE: 120,
-    LEFT_MOTOR: 'B',
-    RIGHT_MOTOR: 'A',
+    LEFT_MOTOR: 'A',
+    RIGHT_MOTOR: 'B',
     VALID_MOTORS: ['A', 'B']
 };
 // const METRIC_MODIFIER = 28.5;
@@ -75,10 +75,10 @@ var validateConfiguration = function (configuration) {
     configuration.leftMotor = configuration.leftMotor || exports.DEFAULT_CONFIG.LEFT_MOTOR;
     configuration.rightMotor = configuration.rightMotor || exports.DEFAULT_CONFIG.RIGHT_MOTOR;
     // @ts-ignore
-    if (!VALID_MOTORS.includes(configuration.leftMotor))
+    if (!exports.DEFAULT_CONFIG.VALID_MOTORS.includes(configuration.leftMotor))
         throw Error('Define left port port correctly');
     // @ts-ignore
-    if (!VALID_MOTORS.includes(configuration.rightMotor))
+    if (!exports.DEFAULT_CONFIG.VALID_MOTORS.includes(configuration.rightMotor))
         throw Error('Define right port port correctly');
     if (configuration.leftMotor === configuration.rightMotor)
         throw Error('Left and right motor can not be same');

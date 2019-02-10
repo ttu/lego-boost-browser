@@ -80,6 +80,7 @@ var LegoBoost = /** @class */ (function () {
      * @returns {Promise}
      */
     LegoBoost.prototype.connect = function (configuration) {
+        if (configuration === void 0) { configuration = {}; }
         return __awaiter(this, void 0, void 0, function () {
             var characteristic, e_1;
             var _this = this;
