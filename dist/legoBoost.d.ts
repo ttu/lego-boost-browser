@@ -3,6 +3,7 @@ export default class LegoBoost {
     private hub;
     private hubControl;
     private color;
+    private updateTimer;
     /**
      * Information from Lego Boost motos and sensors
      * @property LegoBoost#deviceInfo

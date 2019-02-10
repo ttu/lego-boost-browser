@@ -6,6 +6,7 @@ export default class LegoBoost {
   private hub: HubAsync;
   private hubControl: HubControl;
   private color: string;
+  private updateTimer: number;
 
   /**
    * Information from Lego Boost motos and sensors
@@ -53,17 +54,18 @@ export default class LegoBoost {
       this.hub = new HubAsync(characteristic, configuration);
 
       this.hub.emitter.on('disconnect', async evt => {
-        await BoostConnector.reconnect();
+        // await BoostConnector.reconnect();
       });
 
       this.hub.emitter.on('connect', async evt => {
         this.hub.afterInitialization();
-        await this.hub.ledAsync('purple');
+        await this.hub.ledAsync('white');
       });
 
       this.hubControl = new HubControl(this.deviceInfo, this.controlData);
       await this.hubControl.start(this.hub);
-      setInterval(() => {
+      
+      this.updateTimer = setInterval(() => {
         this.hubControl.update();
       }, 100);
 
@@ -105,7 +107,13 @@ export default class LegoBoost {
   async disconnect(): Promise<boolean> {
     if (!this.hub || this.hub.connected === false) return;
     this.hub.disconnect();
-    return await BoostConnector.disconnect();
+    var success = await BoostConnector.disconnect();
+    // TODO: gatt event gattserverdisconnected is not fired so change connected manually
+    this.deviceInfo.connected = !success;
+    if (success) {
+      clearInterval(this.updateTimer);
+    }
+    return success;
   }
 
   /**

@@ -374,19 +374,19 @@ var HubAsync = /** @class */ (function (_super) {
         if (distance === void 0) { distance = 0; }
         if (wait === void 0) { wait = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var distanceCheck;
+            var distanceCheck, direction, compareFunc;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         distanceCheck = distance !== 0
-                            ? this.useMetric
-                                ? distance
-                                : distance * 2.54
+                            ? (this.useMetric ? distance : distance * 2.54)
                             : this.configuration.defaultStopDistance;
-                        this.motorTimeMulti(60, this.configuration.driveSpeed, this.configuration.driveSpeed);
+                        direction = this.configuration.leftMotor === 'A' ? 1 : -1;
+                        compareFunc = direction === 1 ? function () { return distanceCheck >= _this.distance; } : function () { return distanceCheck <= _this.distance; };
+                        this.motorTimeMulti(60, this.configuration.driveSpeed * direction, this.configuration.driveSpeed * direction);
                         if (!wait) return [3 /*break*/, 3];
-                        return [4 /*yield*/, waitForValueToSet.bind(this)('distance', function () { return distanceCheck >= _this.distance; })];
+                        return [4 /*yield*/, waitForValueToSet.bind(this)('distance', compareFunc)];
                     case 1:
                         _a.sent();
                         return [4 /*yield*/, this.motorAngleMultiAsync(0)];
@@ -394,7 +394,7 @@ var HubAsync = /** @class */ (function (_super) {
                         _a.sent();
                         return [3 /*break*/, 4];
                     case 3: return [2 /*return*/, waitForValueToSet
-                            .bind(this)('distance', function () { return distanceCheck >= _this.distance; })
+                            .bind(this)('distance', compareFunc)
                             .then(function (_) { return _this.motorAngleMulti(0, 0, 0); })];
                     case 4: return [2 /*return*/];
                 }

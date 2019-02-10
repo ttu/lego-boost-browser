@@ -313,20 +313,17 @@ export class HubAsync extends Hub {
   async driveUntil(distance = 0, wait = true) {
     const distanceCheck =
       distance !== 0
-        ? this.useMetric
-          ? distance
-          : distance * 2.54
+        ? (this.useMetric ? distance : distance * 2.54)
         : this.configuration.defaultStopDistance;
-    this.motorTimeMulti(60, this.configuration.driveSpeed, this.configuration.driveSpeed);
+    const direction = this.configuration.leftMotor === 'A' ? 1 : -1;
+    const compareFunc = direction === 1 ? () => distanceCheck >= this.distance : () => distanceCheck <= this.distance;
+    this.motorTimeMulti(60, this.configuration.driveSpeed * direction, this.configuration.driveSpeed * direction);
     if (wait) {
-      await waitForValueToSet.bind(this)(
-        'distance',
-        () => distanceCheck >= this.distance
-      );
+      await waitForValueToSet.bind(this)('distance', compareFunc);
       await this.motorAngleMultiAsync(0);
     } else {
       return waitForValueToSet
-        .bind(this)('distance', () => distanceCheck >= this.distance)
+        .bind(this)('distance', compareFunc)
         .then(_ => this.motorAngleMulti(0, 0, 0));
     }
   };

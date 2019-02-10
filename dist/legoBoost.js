@@ -94,12 +94,7 @@ var LegoBoost = /** @class */ (function () {
                         this.hub = new hubAsync_1.HubAsync(characteristic, configuration);
                         this.hub.emitter.on('disconnect', function (evt) { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4 /*yield*/, boostConnector_1.BoostConnector.reconnect()];
-                                    case 1:
-                                        _a.sent();
-                                        return [2 /*return*/];
-                                }
+                                return [2 /*return*/];
                             });
                         }); });
                         this.hub.emitter.on('connect', function (evt) { return __awaiter(_this, void 0, void 0, function () {
@@ -107,7 +102,7 @@ var LegoBoost = /** @class */ (function () {
                                 switch (_a.label) {
                                     case 0:
                                         this.hub.afterInitialization();
-                                        return [4 /*yield*/, this.hub.ledAsync('purple')];
+                                        return [4 /*yield*/, this.hub.ledAsync('white')];
                                     case 1:
                                         _a.sent();
                                         return [2 /*return*/];
@@ -118,7 +113,7 @@ var LegoBoost = /** @class */ (function () {
                         return [4 /*yield*/, this.hubControl.start(this.hub)];
                     case 2:
                         _a.sent();
-                        setInterval(function () {
+                        this.updateTimer = setInterval(function () {
                             _this.hubControl.update();
                         }, 100);
                         return [3 /*break*/, 4];
@@ -182,6 +177,7 @@ var LegoBoost = /** @class */ (function () {
      */
     LegoBoost.prototype.disconnect = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var success;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -189,7 +185,14 @@ var LegoBoost = /** @class */ (function () {
                             return [2 /*return*/];
                         this.hub.disconnect();
                         return [4 /*yield*/, boostConnector_1.BoostConnector.disconnect()];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 1:
+                        success = _a.sent();
+                        // TODO: gatt event gattserverdisconnected is not fired so change connected manually
+                        this.deviceInfo.connected = !success;
+                        if (success) {
+                            clearInterval(this.updateTimer);
+                        }
+                        return [2 /*return*/, success];
                 }
             });
         });
