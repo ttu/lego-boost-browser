@@ -437,6 +437,10 @@ var HubAsync = /** @class */ (function (_super) {
         });
     };
     ;
+    HubAsync.prototype.updateConfiguration = function (configuration) {
+        validateConfiguration(configuration);
+        this.configuration = configuration;
+    };
     return HubAsync;
 }(hub_1.Hub));
 exports.HubAsync = HubAsync;

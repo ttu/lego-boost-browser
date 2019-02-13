@@ -24,6 +24,12 @@ Open `index.html` from the root
 $ npm run build
 ```
 
+## Example Application
+
+React Application for controlling Lego Boost from the browser with Web Bluetooth API
+
+[Lego Boost App](https://github.com/ttu/lego-boost-app)
+
 ## Credits
 
 Communication and control code is ported from these libraries:
@@ -34,7 +40,7 @@ Communication and control code is ported from these libraries:
   * [hubAsync.ts](./src/hubAsync.ts)
 * Node application for controlling Lego Boost: https://github.com/ttu/lego-boost-ai
   * [hubControl.ts](./src/ai/hubControl.ts)
-* Angular implementation: https://github.com/BenjaminDobler/ng-lego-boost
+* Angular application: https://github.com/BenjaminDobler/ng-lego-boost
 * The buffer module from node.js, for the browser: https://github.com/feross/buffer
 
 ## Contributing

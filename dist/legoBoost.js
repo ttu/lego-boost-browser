@@ -76,7 +76,7 @@ var LegoBoost = /** @class */ (function () {
     /**
      * Drive forward until wall is reaced or drive backwards 100meters
      * @method LegoBoost#connect
-     * @param {IConfiguration} configuration Motor configuration
+     * @param {IConfiguration} [configuration={}] Lego boost motor and control configuration
      * @returns {Promise}
      */
     LegoBoost.prototype.connect = function (configuration) {
@@ -199,8 +199,7 @@ var LegoBoost = /** @class */ (function () {
     };
     /**
      * Start AI mode
-     * @method LegoBoost#stop
-     * @returns {Promise}
+     * @method LegoBoost#ai
      */
     LegoBoost.prototype.ai = function () {
         if (!this.hub || this.hub.connected === false)
@@ -228,6 +227,14 @@ var LegoBoost = /** @class */ (function () {
                 }
             });
         });
+    };
+    /**
+     * Update Boost motor and control configuration
+     * @method LegoBoost#updateConfiguration
+     * @param {IConfiguration} configuration Boost motor and control configuration
+     */
+    LegoBoost.prototype.updateConfiguration = function (configuration) {
+        this.hub.updateConfiguration(configuration);
     };
     // Methods from Hub
     /**

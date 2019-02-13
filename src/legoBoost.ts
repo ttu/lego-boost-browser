@@ -45,7 +45,7 @@ export default class LegoBoost {
   /**
    * Drive forward until wall is reaced or drive backwards 100meters
    * @method LegoBoost#connect
-   * @param {IConfiguration} configuration Motor configuration
+   * @param {IConfiguration} [configuration={}] Lego boost motor and control configuration
    * @returns {Promise}
    */
   async connect(configuration: IConfiguration = {}): Promise<void> {
@@ -107,7 +107,7 @@ export default class LegoBoost {
   async disconnect(): Promise<boolean> {
     if (!this.hub || this.hub.connected === false) return;
     this.hub.disconnect();
-    var success = await BoostConnector.disconnect();
+    const success = await BoostConnector.disconnect();
     // TODO: gatt event gattserverdisconnected is not fired so change connected manually
     this.deviceInfo.connected = !success;
     if (success) {
@@ -118,8 +118,7 @@ export default class LegoBoost {
 
   /**
    * Start AI mode
-   * @method LegoBoost#stop
-   * @returns {Promise}
+   * @method LegoBoost#ai
    */
   ai(): void {
     if (!this.hub || this.hub.connected === false) return;
@@ -137,6 +136,15 @@ export default class LegoBoost {
     this.controlData.turnAngle = 0;
     // control datas values might have always been 0, execute force stop
     return await this.hub.motorTimeMultiAsync(1, 0, 0);
+  }
+
+  /**
+   * Update Boost motor and control configuration
+   * @method LegoBoost#updateConfiguration
+   * @param {IConfiguration} configuration Boost motor and control configuration
+   */
+  updateConfiguration(configuration: IConfiguration): void {
+    this.hub.updateConfiguration(configuration);
   }
 
   // Methods from Hub

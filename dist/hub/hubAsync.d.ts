@@ -145,5 +145,6 @@ export declare class HubAsync extends Hub {
      * @returns {Promise}
      */
     turnUntil(direction?: number, wait?: boolean): Promise<any>;
+    updateConfiguration(configuration: IConfiguration): void;
 }
 //# sourceMappingURL=hubAsync.d.ts.map
