@@ -13,12 +13,14 @@
   "author": "Tomi Tuhkanen",
   "license": "MIT",
   "devDependencies": {
-    "@types/web-bluetooth": "^0.0.4",
     "browserify": "^16.2.3",
     "mkdirp": "^0.5.1",
     "tsify": "^4.0.1",
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.3.3"
+  },
+  "dependencies": {
+    "@types/web-bluetooth": "^0.0.4"
   }
 }
