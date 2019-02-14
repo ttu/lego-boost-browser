@@ -144,6 +144,7 @@ export default class LegoBoost {
    * @param {IConfiguration} configuration Boost motor and control configuration
    */
   updateConfiguration(configuration: IConfiguration): void {
+    if (!this.hub) return;
     this.hub.updateConfiguration(configuration);
     this.hubControl.updateConfiguration(configuration);
   }

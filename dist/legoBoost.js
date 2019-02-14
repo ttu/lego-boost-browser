@@ -234,6 +234,8 @@ var LegoBoost = /** @class */ (function () {
      * @param {IConfiguration} configuration Boost motor and control configuration
      */
     LegoBoost.prototype.updateConfiguration = function (configuration) {
+        if (!this.hub)
+            return;
         this.hub.updateConfiguration(configuration);
         this.hubControl.updateConfiguration(configuration);
     };
