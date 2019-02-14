@@ -26,7 +26,7 @@ export const DEFAULT_CONFIG = {
 // const VALID_MOTORS = ['A', 'B'];
 
 
-const validateConfiguration = (configuration : IConfiguration) => {
+const validateConfiguration = (configuration: IConfiguration) => {
 
   configuration.leftMotor = configuration.leftMotor || DEFAULT_CONFIG.LEFT_MOTOR;
   configuration.rightMotor = configuration.rightMotor || DEFAULT_CONFIG.RIGHT_MOTOR;
@@ -350,4 +350,9 @@ export class HubAsync extends Hub {
         .then(_ => this.turn(0, false));
     }
   };
+
+  updateConfiguration(configuration: IConfiguration): void {
+    validateConfiguration(configuration);
+    this.configuration = configuration;
+  }
 }

@@ -18,9 +18,9 @@
     "tsify": "^4.0.1",
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.2.1"
+    "typescript": "^3.3.3"
   },
   "dependencies": {
-    "@types/web-bluetooth": "0.0.4"
+    "@types/web-bluetooth": "^0.0.4"
   }
 }

@@ -63,7 +63,7 @@ export default class LegoBoost {
     /**
      * Drive forward until wall is reaced or drive backwards 100meters
      * @method LegoBoost#connect
-     * @param {IConfiguration} configuration Motor configuration
+     * @param {IConfiguration} [configuration={}] Lego boost motor and control configuration
      * @returns {Promise}
      */
     connect(configuration?: IConfiguration): Promise<void>;
@@ -88,8 +88,7 @@ export default class LegoBoost {
     disconnect(): Promise<boolean>;
     /**
      * Start AI mode
-     * @method LegoBoost#stop
-     * @returns {Promise}
+     * @method LegoBoost#ai
      */
     ai(): void;
     /**
@@ -98,6 +97,12 @@ export default class LegoBoost {
      * @returns {Promise}
      */
     stop(): Promise<{}>;
+    /**
+     * Update Boost motor and control configuration
+     * @method LegoBoost#updateConfiguration
+     * @param {IConfiguration} configuration Boost motor and control configuration
+     */
+    updateConfiguration(configuration: IConfiguration): void;
     /**
      * Control the LED on the Move Hub
      * @method LegoBoost#led
