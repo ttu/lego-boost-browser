@@ -49,10 +49,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var manual_1 = require("./states/manual");
 var ai_1 = require("./states/ai");
 var HubControl = /** @class */ (function () {
-    function HubControl(deviceInfo, controlData) {
+    function HubControl(deviceInfo, controlData, configuration) {
         this.hub = null;
         this.device = deviceInfo;
         this.control = controlData;
+        this.configuration = configuration;
         this.prevControl = __assign({}, this.control);
         this.states = {
             Turn: ai_1.turn.bind(this),
@@ -64,6 +65,9 @@ var HubControl = /** @class */ (function () {
         };
         this.currentState = this.states['Manual'];
     }
+    HubControl.prototype.updateConfiguration = function (configuration) {
+        this.configuration = configuration;
+    };
     HubControl.prototype.start = function (hub) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;

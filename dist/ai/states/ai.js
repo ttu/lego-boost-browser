@@ -56,7 +56,8 @@ function drive() {
     }
     if (!this.control.driveInput || Date.now() - this.control.driveInput > CHECK_TIME_MS) {
         this.control.driveInput = Date.now();
-        this.hub.motorTimeMulti(EXECUTE_TIME_SEC, DRIVE_SPEED, DRIVE_SPEED);
+        var speed = this.configuration.leftMotor === 'A' ? DRIVE_SPEED : DRIVE_SPEED * -1;
+        this.hub.motorTimeMulti(EXECUTE_TIME_SEC, speed, speed);
     }
 }
 exports.drive = drive;
@@ -67,7 +68,8 @@ function back() {
     }
     if (!this.control.driveInput || Date.now() - this.control.driveInput > CHECK_TIME_MS) {
         this.control.driveInput = Date.now();
-        this.hub.motorTimeMulti(EXECUTE_TIME_SEC, REVERSE_SPEED, REVERSE_SPEED);
+        var speed = this.configuration.leftMotor === 'A' ? REVERSE_SPEED : REVERSE_SPEED * -1;
+        this.hub.motorTimeMulti(EXECUTE_TIME_SEC, speed, speed);
     }
 }
 exports.back = back;

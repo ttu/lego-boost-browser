@@ -1,7 +1,9 @@
+import { IConfiguration, HubAsync } from '../hub/hubAsync';
 declare class HubControl {
-    hub: any;
+    hub: HubAsync;
     device: any;
     control: any;
+    configuration: IConfiguration;
     prevControl: any;
     states: {
         Turn: any;
@@ -13,8 +15,9 @@ declare class HubControl {
     };
     currentState: any;
     prevDevice: any;
-    constructor(deviceInfo: any, controlData: any);
-    start(hub: any): Promise<void>;
+    constructor(deviceInfo: any, controlData: any, configuration: IConfiguration);
+    updateConfiguration(configuration: IConfiguration): void;
+    start(hub: HubAsync): Promise<void>;
     disconnect(): Promise<void>;
     setNextState(state: any): void;
     update(): void;

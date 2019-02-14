@@ -109,7 +109,7 @@ var LegoBoost = /** @class */ (function () {
                                 }
                             });
                         }); });
-                        this.hubControl = new hub_control_1.HubControl(this.deviceInfo, this.controlData);
+                        this.hubControl = new hub_control_1.HubControl(this.deviceInfo, this.controlData, configuration);
                         return [4 /*yield*/, this.hubControl.start(this.hub)];
                     case 2:
                         _a.sent();
@@ -235,6 +235,7 @@ var LegoBoost = /** @class */ (function () {
      */
     LegoBoost.prototype.updateConfiguration = function (configuration) {
         this.hub.updateConfiguration(configuration);
+        this.hubControl.updateConfiguration(configuration);
     };
     // Methods from Hub
     /**

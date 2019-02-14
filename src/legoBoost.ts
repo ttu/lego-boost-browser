@@ -62,7 +62,7 @@ export default class LegoBoost {
         await this.hub.ledAsync('white');
       });
 
-      this.hubControl = new HubControl(this.deviceInfo, this.controlData);
+      this.hubControl = new HubControl(this.deviceInfo, this.controlData, configuration);
       await this.hubControl.start(this.hub);
       
       this.updateTimer = setInterval(() => {
@@ -145,6 +145,7 @@ export default class LegoBoost {
    */
   updateConfiguration(configuration: IConfiguration): void {
     this.hub.updateConfiguration(configuration);
+    this.hubControl.updateConfiguration(configuration);
   }
 
   // Methods from Hub
