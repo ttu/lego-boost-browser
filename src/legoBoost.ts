@@ -6,7 +6,7 @@ export default class LegoBoost {
   private hub: HubAsync;
   private hubControl: HubControl;
   private color: string;
-  private updateTimer: number;
+  private updateTimer: any;
 
   /**
    * Information from Lego Boost motos and sensors

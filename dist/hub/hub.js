@@ -414,7 +414,7 @@ var Hub = /** @class */ (function () {
                 _this.writeFromCue();
             })
                 .catch(function (err) {
-                _this.log(err);
+                _this.log("Error while writing: " + el_1.data + " - Error " + err.toString());
                 // TODO: Notify of failure
                 _this.writeFromCue();
             });

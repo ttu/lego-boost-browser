@@ -460,7 +460,7 @@ export class Hub {
           this.writeFromCue();
         })
         .catch(err => {
-          this.log(err);
+          this.log(`Error while writing: ${el.data} - Error ${err.toString()}`);
           // TODO: Notify of failure
           this.writeFromCue();
         });
