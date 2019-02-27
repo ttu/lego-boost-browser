@@ -8,10 +8,17 @@ class HubControl {
   control: any;
   configuration: IConfiguration;
   prevControl: any;
-  states: { Turn: any; Drive: any; Stop: any; Back: any; Manual: any; Seek: any; };
+  states: {
+    Turn: any;
+    Drive: any;
+    Stop: any;
+    Back: any;
+    Manual: any;
+    Seek: any;
+  };
   currentState: any;
   prevDevice: any;
-  
+
   constructor(deviceInfo, controlData, configuration: IConfiguration) {
     this.hub = null;
     this.device = deviceInfo;
@@ -25,7 +32,7 @@ class HubControl {
       Stop: stop.bind(this),
       Back: back.bind(this),
       Manual: manual.bind(this),
-      Seek: seek.bind(this)
+      Seek: seek.bind(this),
     };
 
     this.currentState = this.states['Manual'];
@@ -102,4 +109,4 @@ class HubControl {
   }
 }
 
-export { HubControl }
+export { HubControl };

@@ -14,10 +14,9 @@ function seek() {
   if (!this.control.driveInput || Date.now() - this.control.driveInput > CHECK_TIME_MS) {
     this.control.driveInput = Date.now();
     this.hub.motorTimeMulti(EXECUTE_TIME_SEC, TURN_SPEED, TURN_SPEED_OPPOSITE);
-  } 
-  
-  if (Date.now() - this.control.driveInput < 250)
-    return;
+  }
+
+  if (Date.now() - this.control.driveInput < 250) return;
 
   if (this.device.distance > this.prevDevice.distance) {
     this.control.turnDirection = 'right';
@@ -29,12 +28,12 @@ function seek() {
 }
 
 function turn() {
-  if (this.device.distance < MIN_DISTANCE){
-    this.control.turnDirection = null;      
+  if (this.device.distance < MIN_DISTANCE) {
+    this.control.turnDirection = null;
     this.setNextState('Back');
     return;
   } else if (this.device.distance > OK_DISTANCE) {
-    this.control.turnDirection = null;      
+    this.control.turnDirection = null;
     this.setNextState('Drive');
     return;
   }
@@ -47,9 +46,9 @@ function turn() {
     this.hub.motorTimeMulti(EXECUTE_TIME_SEC, motorA, motorB);
   }
 }
-  
+
 function drive() {
-  if (this.device.distance < MIN_DISTANCE){
+  if (this.device.distance < MIN_DISTANCE) {
     this.setNextState('Back');
     return;
   } else if (this.device.distance < OK_DISTANCE) {
@@ -63,7 +62,7 @@ function drive() {
     this.hub.motorTimeMulti(EXECUTE_TIME_SEC, speed, speed);
   }
 }
-  
+
 function back() {
   if (this.device.distance > OK_DISTANCE) {
     this.setNextState('Seek');
@@ -72,11 +71,11 @@ function back() {
 
   if (!this.control.driveInput || Date.now() - this.control.driveInput > CHECK_TIME_MS) {
     this.control.driveInput = Date.now();
-    const speed =  this.configuration.leftMotor === 'A' ? REVERSE_SPEED : REVERSE_SPEED * -1;
+    const speed = this.configuration.leftMotor === 'A' ? REVERSE_SPEED : REVERSE_SPEED * -1;
     this.hub.motorTimeMulti(EXECUTE_TIME_SEC, speed, speed);
   }
 }
-  
+
 function stop() {
   this.control.speed = 0;
   this.control.turnAngle = 0;
@@ -87,10 +86,4 @@ function stop() {
   }
 }
 
-export {
-  stop,
-  back,
-  drive,
-  turn,
-  seek
-}
+export { stop, back, drive, turn, seek };

@@ -37,63 +37,47 @@ function stepByStep(controlData) {
       controlData.updateInputMode = manualDrive;
       break;
   }
-  
+
   checkMaximums(controlData);
 }
-  
+
 function manualDrive(controlData) {
   switch (controlData.input) {
     case 'up':
-      if (controlData.speed < 0)
-        controlData.speed = 0;
-      else
-        controlData.speed += 10;
+      if (controlData.speed < 0) controlData.speed = 0;
+      else controlData.speed += 10;
 
       controlData.turnAngle = 0;
       break;
     case 'down':
-      if (controlData.speed > 0)
-        controlData.speed = 0;
-      else
-        controlData.speed -= 10;
+      if (controlData.speed > 0) controlData.speed = 0;
+      else controlData.speed -= 10;
 
       controlData.turnAngle = 0;
       break;
     case 'left':
-      if (controlData.turnAngle > 0) 
-        controlData.turnAngle = -10;
-      else
-        controlData.turnAngle -= 10;
+      if (controlData.turnAngle > 0) controlData.turnAngle = -10;
+      else controlData.turnAngle -= 10;
       break;
     case 'right':
-      if (controlData.turnAngle < 0) 
-        controlData.turnAngle = 10;
-      else
-        controlData.turnAngle += 10;
+      if (controlData.turnAngle < 0) controlData.turnAngle = 10;
+      else controlData.turnAngle += 10;
       break;
     case 'q':
-      if (controlData.tilt.roll > 0)
-        controlData.tilt.roll = 0;
-      else
-        controlData.tilt.roll -= 10;
+      if (controlData.tilt.roll > 0) controlData.tilt.roll = 0;
+      else controlData.tilt.roll -= 10;
       break;
     case 'w':
-      if (controlData.tilt.roll < 0)
-        controlData.tilt.roll = 0;
-      else
-        controlData.tilt.roll += 10;
+      if (controlData.tilt.roll < 0) controlData.tilt.roll = 0;
+      else controlData.tilt.roll += 10;
       break;
     case 'a':
-      if (controlData.tilt.pitch > 0)
-        controlData.tilt.pitch = 0;
-      else
-        controlData.tilt.pitch -= 10;
+      if (controlData.tilt.pitch > 0) controlData.tilt.pitch = 0;
+      else controlData.tilt.pitch -= 10;
       break;
     case 's':
-      if (controlData.tilt.pitch < 0)
-        controlData.tilt.pitch = 0;
-      else
-        controlData.tilt.pitch += 10;
+      if (controlData.tilt.pitch < 0) controlData.tilt.pitch = 0;
+      else controlData.tilt.pitch += 10;
       break;
     case 'z':
       controlData.speed = 0;
@@ -108,7 +92,7 @@ function manualDrive(controlData) {
       controlData.updateInputMode = arcadeDrive;
       break;
   }
-  
+
   checkMaximums(controlData);
 }
 
@@ -155,7 +139,7 @@ function arcadeDrive(controlData) {
   }
 }
 
-function checkMaximums(controlData){
+function checkMaximums(controlData) {
   // These values have to be between -100 and 100
   controlData.speed = controlData.speed > 100 ? 100 : controlData.speed;
   controlData.speed = controlData.speed < -100 ? -100 : controlData.speed;
@@ -167,8 +151,4 @@ function checkMaximums(controlData){
   controlData.tilt.pitch = controlData.tilt.pitch < -100 ? -100 : controlData.tilt.pitch;
 }
 
-export {
-  stepByStep,
-  manualDrive,
-  arcadeDrive
-}
+export { stepByStep, manualDrive, arcadeDrive };

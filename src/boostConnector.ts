@@ -8,17 +8,15 @@ export class BoostConnector {
     const options = {
       acceptAllDevices: false,
       filters: [{ services: [BOOST_HUB_SERVICE_UUID] }],
-      optionalServices: [BOOST_HUB_SERVICE_UUID]
+      optionalServices: [BOOST_HUB_SERVICE_UUID],
     };
 
     this.device = await navigator.bluetooth.requestDevice(options);
 
     const server = await this.device.gatt.connect();
     const service = await server.getPrimaryService(BOOST_HUB_SERVICE_UUID);
-    const characteristic = await service.getCharacteristic(
-      BOOST_CHARACTERISTIC_UUID
-    );
-    
+    const characteristic = await service.getCharacteristic(BOOST_CHARACTERISTIC_UUID);
+
     return characteristic;
   }
 

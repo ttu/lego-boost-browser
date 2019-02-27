@@ -37,7 +37,7 @@ export class Hub {
       37: 'DISTANCE',
       38: 'IMOTOR',
       39: 'MOTOR',
-      40: 'TILT'
+      40: 'TILT',
     };
     this.port2num = {
       C: 0x01,
@@ -46,7 +46,7 @@ export class Hub {
       A: 0x37,
       B: 0x38,
       AB: 0x39,
-      TILT: 0x3a
+      TILT: 0x3a,
     };
     this.num2port = {};
     Object.keys(this.port2num).forEach(p => {
@@ -55,7 +55,7 @@ export class Hub {
     this.num2action = {
       1: 'start',
       5: 'conflict',
-      10: 'stop'
+      10: 'stop',
     };
     this.num2color = {
       0: 'black',
@@ -63,7 +63,7 @@ export class Hub {
       5: 'green',
       7: 'yellow',
       9: 'red',
-      10: 'white'
+      10: 'white',
     };
 
     this.addListeners();
@@ -77,14 +77,12 @@ export class Hub {
       if (this.noReconnect === false) this.emit('disconnected');
     });
 
-    this.characteristic.addEventListener(
-      'characteristicvaluechanged',
-      event => {
-        // https://googlechrome.github.io/samples/web-bluetooth/read-characteristic-value-changed.html
-        // @ts-ignore
-        const data = Buffer.from(event.target.value.buffer);
-        this.parseMessage(data);
-      });
+    this.characteristic.addEventListener('characteristicvaluechanged', event => {
+      // https://googlechrome.github.io/samples/web-bluetooth/read-characteristic-value-changed.html
+      // @ts-ignore
+      const data = Buffer.from(event.target.value.buffer);
+      this.parseMessage(data);
+    });
 
     setTimeout(() => {
       // Without timout missed first characteristicvaluechanged events
@@ -115,14 +113,14 @@ export class Hub {
           this.ports[data[3]] = {
             type: 'port',
             deviceType: this.num2type[data[5]],
-            deviceTypeNum: data[5]
+            deviceTypeNum: data[5],
           };
         } else if (data[4] === 0x02) {
           this.ports[data[3]] = {
             type: 'group',
             deviceType: this.num2type[data[5]],
             deviceTypeNum: data[5],
-            members: [data[7], data[8]]
+            members: [data[7], data[8]],
           };
         }
         break;
@@ -146,7 +144,7 @@ export class Hub {
          */
         this.emit('port', {
           port: this.num2port[data[3]],
-          action: this.num2action[data[4]]
+          action: this.num2action[data[4]],
         });
         break;
       }
@@ -210,16 +208,12 @@ export class Hub {
          */
         this.emit('rotation', {
           port: this.num2port[data[3]],
-          angle
+          angle,
         });
         break;
       }
       default:
-        this.log(
-          'unknown sensor type 0x' + data[3].toString(16),
-          data[3],
-          this.ports[data[3]].deviceType
-        );
+        this.log('unknown sensor type 0x' + data[3].toString(16), data[3], this.ports[data[3]].deviceType);
     }
   }
 
@@ -263,10 +257,7 @@ export class Hub {
    * @param {function} callback
    */
   motorTimeMulti(seconds, dutyCycleA, dutyCycleB, callback?) {
-    this.write(
-      this.encodeMotorTimeMulti(0x39, seconds, dutyCycleA, dutyCycleB),
-      callback
-    );
+    this.write(this.encodeMotorTimeMulti(0x39, seconds, dutyCycleA, dutyCycleB), callback);
   }
 
   /**
@@ -298,10 +289,7 @@ export class Hub {
    * @param {function} callback
    */
   motorAngleMulti(angle, dutyCycleA, dutyCycleB, callback?) {
-    this.write(
-      this.encodeMotorAngleMulti(0x39, angle, dutyCycleA, dutyCycleB),
-      callback
-    );
+    this.write(this.encodeMotorAngleMulti(0x39, angle, dutyCycleA, dutyCycleB), callback);
   }
 
   motorPowerCommand(port, power) {
@@ -312,17 +300,7 @@ export class Hub {
   encodeMotorPower(port, dutyCycle = 100) {
     const p = this.port2num[port];
     // @ts-ignore
-    const buf = Buffer.from([
-      0x09,
-      0x00,
-      0x81,
-      p,
-      0x11,
-      0x07,
-      0x00,
-      0x64,
-      0x03
-    ]);
+    const buf = Buffer.from([0x09, 0x00, 0x81, p, 0x11, 0x07, 0x00, 0x64, 0x03]);
     //buf.writeUInt16LE(seconds * 1000, 6);
     buf.writeInt8(dutyCycle, 6);
     return buf;
@@ -360,18 +338,7 @@ export class Hub {
 
     this.write(
       // @ts-ignore
-      Buffer.from([
-        0x0a,
-        0x00,
-        0x41,
-        port,
-        option,
-        0x01,
-        0x00,
-        0x00,
-        0x00,
-        0x01
-      ]),
+      Buffer.from([0x0a, 0x00, 0x41, port, option, 0x01, 0x00, 0x00, 0x00, 0x01]),
       callback
     );
   }
@@ -392,18 +359,7 @@ export class Hub {
     }
     this.write(
       // @ts-ignore
-      Buffer.from([
-        0x0a,
-        0x00,
-        0x41,
-        port,
-        option,
-        0x01,
-        0x00,
-        0x00,
-        0x00,
-        0x00
-      ]),
+      Buffer.from([0x0a, 0x00, 0x41, port, option, 0x01, 0x00, 0x00, 0x00, 0x00]),
       callback
     );
   }
@@ -442,7 +398,7 @@ export class Hub {
     this.writeCue.push({
       data,
       secondArg: true,
-      callback
+      callback,
     });
 
     this.writeFromCue();
@@ -469,21 +425,7 @@ export class Hub {
 
   encodeMotorTimeMulti(port, seconds, dutyCycleA = 100, dutyCycleB = -100) {
     // @ts-ignore
-    const buf = Buffer.from([
-      0x0d,
-      0x00,
-      0x81,
-      port,
-      0x11,
-      0x0a,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x64,
-      0x7f,
-      0x03
-    ]);
+    const buf = Buffer.from([0x0d, 0x00, 0x81, port, 0x11, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x64, 0x7f, 0x03]);
     buf.writeUInt16LE(seconds * 1000, 6);
     buf.writeInt8(dutyCycleA, 8);
     buf.writeInt8(dutyCycleB, 9);
@@ -492,20 +434,7 @@ export class Hub {
 
   encodeMotorTime(port, seconds, dutyCycle = 100) {
     // @ts-ignore
-    const buf = Buffer.from([
-      0x0c,
-      0x00,
-      0x81,
-      port,
-      0x11,
-      0x09,
-      0x00,
-      0x00,
-      0x00,
-      0x64,
-      0x7f,
-      0x03
-    ]);
+    const buf = Buffer.from([0x0c, 0x00, 0x81, port, 0x11, 0x09, 0x00, 0x00, 0x00, 0x64, 0x7f, 0x03]);
     buf.writeUInt16LE(seconds * 1000, 6);
     buf.writeInt8(dutyCycle, 8);
     return buf;
@@ -513,23 +442,7 @@ export class Hub {
 
   encodeMotorAngleMulti(port, angle, dutyCycleA = 100, dutyCycleB = -100) {
     // @ts-ignore
-    const buf = Buffer.from([
-      0x0f,
-      0x00,
-      0x81,
-      port,
-      0x11,
-      0x0c,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x64,
-      0x7f,
-      0x03
-    ]);
+    const buf = Buffer.from([0x0f, 0x00, 0x81, port, 0x11, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x64, 0x7f, 0x03]);
     buf.writeUInt32LE(angle, 6);
     buf.writeInt8(dutyCycleA, 10);
     buf.writeInt8(dutyCycleB, 11);
@@ -538,22 +451,7 @@ export class Hub {
 
   encodeMotorAngle(port, angle, dutyCycle = 100) {
     // @ts-ignore
-    const buf = Buffer.from([
-      0x0e,
-      0x00,
-      0x81,
-      port,
-      0x11,
-      0x0b,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x64,
-      0x7f,
-      0x03
-    ]);
+    const buf = Buffer.from([0x0e, 0x00, 0x81, port, 0x11, 0x0b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x64, 0x7f, 0x03]);
     buf.writeUInt32LE(angle, 6);
     buf.writeInt8(dutyCycle, 10);
     return buf;
@@ -577,7 +475,7 @@ export class Hub {
         'yellow',
         'orange',
         'red',
-        'white'
+        'white',
       ];
       color = colors.indexOf(color);
     }

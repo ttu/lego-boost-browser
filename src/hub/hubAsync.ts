@@ -11,8 +11,8 @@ export const DEFAULT_CONFIG = {
   DEFAULT_CLEAR_DISTANCE: 120,
   LEFT_MOTOR: 'A',
   RIGHT_MOTOR: 'B',
-  VALID_MOTORS: ['A', 'B']
-}
+  VALID_MOTORS: ['A', 'B'],
+};
 
 // const METRIC_MODIFIER = 28.5;
 // const IMPERIAL_MODIFIER = METRIC_MODIFIER / 4;
@@ -25,22 +25,17 @@ export const DEFAULT_CONFIG = {
 // const RIGHT_MOTOR = 'A';
 // const VALID_MOTORS = ['A', 'B'];
 
-
 const validateConfiguration = (configuration: IConfiguration) => {
-
   configuration.leftMotor = configuration.leftMotor || DEFAULT_CONFIG.LEFT_MOTOR;
   configuration.rightMotor = configuration.rightMotor || DEFAULT_CONFIG.RIGHT_MOTOR;
 
   // @ts-ignore
-  if (!DEFAULT_CONFIG.VALID_MOTORS.includes(configuration.leftMotor))
-    throw Error('Define left port port correctly');
+  if (!DEFAULT_CONFIG.VALID_MOTORS.includes(configuration.leftMotor)) throw Error('Define left port port correctly');
 
   // @ts-ignore
-  if (!DEFAULT_CONFIG.VALID_MOTORS.includes(configuration.rightMotor))
-    throw Error('Define right port port correctly');
+  if (!DEFAULT_CONFIG.VALID_MOTORS.includes(configuration.rightMotor)) throw Error('Define right port port correctly');
 
-  if (configuration.leftMotor === configuration.rightMotor)
-    throw Error('Left and right motor can not be same');
+  if (configuration.leftMotor === configuration.rightMotor) throw Error('Left and right motor can not be same');
 
   configuration.distanceModifier = configuration.distanceModifier || DEFAULT_CONFIG.METRIC_MODIFIER;
   configuration.turnModifier = configuration.turnModifier || DEFAULT_CONFIG.TURN_MODIFIER;
@@ -48,22 +43,18 @@ const validateConfiguration = (configuration: IConfiguration) => {
   configuration.turnSpeed = configuration.turnSpeed || DEFAULT_CONFIG.TURN_SPEED;
   configuration.defaultStopDistance = configuration.defaultStopDistance || DEFAULT_CONFIG.DEFAULT_STOP_DISTANCE;
   configuration.defaultClearDistance = configuration.defaultClearDistance || DEFAULT_CONFIG.DEFAULT_CLEAR_DISTANCE;
-}
+};
 
-const waitForValueToSet = function (
+const waitForValueToSet = function(
   valueName,
   compareFunc = valueNameToCompare => this[valueNameToCompare],
   timeoutMs = 0
 ) {
-  if (compareFunc.bind(this)(valueName))
-    return Promise.resolve(this[valueName]);
+  if (compareFunc.bind(this)(valueName)) return Promise.resolve(this[valueName]);
 
   return new Promise((resolve, reject) => {
     setTimeout(
-      async () =>
-        resolve(
-          await waitForValueToSet.bind(this)(valueName, compareFunc, timeoutMs)
-        ),
+      async () => resolve(await waitForValueToSet.bind(this)(valueName, compareFunc, timeoutMs)),
       timeoutMs + 100
     );
   });
@@ -81,7 +72,6 @@ export interface IConfiguration {
 }
 
 export class HubAsync extends Hub {
-
   hubDisconnected: boolean;
   configuration: IConfiguration;
   portData: any;
@@ -89,7 +79,7 @@ export class HubAsync extends Hub {
   modifier: number;
   distance: number;
 
-  constructor(charasteristics: BluetoothRemoteGATTCharacteristic, configuration: IConfiguration) { 
+  constructor(charasteristics: BluetoothRemoteGATTCharacteristic, configuration: IConfiguration) {
     super(charasteristics);
     validateConfiguration(configuration);
     this.configuration = configuration;
@@ -102,7 +92,7 @@ export class HubAsync extends Hub {
   disconnectAsync() {
     this.disconnect();
     return waitForValueToSet.bind(this)('hubDisconnected');
-  };
+  }
 
   /**
    * Execute this method after new instance of Hub is created
@@ -116,18 +106,15 @@ export class HubAsync extends Hub {
       AB: { angle: 0 },
       C: { angle: 0 },
       D: { angle: 0 },
-      LED: { angle: 0 }
+      LED: { angle: 0 },
     };
     this.useMetric = true;
     this.modifier = 1;
 
-    this.emitter.on(
-      'rotation',
-      rotation => (this.portData[rotation.port].angle = rotation.angle)
-    );
+    this.emitter.on('rotation', rotation => (this.portData[rotation.port].angle = rotation.angle));
     this.emitter.on('disconnect', () => (this.hubDisconnected = true));
     this.emitter.on('distance', distance => (this.distance = distance));
-  };
+  }
 
   /**
    * Control the LED on the Move Hub
@@ -145,7 +132,7 @@ export class HubAsync extends Hub {
         setTimeout(resolve, CALLBACK_TIMEOUT_MS);
       });
     });
-  };
+  }
 
   /**
    * Run a motor for specific time
@@ -160,13 +147,10 @@ export class HubAsync extends Hub {
   motorTimeAsync(port, seconds, dutyCycle = 100, wait = false) {
     return new Promise((resolve, reject) => {
       this.motorTime(port, seconds, dutyCycle, () => {
-        setTimeout(
-          resolve,
-          wait ? CALLBACK_TIMEOUT_MS + seconds * 1000 : CALLBACK_TIMEOUT_MS
-        );
+        setTimeout(resolve, wait ? CALLBACK_TIMEOUT_MS + seconds * 1000 : CALLBACK_TIMEOUT_MS);
       });
     });
-  };
+  }
 
   /**
    * Run both motors (A and B) for specific time
@@ -182,13 +166,10 @@ export class HubAsync extends Hub {
   motorTimeMultiAsync(seconds, dutyCycleA = 100, dutyCycleB = 100, wait = false) {
     return new Promise((resolve, reject) => {
       this.motorTimeMulti(seconds, dutyCycleA, dutyCycleB, () => {
-        setTimeout(
-          resolve,
-          wait ? CALLBACK_TIMEOUT_MS + seconds * 1000 : CALLBACK_TIMEOUT_MS
-        );
+        setTimeout(resolve, wait ? CALLBACK_TIMEOUT_MS + seconds * 1000 : CALLBACK_TIMEOUT_MS);
       });
     });
-  };
+  }
 
   /**
    * Turn a motor by specific angle
@@ -215,7 +196,7 @@ export class HubAsync extends Hub {
         }
       });
     });
-  };
+  }
 
   /**
    * Turn both motors (A and B) by specific angle
@@ -243,7 +224,7 @@ export class HubAsync extends Hub {
         }
       });
     });
-  };
+  }
 
   /**
    * Use metric units (default)
@@ -251,7 +232,7 @@ export class HubAsync extends Hub {
    */
   useMetricUnits() {
     this.useMetric = true;
-  };
+  }
 
   /**
    * Use imperial units
@@ -259,7 +240,7 @@ export class HubAsync extends Hub {
    */
   useImperialUnits() {
     this.useMetric = false;
-  };
+  }
 
   /**
    * Set friction modifier
@@ -268,7 +249,7 @@ export class HubAsync extends Hub {
    */
   setFrictionModifier(modifier) {
     this.modifier = modifier;
-  };
+  }
 
   /**
    * Drive specified distance
@@ -280,11 +261,14 @@ export class HubAsync extends Hub {
   drive(distance, wait = true) {
     const angle =
       Math.abs(distance) *
-      ((this.useMetric ? this.configuration.distanceModifier : (this.configuration.distanceModifier / 4)) * this.modifier);
-    const dutyCycleA = this.configuration.driveSpeed * (distance > 0 ? 1 : -1) * (this.configuration.leftMotor === 'A' ? 1 : -1);
-    const dutyCycleB = this.configuration.driveSpeed * (distance > 0 ? 1 : -1) * (this.configuration.leftMotor === 'A' ? 1 : -1);
+      ((this.useMetric ? this.configuration.distanceModifier : this.configuration.distanceModifier / 4) *
+        this.modifier);
+    const dutyCycleA =
+      this.configuration.driveSpeed * (distance > 0 ? 1 : -1) * (this.configuration.leftMotor === 'A' ? 1 : -1);
+    const dutyCycleB =
+      this.configuration.driveSpeed * (distance > 0 ? 1 : -1) * (this.configuration.leftMotor === 'A' ? 1 : -1);
     return this.motorAngleMultiAsync(angle, dutyCycleA, dutyCycleB, wait);
-  };
+  }
 
   /**
    * Turn robot specified degrees
@@ -300,7 +284,7 @@ export class HubAsync extends Hub {
     const dutyCycleA = this.configuration.leftMotor === 'A' ? leftTurn : rightTurn;
     const dutyCycleB = this.configuration.leftMotor === 'A' ? rightTurn : leftTurn;
     return this.motorAngleMultiAsync(angle, dutyCycleA, dutyCycleB, wait);
-  };
+  }
 
   /**
    * Drive untill sensor shows object in defined distance
@@ -312,9 +296,7 @@ export class HubAsync extends Hub {
    */
   async driveUntil(distance = 0, wait = true) {
     const distanceCheck =
-      distance !== 0
-        ? (this.useMetric ? distance : distance * 2.54)
-        : this.configuration.defaultStopDistance;
+      distance !== 0 ? (this.useMetric ? distance : distance * 2.54) : this.configuration.defaultStopDistance;
     const direction = this.configuration.leftMotor === 'A' ? 1 : -1;
     const compareFunc = direction === 1 ? () => distanceCheck >= this.distance : () => distanceCheck <= this.distance;
     this.motorTimeMulti(60, this.configuration.driveSpeed * direction, this.configuration.driveSpeed * direction);
@@ -326,7 +308,7 @@ export class HubAsync extends Hub {
         .bind(this)('distance', compareFunc)
         .then(_ => this.motorAngleMulti(0, 0, 0));
     }
-  };
+  }
 
   /**
    * Turn until there is no object in sensors sight
@@ -339,17 +321,14 @@ export class HubAsync extends Hub {
     const directionModifier = direction > 0 ? 1 : -1;
     this.turn(360 * directionModifier, false);
     if (wait) {
-      await waitForValueToSet.bind(this)(
-        'distance',
-        () => this.distance >= this.configuration.defaultClearDistance
-      );
+      await waitForValueToSet.bind(this)('distance', () => this.distance >= this.configuration.defaultClearDistance);
       await this.turn(0, false);
     } else {
       return waitForValueToSet
         .bind(this)('distance', () => this.distance >= this.configuration.defaultClearDistance)
         .then(_ => this.turn(0, false));
     }
-  };
+  }
 
   updateConfiguration(configuration: IConfiguration): void {
     validateConfiguration(configuration);

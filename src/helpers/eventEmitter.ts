@@ -29,9 +29,7 @@ export class EventEmitter<T extends string> {
   }
 
   public removeAllListeners(): void {
-    Object.keys(this.events).forEach((event: string) =>
-      this.events[event].splice(0, this.events[event].length)
-    );
+    Object.keys(this.events).forEach((event: string) => this.events[event].splice(0, this.events[event].length));
   }
 
   public emit(event: string, ...args: any[]): void {
@@ -43,7 +41,7 @@ export class EventEmitter<T extends string> {
   }
 
   public once(event: string, listener: Listener): () => void {
-    const remove: (() => void) = this.on(event, (...args: any[]) => {
+    const remove: () => void = this.on(event, (...args: any[]) => {
       remove();
       listener.apply(this, args);
     });

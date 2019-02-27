@@ -10,7 +10,7 @@ export default class LegoBoost {
 
   /**
    * Information from Lego Boost motos and sensors
-   * @property LegoBoost#deviceInfo 
+   * @property LegoBoost#deviceInfo
    */
   public deviceInfo = {
     ports: {
@@ -26,7 +26,7 @@ export default class LegoBoost {
     rssi: 0,
     color: '',
     error: '',
-    connected: false
+    connected: false,
   };
 
   /**
@@ -39,7 +39,7 @@ export default class LegoBoost {
     turnAngle: 0,
     tilt: { roll: 0, pitch: 0 },
     forceState: null,
-    updateInputMode: null
+    updateInputMode: null,
   };
 
   /**
@@ -64,11 +64,10 @@ export default class LegoBoost {
 
       this.hubControl = new HubControl(this.deviceInfo, this.controlData, configuration);
       await this.hubControl.start(this.hub);
-      
+
       this.updateTimer = setInterval(() => {
         this.hubControl.update();
       }, 100);
-
     } catch (e) {
       console.log('Error from connect: ' + e);
     }
@@ -93,10 +92,8 @@ export default class LegoBoost {
    */
   async driveToDirection(direction = 1): Promise<{}> {
     if (!this.preCheck()) return;
-    if (direction > 0)
-      return await this.hub.driveUntil();
-    else
-      return await this.hub.drive(-10000);
+    if (direction > 0) return await this.hub.driveUntil();
+    else return await this.hub.drive(-10000);
   }
 
   /**
@@ -316,7 +313,6 @@ export default class LegoBoost {
     return await this.hub.turn(degrees, wait);
   }
 
-  
   /**
    * Drive untill sensor shows object in defined distance
    * @method LegoBoost#driveUntil

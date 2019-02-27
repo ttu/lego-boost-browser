@@ -1,20 +1,28 @@
 {
   "name": "lego-boost-browser",
   "version": "0.1.0",
-  "description": "",
+  "description": "Web Bluetooth API control package for Lego Boost",
   "main": "dist/legoBoost.js",
   "types": "dist/legoBoost.d.ts",
   "scripts": {
     "build": "rm -rf dist && tsc",
     "build:browser": "mkdirp dist && browserify ./src/browser.ts --debug -p [ tsify ] > ./dist/bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "tslint --project ./tsconfig.json"
+    "lint": "tslint --project ./tsconfig.json",
+    "prettier": "cross-env prettier --check './src/**/*'"
   },
   "author": "Tomi Tuhkanen",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ttu/lego-boost-browser/issues"
+  },
+  "homepage": "https://github.com/ttu/lego-boost-browser#readme",
   "devDependencies": {
     "browserify": "^16.2.3",
+    "cross-env": "^5.2.0",
     "mkdirp": "^0.5.1",
+    "prettier": "^1.16.4",
+    "ts-node": "^8.0.2",
     "tsify": "^4.0.1",
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.18.0",

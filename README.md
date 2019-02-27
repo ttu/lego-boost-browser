@@ -4,9 +4,9 @@ Control Lego Boost from the browser without any installations.
 
 ## Web Bluetooth API
 
-Application uses [Web Bluetooth API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API) to communicate with Lego Boost. 
+Application uses [Web Bluetooth API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API) to communicate with Lego Boost.
 
-Web Bluetooth API works with __Windows, Mac, Linux__ and __Android__ devices with __Chrome__ and __Opera__ browsers. Unfortunately Apple iOS doesn't support Web Bluetooth. 
+Web Bluetooth API works with **Windows, Mac, Linux** and **Android** devices with **Chrome** and **Opera** browsers. Unfortunately Apple iOS doesn't support Web Bluetooth.
 
 [Supported devices](https://github.com/WebBluetoothCG/web-bluetooth/blob/master/implementation-status.md)
 
@@ -34,14 +34,14 @@ React Application for controlling Lego Boost from the browser with Web Bluetooth
 
 Communication and control code is ported from these libraries:
 
-* Node module for controlling Lego Boost: https://github.com/hobbyquaker/node-movehub
-  * [hub.ts](./src/hub.ts)
-* Async implementation of Node module: https://github.com/ttu/node-movehub-async
-  * [hubAsync.ts](./src/hubAsync.ts)
-* Node application for controlling Lego Boost: https://github.com/ttu/lego-boost-ai
-  * [hubControl.ts](./src/ai/hubControl.ts)
-* Angular application: https://github.com/BenjaminDobler/ng-lego-boost
-* The buffer module from node.js, for the browser: https://github.com/feross/buffer
+- Node module for controlling Lego Boost: https://github.com/hobbyquaker/node-movehub
+  - [hub.ts](./src/hub.ts)
+- Async implementation of Node module: https://github.com/ttu/node-movehub-async
+  - [hubAsync.ts](./src/hubAsync.ts)
+- Node application for controlling Lego Boost: https://github.com/ttu/lego-boost-ai
+  - [hubControl.ts](./src/ai/hubControl.ts)
+- Angular application: https://github.com/BenjaminDobler/ng-lego-boost
+- The buffer module from node.js, for the browser: https://github.com/feross/buffer
 
 ## Contributing
 
@@ -49,7 +49,7 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## Disclaimer
 
-LEGO and BOOST are Trademarks from The LEGO Company, which do not support this project. 
+LEGO and BOOST are Trademarks from The LEGO Company, which do not support this project.
 
 Project maintainers are not responsible for any damage on your LEGO BOOST devices - use it at your own risk.
 
