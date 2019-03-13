@@ -279,8 +279,9 @@ export class HubAsync extends Hub {
    */
   turn(degrees, wait = true) {
     const angle = Math.abs(degrees) * this.configuration.turnModifier;
-    const leftTurn = this.configuration.turnSpeed * (degrees > 0 ? 1 : -1);
-    const rightTurn = this.configuration.turnSpeed * (degrees > 0 ? -1 : 1);
+    const turnMotorModifier = (this.configuration.leftMotor === 'A' ? 1 : -1);
+    const leftTurn = this.configuration.turnSpeed * (degrees > 0 ? 1 : -1) * turnMotorModifier;
+    const rightTurn = this.configuration.turnSpeed * (degrees > 0 ? -1 : 1) * turnMotorModifier;
     const dutyCycleA = this.configuration.leftMotor === 'A' ? leftTurn : rightTurn;
     const dutyCycleB = this.configuration.leftMotor === 'A' ? rightTurn : leftTurn;
     return this.motorAngleMultiAsync(angle, dutyCycleA, dutyCycleB, wait);
