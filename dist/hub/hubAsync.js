@@ -59,7 +59,7 @@ exports.DEFAULT_CONFIG = {
     DEFAULT_CLEAR_DISTANCE: 120,
     LEFT_MOTOR: 'A',
     RIGHT_MOTOR: 'B',
-    VALID_MOTORS: ['A', 'B']
+    VALID_MOTORS: ['A', 'B'],
 };
 // const METRIC_MODIFIER = 28.5;
 // const IMPERIAL_MODIFIER = METRIC_MODIFIER / 4;
@@ -96,17 +96,14 @@ var waitForValueToSet = function (valueName, compareFunc, timeoutMs) {
     if (compareFunc.bind(this)(valueName))
         return Promise.resolve(this[valueName]);
     return new Promise(function (resolve, reject) {
-        setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
-            var _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        _a = resolve;
-                        return [4 /*yield*/, waitForValueToSet.bind(this)(valueName, compareFunc, timeoutMs)];
-                    case 1: return [2 /*return*/, _a.apply(void 0, [_b.sent()])];
-                }
-            });
-        }); }, timeoutMs + 100);
+        setTimeout(function () { return __awaiter(_this, void 0, void 0, function () { var _a; return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _a = resolve;
+                    return [4 /*yield*/, waitForValueToSet.bind(this)(valueName, compareFunc, timeoutMs)];
+                case 1: return [2 /*return*/, _a.apply(void 0, [_b.sent()])];
+            }
+        }); }); }, timeoutMs + 100);
     });
 };
 var HubAsync = /** @class */ (function (_super) {
@@ -126,7 +123,6 @@ var HubAsync = /** @class */ (function (_super) {
         this.disconnect();
         return waitForValueToSet.bind(this)('hubDisconnected');
     };
-    ;
     /**
      * Execute this method after new instance of Hub is created
      * @method Hub#afterInitialization
@@ -140,7 +136,7 @@ var HubAsync = /** @class */ (function (_super) {
             AB: { angle: 0 },
             C: { angle: 0 },
             D: { angle: 0 },
-            LED: { angle: 0 }
+            LED: { angle: 0 },
         };
         this.useMetric = true;
         this.modifier = 1;
@@ -148,7 +144,6 @@ var HubAsync = /** @class */ (function (_super) {
         this.emitter.on('disconnect', function () { return (_this.hubDisconnected = true); });
         this.emitter.on('distance', function (distance) { return (_this.distance = distance); });
     };
-    ;
     /**
      * Control the LED on the Move Hub
      * @method Hub#ledAsync
@@ -167,7 +162,6 @@ var HubAsync = /** @class */ (function (_super) {
             });
         });
     };
-    ;
     /**
      * Run a motor for specific time
      * @method Hub#motorTimeAsync
@@ -188,7 +182,6 @@ var HubAsync = /** @class */ (function (_super) {
             });
         });
     };
-    ;
     /**
      * Run both motors (A and B) for specific time
      * @method Hub#motorTimeMultiAsync
@@ -211,7 +204,6 @@ var HubAsync = /** @class */ (function (_super) {
             });
         });
     };
-    ;
     /**
      * Turn a motor by specific angle
      * @method Hub#motorAngleAsync
@@ -256,7 +248,6 @@ var HubAsync = /** @class */ (function (_super) {
             }); });
         });
     };
-    ;
     /**
      * Turn both motors (A and B) by specific angle
      * @method Hub#motorAngleMultiAsync
@@ -303,7 +294,6 @@ var HubAsync = /** @class */ (function (_super) {
             }); });
         });
     };
-    ;
     /**
      * Use metric units (default)
      * @method Hub#useMetricUnits
@@ -311,7 +301,6 @@ var HubAsync = /** @class */ (function (_super) {
     HubAsync.prototype.useMetricUnits = function () {
         this.useMetric = true;
     };
-    ;
     /**
      * Use imperial units
      * @method Hub#useImperialUnits
@@ -319,7 +308,6 @@ var HubAsync = /** @class */ (function (_super) {
     HubAsync.prototype.useImperialUnits = function () {
         this.useMetric = false;
     };
-    ;
     /**
      * Set friction modifier
      * @method Hub#setFrictionModifier
@@ -328,7 +316,6 @@ var HubAsync = /** @class */ (function (_super) {
     HubAsync.prototype.setFrictionModifier = function (modifier) {
         this.modifier = modifier;
     };
-    ;
     /**
      * Drive specified distance
      * @method Hub#drive
@@ -339,12 +326,12 @@ var HubAsync = /** @class */ (function (_super) {
     HubAsync.prototype.drive = function (distance, wait) {
         if (wait === void 0) { wait = true; }
         var angle = Math.abs(distance) *
-            ((this.useMetric ? this.configuration.distanceModifier : (this.configuration.distanceModifier / 4)) * this.modifier);
+            ((this.useMetric ? this.configuration.distanceModifier : this.configuration.distanceModifier / 4) *
+                this.modifier);
         var dutyCycleA = this.configuration.driveSpeed * (distance > 0 ? 1 : -1) * (this.configuration.leftMotor === 'A' ? 1 : -1);
         var dutyCycleB = this.configuration.driveSpeed * (distance > 0 ? 1 : -1) * (this.configuration.leftMotor === 'A' ? 1 : -1);
         return this.motorAngleMultiAsync(angle, dutyCycleA, dutyCycleB, wait);
     };
-    ;
     /**
      * Turn robot specified degrees
      * @method Hub#turn
@@ -355,13 +342,13 @@ var HubAsync = /** @class */ (function (_super) {
     HubAsync.prototype.turn = function (degrees, wait) {
         if (wait === void 0) { wait = true; }
         var angle = Math.abs(degrees) * this.configuration.turnModifier;
-        var leftTurn = this.configuration.turnSpeed * (degrees > 0 ? 1 : -1);
-        var rightTurn = this.configuration.turnSpeed * (degrees > 0 ? -1 : 1);
+        var turnMotorModifier = (this.configuration.leftMotor === 'A' ? 1 : -1);
+        var leftTurn = this.configuration.turnSpeed * (degrees > 0 ? 1 : -1) * turnMotorModifier;
+        var rightTurn = this.configuration.turnSpeed * (degrees > 0 ? -1 : 1) * turnMotorModifier;
         var dutyCycleA = this.configuration.leftMotor === 'A' ? leftTurn : rightTurn;
         var dutyCycleB = this.configuration.leftMotor === 'A' ? rightTurn : leftTurn;
         return this.motorAngleMultiAsync(angle, dutyCycleA, dutyCycleB, wait);
     };
-    ;
     /**
      * Drive untill sensor shows object in defined distance
      * @method Hub#driveUntil
@@ -379,9 +366,7 @@ var HubAsync = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        distanceCheck = distance !== 0
-                            ? (this.useMetric ? distance : distance * 2.54)
-                            : this.configuration.defaultStopDistance;
+                        distanceCheck = distance !== 0 ? (this.useMetric ? distance : distance * 2.54) : this.configuration.defaultStopDistance;
                         direction = this.configuration.leftMotor === 'A' ? 1 : -1;
                         compareFunc = direction === 1 ? function () { return distanceCheck >= _this.distance; } : function () { return distanceCheck <= _this.distance; };
                         this.motorTimeMulti(60, this.configuration.driveSpeed * direction, this.configuration.driveSpeed * direction);
@@ -401,7 +386,6 @@ var HubAsync = /** @class */ (function (_super) {
             });
         });
     };
-    ;
     /**
      * Turn until there is no object in sensors sight
      * @method Hub#turnUntil
@@ -436,7 +420,6 @@ var HubAsync = /** @class */ (function (_super) {
             });
         });
     };
-    ;
     HubAsync.prototype.updateConfiguration = function (configuration) {
         validateConfiguration(configuration);
         this.configuration = configuration;

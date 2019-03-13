@@ -24,9 +24,7 @@ var EventEmitter = /** @class */ (function () {
     };
     EventEmitter.prototype.removeAllListeners = function () {
         var _this = this;
-        Object.keys(this.events).forEach(function (event) {
-            return _this.events[event].splice(0, _this.events[event].length);
-        });
+        Object.keys(this.events).forEach(function (event) { return _this.events[event].splice(0, _this.events[event].length); });
     };
     EventEmitter.prototype.emit = function (event) {
         var _this = this;

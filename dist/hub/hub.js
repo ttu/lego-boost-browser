@@ -18,7 +18,7 @@ var Hub = /** @class */ (function () {
             37: 'DISTANCE',
             38: 'IMOTOR',
             39: 'MOTOR',
-            40: 'TILT'
+            40: 'TILT',
         };
         this.port2num = {
             C: 0x01,
@@ -27,7 +27,7 @@ var Hub = /** @class */ (function () {
             A: 0x37,
             B: 0x38,
             AB: 0x39,
-            TILT: 0x3a
+            TILT: 0x3a,
         };
         this.num2port = {};
         Object.keys(this.port2num).forEach(function (p) {
@@ -36,7 +36,7 @@ var Hub = /** @class */ (function () {
         this.num2action = {
             1: 'start',
             5: 'conflict',
-            10: 'stop'
+            10: 'stop',
         };
         this.num2color = {
             0: 'black',
@@ -44,7 +44,7 @@ var Hub = /** @class */ (function () {
             5: 'green',
             7: 'yellow',
             9: 'red',
-            10: 'white'
+            10: 'white',
         };
         this.addListeners();
     }
@@ -92,7 +92,7 @@ var Hub = /** @class */ (function () {
                     this.ports[data[3]] = {
                         type: 'port',
                         deviceType: this.num2type[data[5]],
-                        deviceTypeNum: data[5]
+                        deviceTypeNum: data[5],
                     };
                 }
                 else if (data[4] === 0x02) {
@@ -100,7 +100,7 @@ var Hub = /** @class */ (function () {
                         type: 'group',
                         deviceType: this.num2type[data[5]],
                         deviceTypeNum: data[5],
-                        members: [data[7], data[8]]
+                        members: [data[7], data[8]],
                     };
                 }
                 break;
@@ -124,7 +124,7 @@ var Hub = /** @class */ (function () {
                  */
                 this.emit('port', {
                     port: this.num2port[data[3]],
-                    action: this.num2action[data[4]]
+                    action: this.num2action[data[4]],
                 });
                 break;
             }
@@ -186,7 +186,7 @@ var Hub = /** @class */ (function () {
                  */
                 this.emit('rotation', {
                     port: this.num2port[data[3]],
-                    angle: angle
+                    angle: angle,
                 });
                 break;
             }
@@ -272,17 +272,7 @@ var Hub = /** @class */ (function () {
         if (dutyCycle === void 0) { dutyCycle = 100; }
         var p = this.port2num[port];
         // @ts-ignore
-        var buf = buffer_1.Buffer.from([
-            0x09,
-            0x00,
-            0x81,
-            p,
-            0x11,
-            0x07,
-            0x00,
-            0x64,
-            0x03
-        ]);
+        var buf = buffer_1.Buffer.from([0x09, 0x00, 0x81, p, 0x11, 0x07, 0x00, 0x64, 0x03]);
         //buf.writeUInt16LE(seconds * 1000, 6);
         buf.writeInt8(dutyCycle, 6);
         return buf;
@@ -317,18 +307,7 @@ var Hub = /** @class */ (function () {
         }
         this.write(
         // @ts-ignore
-        buffer_1.Buffer.from([
-            0x0a,
-            0x00,
-            0x41,
-            port,
-            option,
-            0x01,
-            0x00,
-            0x00,
-            0x00,
-            0x01
-        ]), callback);
+        buffer_1.Buffer.from([0x0a, 0x00, 0x41, port, option, 0x01, 0x00, 0x00, 0x00, 0x01]), callback);
     };
     /**
      * Unsubscribe from sensor notifications
@@ -347,18 +326,7 @@ var Hub = /** @class */ (function () {
         }
         this.write(
         // @ts-ignore
-        buffer_1.Buffer.from([
-            0x0a,
-            0x00,
-            0x41,
-            port,
-            option,
-            0x01,
-            0x00,
-            0x00,
-            0x00,
-            0x00
-        ]), callback);
+        buffer_1.Buffer.from([0x0a, 0x00, 0x41, port, option, 0x01, 0x00, 0x00, 0x00, 0x00]), callback);
     };
     Hub.prototype.subscribeAll = function () {
         var _this = this;
@@ -396,7 +364,7 @@ var Hub = /** @class */ (function () {
         this.writeCue.push({
             data: data,
             secondArg: true,
-            callback: callback
+            callback: callback,
         });
         this.writeFromCue();
     };
@@ -424,21 +392,7 @@ var Hub = /** @class */ (function () {
         if (dutyCycleA === void 0) { dutyCycleA = 100; }
         if (dutyCycleB === void 0) { dutyCycleB = -100; }
         // @ts-ignore
-        var buf = buffer_1.Buffer.from([
-            0x0d,
-            0x00,
-            0x81,
-            port,
-            0x11,
-            0x0a,
-            0x00,
-            0x00,
-            0x00,
-            0x00,
-            0x64,
-            0x7f,
-            0x03
-        ]);
+        var buf = buffer_1.Buffer.from([0x0d, 0x00, 0x81, port, 0x11, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x64, 0x7f, 0x03]);
         buf.writeUInt16LE(seconds * 1000, 6);
         buf.writeInt8(dutyCycleA, 8);
         buf.writeInt8(dutyCycleB, 9);
@@ -447,20 +401,7 @@ var Hub = /** @class */ (function () {
     Hub.prototype.encodeMotorTime = function (port, seconds, dutyCycle) {
         if (dutyCycle === void 0) { dutyCycle = 100; }
         // @ts-ignore
-        var buf = buffer_1.Buffer.from([
-            0x0c,
-            0x00,
-            0x81,
-            port,
-            0x11,
-            0x09,
-            0x00,
-            0x00,
-            0x00,
-            0x64,
-            0x7f,
-            0x03
-        ]);
+        var buf = buffer_1.Buffer.from([0x0c, 0x00, 0x81, port, 0x11, 0x09, 0x00, 0x00, 0x00, 0x64, 0x7f, 0x03]);
         buf.writeUInt16LE(seconds * 1000, 6);
         buf.writeInt8(dutyCycle, 8);
         return buf;
@@ -469,23 +410,7 @@ var Hub = /** @class */ (function () {
         if (dutyCycleA === void 0) { dutyCycleA = 100; }
         if (dutyCycleB === void 0) { dutyCycleB = -100; }
         // @ts-ignore
-        var buf = buffer_1.Buffer.from([
-            0x0f,
-            0x00,
-            0x81,
-            port,
-            0x11,
-            0x0c,
-            0x00,
-            0x00,
-            0x00,
-            0x00,
-            0x00,
-            0x00,
-            0x64,
-            0x7f,
-            0x03
-        ]);
+        var buf = buffer_1.Buffer.from([0x0f, 0x00, 0x81, port, 0x11, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x64, 0x7f, 0x03]);
         buf.writeUInt32LE(angle, 6);
         buf.writeInt8(dutyCycleA, 10);
         buf.writeInt8(dutyCycleB, 11);
@@ -494,22 +419,7 @@ var Hub = /** @class */ (function () {
     Hub.prototype.encodeMotorAngle = function (port, angle, dutyCycle) {
         if (dutyCycle === void 0) { dutyCycle = 100; }
         // @ts-ignore
-        var buf = buffer_1.Buffer.from([
-            0x0e,
-            0x00,
-            0x81,
-            port,
-            0x11,
-            0x0b,
-            0x00,
-            0x00,
-            0x00,
-            0x00,
-            0x00,
-            0x64,
-            0x7f,
-            0x03
-        ]);
+        var buf = buffer_1.Buffer.from([0x0e, 0x00, 0x81, port, 0x11, 0x0b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x64, 0x7f, 0x03]);
         buf.writeUInt32LE(angle, 6);
         buf.writeInt8(dutyCycle, 10);
         return buf;
@@ -533,7 +443,7 @@ var Hub = /** @class */ (function () {
                 'yellow',
                 'orange',
                 'red',
-                'white'
+                'white',
             ];
             color = colors.indexOf(color);
         }

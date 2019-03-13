@@ -49,7 +49,7 @@ var BoostConnector = /** @class */ (function () {
                         options = {
                             acceptAllDevices: false,
                             filters: [{ services: [BOOST_HUB_SERVICE_UUID] }],
-                            optionalServices: [BOOST_HUB_SERVICE_UUID]
+                            optionalServices: [BOOST_HUB_SERVICE_UUID],
                         };
                         _a = this;
                         return [4 /*yield*/, navigator.bluetooth.requestDevice(options)];

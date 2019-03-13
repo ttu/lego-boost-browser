@@ -61,7 +61,7 @@ var HubControl = /** @class */ (function () {
             Stop: ai_1.stop.bind(this),
             Back: ai_1.back.bind(this),
             Manual: manual_1.manual.bind(this),
-            Seek: ai_1.seek.bind(this)
+            Seek: ai_1.seek.bind(this),
         };
         this.currentState = this.states['Manual'];
     }

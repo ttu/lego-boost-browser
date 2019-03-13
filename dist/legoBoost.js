@@ -58,7 +58,7 @@ var LegoBoost = /** @class */ (function () {
             rssi: 0,
             color: '',
             error: '',
-            connected: false
+            connected: false,
         };
         /**
          * Input data to used on manual control
@@ -70,7 +70,7 @@ var LegoBoost = /** @class */ (function () {
             turnAngle: 0,
             tilt: { roll: 0, pitch: 0 },
             forceState: null,
-            updateInputMode: null
+            updateInputMode: null,
         };
     }
     /**
