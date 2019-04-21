@@ -13,6 +13,17 @@ export class BoostConnector {
 
     this.device = await navigator.bluetooth.requestDevice(options);
 
+    this.device.addEventListener('gattserverdisconnected', event => { 
+      console.log(event);
+    });
+
+    // await this.device.watchAdvertisements();
+
+    // this.device.addEventListener('advertisementreceived', event => {
+    //   // @ts-ignore
+    //   console.log(event.rssi);
+    // });
+
     const server = await this.device.gatt.connect();
     const service = await server.getPrimaryService(BOOST_HUB_SERVICE_UUID);
     const characteristic = await service.getCharacteristic(BOOST_CHARACTERISTIC_UUID);

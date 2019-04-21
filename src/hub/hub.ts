@@ -70,13 +70,6 @@ export class Hub {
   }
 
   private addListeners() {
-    this.characteristic.addEventListener('gattserverdisconnected', event => {
-      // @ts-ignore
-      this.log(`Device ${event.target.name} is disconnected.`);
-
-      if (this.noReconnect === false) this.emit('disconnected');
-    });
-
     this.characteristic.addEventListener('characteristicvaluechanged', event => {
       // https://googlechrome.github.io/samples/web-bluetooth/read-characteristic-value-changed.html
       // @ts-ignore
