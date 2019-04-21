@@ -9,7 +9,7 @@ export default class LegoBoost {
   private updateTimer: any;
   private configuration: IConfiguration;
 
-  private logDebug: (message?: any, ...optionalParams: any[]) => void;
+  private logDebug: (message?: any, ...optionalParams: any[]) => void = (s) => {};
 
   /**
    * Information from Lego Boost motos and sensors

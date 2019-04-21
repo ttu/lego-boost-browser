@@ -40,6 +40,7 @@ var hubAsync_1 = require("./hub/hubAsync");
 var hub_control_1 = require("./ai/hub-control");
 var LegoBoost = /** @class */ (function () {
     function LegoBoost() {
+        this.logDebug = function (s) { };
         /**
          * Information from Lego Boost motos and sensors
          * @property LegoBoost#deviceInfo
