@@ -90,7 +90,7 @@ export class HubAsync extends Hub {
    * @returns {Promise<boolean>} disconnection successful
    */
   disconnectAsync() {
-    this.disconnect();
+    this.setDisconnected();
     return waitForValueToSet.bind(this)('hubDisconnected');
   }
 
@@ -279,7 +279,7 @@ export class HubAsync extends Hub {
    */
   turn(degrees, wait = true) {
     const angle = Math.abs(degrees) * this.configuration.turnModifier;
-    const turnMotorModifier = (this.configuration.leftMotor === 'A' ? 1 : -1);
+    const turnMotorModifier = this.configuration.leftMotor === 'A' ? 1 : -1;
     const leftTurn = this.configuration.turnSpeed * (degrees > 0 ? 1 : -1) * turnMotorModifier;
     const rightTurn = this.configuration.turnSpeed * (degrees > 0 ? -1 : 1) * turnMotorModifier;
     const dutyCycleA = this.configuration.leftMotor === 'A' ? leftTurn : rightTurn;

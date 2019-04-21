@@ -93,7 +93,7 @@ export class Hub {
            * Fires when a connection to the Move Hub is established
            * @event Hub#connect
            */
-          if (this.autoSubscribe) {
+          if (this.connected === false && this.autoSubscribe) {
             this.subscribeAll();
           }
 
@@ -213,14 +213,14 @@ export class Hub {
   }
 
   /**
-   * Disconnect from Move Hub
-   * @method Hub#disconnect
+   * Set Move Hub as disconnected
+   * @method Hub#setDisconnected
    */
-  disconnect() {
-    if (this.connected) {
-      //this.characteristic.disconnect();
-      this.noReconnect = true;
-    }
+  setDisconnected() {
+    // TODO: Should get this from some notification?
+    this.connected = false;
+    this.noReconnect = true;
+    this.writeCue = [];
   }
 
   /**

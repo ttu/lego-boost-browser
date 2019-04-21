@@ -7,6 +7,7 @@ export default class LegoBoost {
   private hubControl: HubControl;
   private color: string;
   private updateTimer: any;
+  private configuration: IConfiguration;
 
   private logDebug: (message?: any, ...optionalParams: any[]) => void;
 
@@ -52,28 +53,61 @@ export default class LegoBoost {
    */
   async connect(configuration: IConfiguration = {}): Promise<void> {
     try {
-      const characteristic = await BoostConnector.connect();
-      this.hub = new HubAsync(characteristic, configuration);
-      this.hub.logDebug = this.logDebug;
-
-      this.hub.emitter.on('disconnect', async evt => {
-        // await BoostConnector.reconnect();
-      });
-
-      this.hub.emitter.on('connect', async evt => {
-        this.hub.afterInitialization();
-        await this.hub.ledAsync('white');
-      });
-
-      this.hubControl = new HubControl(this.deviceInfo, this.controlData, configuration);
-      await this.hubControl.start(this.hub);
-
-      this.updateTimer = setInterval(() => {
-        this.hubControl.update();
-      }, 100);
+      this.configuration = configuration;
+      const characteristic = await BoostConnector.connect(this.handleGattDisconnect.bind(this));
+      this.initHub(characteristic, this.configuration);
     } catch (e) {
       console.log('Error from connect: ' + e);
     }
+  }
+
+  private async initHub(characteristic, configuration) {
+    this.hub = new HubAsync(characteristic, configuration);
+    this.hub.logDebug = this.logDebug;
+
+    this.hub.emitter.on('disconnect', async evt => {
+      // TODO: This is never launched as event comes from BoostConnector
+      // await BoostConnector.reconnect();
+    });
+
+    this.hub.emitter.on('connect', async evt => {
+      this.hub.afterInitialization();
+      await this.hub.ledAsync('white');
+      this.logDebug('Connected');
+    });
+
+    this.hubControl = new HubControl(this.deviceInfo, this.controlData, configuration);
+    await this.hubControl.start(this.hub);
+
+    this.updateTimer = setInterval(() => {
+      this.hubControl.update();
+    }, 100);
+  }
+
+  private async handleGattDisconnect() {
+    this.logDebug('handleGattDisconnect');
+
+    if (this.deviceInfo.connected === false) return;
+
+    this.hub.setDisconnected();
+    this.deviceInfo.connected = false;
+    clearInterval(this.updateTimer);
+    this.logDebug('Disconnected');
+
+    // TODO: Can't get autoreconnect to work
+    // if (this.hub.noReconnect) {
+    //   this.hub.setDisconnected();
+    //   this.deviceInfo.connected = false;
+    // } else {
+    //   this.hub.setDisconnected();
+    //   this.deviceInfo.connected = false;
+    //   const reconnection = await BoostConnector.reconnect();
+    //   if (reconnection[0]) {
+    //     await this.initHub(reconnection[1], this.configuration);
+    //   } else {
+    //     this.logDebug('Reconnection failed');
+    //   }
+    // }
   }
 
   /**
@@ -106,13 +140,8 @@ export default class LegoBoost {
    */
   async disconnect(): Promise<boolean> {
     if (!this.hub || this.hub.connected === false) return;
-    this.hub.disconnect();
+    this.hub.setDisconnected();
     const success = await BoostConnector.disconnect();
-    // TODO: gatt event gattserverdisconnected is not fired so change connected manually
-    this.deviceInfo.connected = !success;
-    if (success) {
-      clearInterval(this.updateTimer);
-    }
     return success;
   }
 

@@ -4,7 +4,7 @@ const BOOST_CHARACTERISTIC_UUID = '00001624-1212-efde-1623-785feabcd123';
 export class BoostConnector {
   private static device: BluetoothDevice;
 
-  public static async connect(): Promise<BluetoothRemoteGATTCharacteristic> {
+  public static async connect(disconnectCallback: () => Promise<void>): Promise<BluetoothRemoteGATTCharacteristic> {
     const options = {
       acceptAllDevices: false,
       filters: [{ services: [BOOST_HUB_SERVICE_UUID] }],
@@ -13,8 +13,8 @@ export class BoostConnector {
 
     this.device = await navigator.bluetooth.requestDevice(options);
 
-    this.device.addEventListener('gattserverdisconnected', event => { 
-      console.log(event);
+    this.device.addEventListener('gattserverdisconnected', async event => {
+      await disconnectCallback();
     });
 
     // await this.device.watchAdvertisements();
@@ -24,19 +24,21 @@ export class BoostConnector {
     //   console.log(event.rssi);
     // });
 
-    const server = await this.device.gatt.connect();
-    const service = await server.getPrimaryService(BOOST_HUB_SERVICE_UUID);
-    const characteristic = await service.getCharacteristic(BOOST_CHARACTERISTIC_UUID);
-
-    return characteristic;
+    return BoostConnector.getCharacteristic(this.device);
   }
 
-  public static async reconnect(): Promise<boolean> {
+  private static async getCharacteristic(device: BluetoothDevice): Promise<BluetoothRemoteGATTCharacteristic> {
+    const server = await device.gatt.connect();
+    const service = await server.getPrimaryService(BOOST_HUB_SERVICE_UUID);
+    return await service.getCharacteristic(BOOST_CHARACTERISTIC_UUID);
+  }
+
+  public static async reconnect(): Promise<[boolean, BluetoothRemoteGATTCharacteristic]> {
     if (this.device) {
-      await this.device.gatt.connect();
-      return true;
+      const char = await BoostConnector.getCharacteristic(this.device);
+      return [true, char];
     }
-    return false;
+    return [false, null];
   }
 
   public static async disconnect(): Promise<boolean> {
