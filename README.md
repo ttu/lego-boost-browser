@@ -43,6 +43,10 @@ Communication and control code is ported from these libraries:
 - Angular application: https://github.com/BenjaminDobler/ng-lego-boost
 - The buffer module from node.js, for the browser: https://github.com/feross/buffer
 
+
+Reverse engineering the LEGO BOOST Hub
+  - https://github.com/JorgePe/BOOSTreveng
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

@@ -8,6 +8,8 @@ export default class LegoBoost {
   private color: string;
   private updateTimer: any;
 
+  private logDebug: (message?: any, ...optionalParams: any[]) => void;
+
   /**
    * Information from Lego Boost motos and sensors
    * @property LegoBoost#deviceInfo
@@ -52,6 +54,7 @@ export default class LegoBoost {
     try {
       const characteristic = await BoostConnector.connect();
       this.hub = new HubAsync(characteristic, configuration);
+      this.hub.logDebug = this.logDebug;
 
       this.hub.emitter.on('disconnect', async evt => {
         // await BoostConnector.reconnect();

@@ -6,6 +6,7 @@ export class Hub {
   characteristic: BluetoothRemoteGATTCharacteristic;
 
   log: (message?: any, ...optionalParams: any[]) => void;
+  logDebug: (message?: any, ...optionalParams: any[]) => void;
 
   autoSubscribe: boolean = true;
   ports: any;
@@ -100,7 +101,8 @@ export class Hub {
           this.emit('connect');
         }, 1000);
 
-        console.log('Found: ' + this.num2type[data[5]]);
+        this.log('Found: ' + this.num2type[data[5]]);
+        this.logDebug('Found', data);
 
         if (data[4] === 0x01) {
           this.ports[data[3]] = {
@@ -317,7 +319,7 @@ export class Hub {
   /**
    * Subscribe for sensor notifications
    * @param {string|number} port - e.g. call `.subscribe('C')` if you have your distance/color sensor on port C.
-   * @param {number} [option=0]. Unknown meaning. Needs to be 0 for distance/color, 2 for motors, 8 for tilt
+   * @param {number} [option=0] Unknown meaning. Needs to be 0 for distance/color, 2 for motors, 8 for tilt
    * @param {function} [callback]
    */
   subscribe(port, option = 0, callback?) {
@@ -339,7 +341,7 @@ export class Hub {
   /**
    * Unsubscribe from sensor notifications
    * @param {string|number} port
-   * @param {number} [option=0]. Unknown meaning. Needs to be 0 for distance/color, 2 for motors, 8 for tilt
+   * @param {number} [option=0] Unknown meaning. Needs to be 0 for distance/color, 2 for motors, 8 for tilt
    * @param {function} [callback]
    */
   unsubscribe(port, option = 0, callback) {
@@ -367,6 +369,8 @@ export class Hub {
         this.subscribe(parseInt(port, 10), 2);
       } else if (this.ports[port].deviceType === 'MOTOR') {
         this.subscribe(parseInt(port, 10), 2);
+      } else {
+        this.logDebug(`Port subscribtion not sent: ${port}`);
       }
     });
   }
@@ -400,6 +404,7 @@ export class Hub {
   writeFromCue() {
     if (this.writeCue.length > 0 && !this.isWritting) {
       const el: any = this.writeCue.shift();
+      this.logDebug('Writing to device', el);
       this.isWritting = true;
       this.characteristic
         .writeValue(el.data)
@@ -410,6 +415,7 @@ export class Hub {
         })
         .catch(err => {
           this.log(`Error while writing: ${el.data} - Error ${err.toString()}`);
+          this.isWritting = false;
           // TODO: Notify of failure
           this.writeFromCue();
         });
