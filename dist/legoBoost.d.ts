@@ -4,6 +4,8 @@ export default class LegoBoost {
     private hubControl;
     private color;
     private updateTimer;
+    private configuration;
+    private logDebug;
     /**
      * Information from Lego Boost motos and sensors
      * @property LegoBoost#deviceInfo
@@ -67,6 +69,8 @@ export default class LegoBoost {
      * @returns {Promise}
      */
     connect(configuration?: IConfiguration): Promise<void>;
+    private initHub;
+    private handleGattDisconnect;
     /**
      * Change the color of the led between pink and orange
      * @method LegoBoost#changeLed

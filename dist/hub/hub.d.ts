@@ -4,6 +4,7 @@ export declare class Hub {
     emitter: EventEmitter<any>;
     characteristic: BluetoothRemoteGATTCharacteristic;
     log: (message?: any, ...optionalParams: any[]) => void;
+    logDebug: (message?: any, ...optionalParams: any[]) => void;
     autoSubscribe: boolean;
     ports: any;
     num2type: any;
@@ -24,10 +25,10 @@ export declare class Hub {
     private parseMessage;
     private parseSensor;
     /**
-     * Disconnect from Move Hub
-     * @method Hub#disconnect
+     * Set Move Hub as disconnected
+     * @method Hub#setDisconnected
      */
-    disconnect(): void;
+    setDisconnected(): void;
     /**
      * Run a motor for specific time
      * @param {string|number} port possible string values: `A`, `B`, `AB`, `C`, `D`.
@@ -81,14 +82,14 @@ export declare class Hub {
     /**
      * Subscribe for sensor notifications
      * @param {string|number} port - e.g. call `.subscribe('C')` if you have your distance/color sensor on port C.
-     * @param {number} [option=0]. Unknown meaning. Needs to be 0 for distance/color, 2 for motors, 8 for tilt
+     * @param {number} [option=0] Unknown meaning. Needs to be 0 for distance/color, 2 for motors, 8 for tilt
      * @param {function} [callback]
      */
     subscribe(port: any, option?: number, callback?: any): void;
     /**
      * Unsubscribe from sensor notifications
      * @param {string|number} port
-     * @param {number} [option=0]. Unknown meaning. Needs to be 0 for distance/color, 2 for motors, 8 for tilt
+     * @param {number} [option=0] Unknown meaning. Needs to be 0 for distance/color, 2 for motors, 8 for tilt
      * @param {function} [callback]
      */
     unsubscribe(port: any, option: number, callback: any): void;

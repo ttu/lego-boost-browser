@@ -120,7 +120,7 @@ var HubAsync = /** @class */ (function (_super) {
      * @returns {Promise<boolean>} disconnection successful
      */
     HubAsync.prototype.disconnectAsync = function () {
-        this.disconnect();
+        this.setDisconnected();
         return waitForValueToSet.bind(this)('hubDisconnected');
     };
     /**
@@ -342,7 +342,7 @@ var HubAsync = /** @class */ (function (_super) {
     HubAsync.prototype.turn = function (degrees, wait) {
         if (wait === void 0) { wait = true; }
         var angle = Math.abs(degrees) * this.configuration.turnModifier;
-        var turnMotorModifier = (this.configuration.leftMotor === 'A' ? 1 : -1);
+        var turnMotorModifier = this.configuration.leftMotor === 'A' ? 1 : -1;
         var leftTurn = this.configuration.turnSpeed * (degrees > 0 ? 1 : -1) * turnMotorModifier;
         var rightTurn = this.configuration.turnSpeed * (degrees > 0 ? -1 : 1) * turnMotorModifier;
         var dutyCycleA = this.configuration.leftMotor === 'A' ? leftTurn : rightTurn;

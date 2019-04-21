@@ -54,12 +54,6 @@ var Hub = /** @class */ (function () {
     };
     Hub.prototype.addListeners = function () {
         var _this = this;
-        this.characteristic.addEventListener('gattserverdisconnected', function (event) {
-            // @ts-ignore
-            _this.log("Device " + event.target.name + " is disconnected.");
-            if (_this.noReconnect === false)
-                _this.emit('disconnected');
-        });
         this.characteristic.addEventListener('characteristicvaluechanged', function (event) {
             // https://googlechrome.github.io/samples/web-bluetooth/read-characteristic-value-changed.html
             // @ts-ignore
@@ -81,13 +75,14 @@ var Hub = /** @class */ (function () {
                      * Fires when a connection to the Move Hub is established
                      * @event Hub#connect
                      */
-                    if (_this.autoSubscribe) {
+                    if (_this.connected === false && _this.autoSubscribe) {
                         _this.subscribeAll();
                     }
                     _this.connected = true;
                     _this.emit('connect');
                 }, 1000);
-                console.log('Found: ' + this.num2type[data[5]]);
+                this.log('Found: ' + this.num2type[data[5]]);
+                this.logDebug('Found', data);
                 if (data[4] === 0x01) {
                     this.ports[data[3]] = {
                         type: 'port',
@@ -195,14 +190,14 @@ var Hub = /** @class */ (function () {
         }
     };
     /**
-     * Disconnect from Move Hub
-     * @method Hub#disconnect
+     * Set Move Hub as disconnected
+     * @method Hub#setDisconnected
      */
-    Hub.prototype.disconnect = function () {
-        if (this.connected) {
-            //this.characteristic.disconnect();
-            this.noReconnect = true;
-        }
+    Hub.prototype.setDisconnected = function () {
+        // TODO: Should get this from some notification?
+        this.connected = false;
+        this.noReconnect = true;
+        this.writeCue = [];
     };
     /**
      * Run a motor for specific time
@@ -293,7 +288,7 @@ var Hub = /** @class */ (function () {
     /**
      * Subscribe for sensor notifications
      * @param {string|number} port - e.g. call `.subscribe('C')` if you have your distance/color sensor on port C.
-     * @param {number} [option=0]. Unknown meaning. Needs to be 0 for distance/color, 2 for motors, 8 for tilt
+     * @param {number} [option=0] Unknown meaning. Needs to be 0 for distance/color, 2 for motors, 8 for tilt
      * @param {function} [callback]
      */
     Hub.prototype.subscribe = function (port, option, callback) {
@@ -312,7 +307,7 @@ var Hub = /** @class */ (function () {
     /**
      * Unsubscribe from sensor notifications
      * @param {string|number} port
-     * @param {number} [option=0]. Unknown meaning. Needs to be 0 for distance/color, 2 for motors, 8 for tilt
+     * @param {number} [option=0] Unknown meaning. Needs to be 0 for distance/color, 2 for motors, 8 for tilt
      * @param {function} [callback]
      */
     Hub.prototype.unsubscribe = function (port, option, callback) {
@@ -343,6 +338,9 @@ var Hub = /** @class */ (function () {
             else if (_this.ports[port].deviceType === 'MOTOR') {
                 _this.subscribe(parseInt(port, 10), 2);
             }
+            else {
+                _this.logDebug("Port subscribtion not sent: " + port);
+            }
         });
     };
     /**
@@ -372,6 +370,7 @@ var Hub = /** @class */ (function () {
         var _this = this;
         if (this.writeCue.length > 0 && !this.isWritting) {
             var el_1 = this.writeCue.shift();
+            this.logDebug('Writing to device', el_1);
             this.isWritting = true;
             this.characteristic
                 .writeValue(el_1.data)
@@ -383,6 +382,7 @@ var Hub = /** @class */ (function () {
             })
                 .catch(function (err) {
                 _this.log("Error while writing: " + el_1.data + " - Error " + err.toString());
+                _this.isWritting = false;
                 // TODO: Notify of failure
                 _this.writeFromCue();
             });

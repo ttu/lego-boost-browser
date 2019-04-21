@@ -40,9 +40,10 @@ var BOOST_CHARACTERISTIC_UUID = '00001624-1212-efde-1623-785feabcd123';
 var BoostConnector = /** @class */ (function () {
     function BoostConnector() {
     }
-    BoostConnector.connect = function () {
+    BoostConnector.connect = function (disconnectCallback) {
         return __awaiter(this, void 0, void 0, function () {
-            var options, _a, server, service, characteristic;
+            var options, _a;
+            var _this = this;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -55,31 +56,55 @@ var BoostConnector = /** @class */ (function () {
                         return [4 /*yield*/, navigator.bluetooth.requestDevice(options)];
                     case 1:
                         _a.device = _b.sent();
-                        return [4 /*yield*/, this.device.gatt.connect()];
-                    case 2:
-                        server = _b.sent();
+                        this.device.addEventListener('gattserverdisconnected', function (event) { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, disconnectCallback()];
+                                    case 1:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); });
+                        // await this.device.watchAdvertisements();
+                        // this.device.addEventListener('advertisementreceived', event => {
+                        //   // @ts-ignore
+                        //   console.log(event.rssi);
+                        // });
+                        return [2 /*return*/, BoostConnector.getCharacteristic(this.device)];
+                }
+            });
+        });
+    };
+    BoostConnector.getCharacteristic = function (device) {
+        return __awaiter(this, void 0, void 0, function () {
+            var server, service;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, device.gatt.connect()];
+                    case 1:
+                        server = _a.sent();
                         return [4 /*yield*/, server.getPrimaryService(BOOST_HUB_SERVICE_UUID)];
-                    case 3:
-                        service = _b.sent();
+                    case 2:
+                        service = _a.sent();
                         return [4 /*yield*/, service.getCharacteristic(BOOST_CHARACTERISTIC_UUID)];
-                    case 4:
-                        characteristic = _b.sent();
-                        return [2 /*return*/, characteristic];
+                    case 3: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
     BoostConnector.reconnect = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var char;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         if (!this.device) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this.device.gatt.connect()];
+                        return [4 /*yield*/, BoostConnector.getCharacteristic(this.device)];
                     case 1:
-                        _a.sent();
-                        return [2 /*return*/, true];
-                    case 2: return [2 /*return*/, false];
+                        char = _a.sent();
+                        return [2 /*return*/, [true, char]];
+                    case 2: return [2 /*return*/, [false, null]];
                 }
             });
         });

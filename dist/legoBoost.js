@@ -83,15 +83,33 @@ var LegoBoost = /** @class */ (function () {
         if (configuration === void 0) { configuration = {}; }
         return __awaiter(this, void 0, void 0, function () {
             var characteristic, e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        this.configuration = configuration;
+                        return [4 /*yield*/, boostConnector_1.BoostConnector.connect(this.handleGattDisconnect.bind(this))];
+                    case 1:
+                        characteristic = _a.sent();
+                        this.initHub(characteristic, this.configuration);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        e_1 = _a.sent();
+                        console.log('Error from connect: ' + e_1);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    LegoBoost.prototype.initHub = function (characteristic, configuration) {
+        return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
-                        return [4 /*yield*/, boostConnector_1.BoostConnector.connect()];
-                    case 1:
-                        characteristic = _a.sent();
                         this.hub = new hubAsync_1.HubAsync(characteristic, configuration);
+                        this.hub.logDebug = this.logDebug;
                         this.hub.emitter.on('disconnect', function (evt) { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
                                 return [2 /*return*/];
@@ -105,24 +123,34 @@ var LegoBoost = /** @class */ (function () {
                                         return [4 /*yield*/, this.hub.ledAsync('white')];
                                     case 1:
                                         _a.sent();
+                                        this.logDebug('Connected');
                                         return [2 /*return*/];
                                 }
                             });
                         }); });
                         this.hubControl = new hub_control_1.HubControl(this.deviceInfo, this.controlData, configuration);
                         return [4 /*yield*/, this.hubControl.start(this.hub)];
-                    case 2:
+                    case 1:
                         _a.sent();
                         this.updateTimer = setInterval(function () {
                             _this.hubControl.update();
                         }, 100);
-                        return [3 /*break*/, 4];
-                    case 3:
-                        e_1 = _a.sent();
-                        console.log('Error from connect: ' + e_1);
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        return [2 /*return*/];
                 }
+            });
+        });
+    };
+    LegoBoost.prototype.handleGattDisconnect = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.logDebug('handleGattDisconnect');
+                if (this.deviceInfo.connected === false)
+                    return [2 /*return*/];
+                this.hub.setDisconnected();
+                this.deviceInfo.connected = false;
+                clearInterval(this.updateTimer);
+                this.logDebug('Disconnected');
+                return [2 /*return*/];
             });
         });
     };
@@ -183,15 +211,10 @@ var LegoBoost = /** @class */ (function () {
                     case 0:
                         if (!this.hub || this.hub.connected === false)
                             return [2 /*return*/];
-                        this.hub.disconnect();
+                        this.hub.setDisconnected();
                         return [4 /*yield*/, boostConnector_1.BoostConnector.disconnect()];
                     case 1:
                         success = _a.sent();
-                        // TODO: gatt event gattserverdisconnected is not fired so change connected manually
-                        this.deviceInfo.connected = !success;
-                        if (success) {
-                            clearInterval(this.updateTimer);
-                        }
                         return [2 /*return*/, success];
                 }
             });
