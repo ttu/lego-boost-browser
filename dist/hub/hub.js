@@ -75,11 +75,13 @@ var Hub = /** @class */ (function () {
                      * Fires when a connection to the Move Hub is established
                      * @event Hub#connect
                      */
-                    if (_this.connected === false && _this.autoSubscribe) {
+                    if (_this.autoSubscribe) {
                         _this.subscribeAll();
                     }
-                    _this.connected = true;
-                    _this.emit('connect');
+                    if (!_this.connected) {
+                        _this.connected = true;
+                        _this.emit('connect');
+                    }
                 }, 1000);
                 this.log('Found: ' + this.num2type[data[5]]);
                 this.logDebug('Found', data);
