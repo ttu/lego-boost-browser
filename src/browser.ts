@@ -1,10 +1,13 @@
 import LegoBoost from './legoBoost';
+import { BoostConnector } from './boostConnector';
 
 const boost = new LegoBoost();
 // @ts-ignore
 boost.logDebug = console.log;
 
 // Add as a window globals, so these can be called from HTML
+// @ts-ignore
+window.isWebBluetoothSupported = BoostConnector.isWebBluetoothSupported;
 // @ts-ignore
 window.connect = boost.connect.bind(boost);
 // @ts-ignore

@@ -1,5 +1,8 @@
 # Changelog
 
 ### [Unreleased]
-* ADDED: Configure motors 
-* ADDED: Basic functionality
+
+* ADDED: Simple tester web site
+* ADDED: Configure Boost motors 
+* ADDED: Boost basic functionality
+* ADDED: Web Bluetooth connection helper

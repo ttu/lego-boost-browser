@@ -1,10 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var legoBoost_1 = require("./legoBoost");
+var boostConnector_1 = require("./boostConnector");
 var boost = new legoBoost_1.default();
 // @ts-ignore
 boost.logDebug = console.log;
 // Add as a window globals, so these can be called from HTML
+// @ts-ignore
+window.isWebBluetoothSupported = boostConnector_1.BoostConnector.isWebBluetoothSupported;
 // @ts-ignore
 window.connect = boost.connect.bind(boost);
 // @ts-ignore

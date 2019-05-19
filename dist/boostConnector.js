@@ -124,6 +124,7 @@ var BoostConnector = /** @class */ (function () {
             });
         });
     };
+    BoostConnector.isWebBluetoothSupported = navigator.bluetooth ? true : false;
     return BoostConnector;
 }());
 exports.BoostConnector = BoostConnector;
