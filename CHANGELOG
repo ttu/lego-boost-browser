@@ -2,6 +2,7 @@
 
 ### [Unreleased]
 
+* CHANGED: Port numbers to support FW 2.0.00.0017
 * ADDED: Simple tester web site
 * ADDED: Configure Boost motors 
 * ADDED: Boost basic functionality

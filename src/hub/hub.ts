@@ -41,12 +41,12 @@ export class Hub {
       40: 'TILT',
     };
     this.port2num = {
-      C: 0x01,
-      D: 0x02,
+      A: 0x00,
+      B: 0x01,
+      C: 0x02,
+      D: 0x03,
+      AB: 0x10,
       LED: 0x32,
-      A: 0x37,
-      B: 0x38,
-      AB: 0x39,
       TILT: 0x3a,
     };
     this.num2port = {};
@@ -120,6 +120,11 @@ export class Hub {
             members: [data[7], data[8]],
           };
         }
+        break;
+      }
+      case 0x05: {
+        this.log('Malformed message');
+        this.log('<', data);
         break;
       }
       case 0x45: {
@@ -254,7 +259,7 @@ export class Hub {
    * @param {function} callback
    */
   motorTimeMulti(seconds, dutyCycleA, dutyCycleB, callback?) {
-    this.write(this.encodeMotorTimeMulti(0x39, seconds, dutyCycleA, dutyCycleB), callback);
+    this.write(this.encodeMotorTimeMulti(this.port2num['AB'], seconds, dutyCycleA, dutyCycleB), callback);
   }
 
   /**
@@ -286,7 +291,7 @@ export class Hub {
    * @param {function} callback
    */
   motorAngleMulti(angle, dutyCycleA, dutyCycleB, callback?) {
-    this.write(this.encodeMotorAngleMulti(0x39, angle, dutyCycleA, dutyCycleB), callback);
+    this.write(this.encodeMotorAngleMulti(this.port2num['AB'], angle, dutyCycleA, dutyCycleB), callback);
   }
 
   motorPowerCommand(port, power) {
