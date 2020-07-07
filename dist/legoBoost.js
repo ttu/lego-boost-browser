@@ -77,7 +77,7 @@ var LegoBoost = /** @class */ (function () {
     /**
      * Drive forward until wall is reaced or drive backwards 100meters
      * @method LegoBoost#connect
-     * @param {IConfiguration} [configuration={}] Lego boost motor and control configuration
+     * @param {BoostConfiguration} [configuration={}] Lego boost motor and control configuration
      * @returns {Promise}
      */
     LegoBoost.prototype.connect = function (configuration) {
@@ -255,7 +255,7 @@ var LegoBoost = /** @class */ (function () {
     /**
      * Update Boost motor and control configuration
      * @method LegoBoost#updateConfiguration
-     * @param {IConfiguration} configuration Boost motor and control configuration
+     * @param {BoostConfiguration} configuration Boost motor and control configuration
      */
     LegoBoost.prototype.updateConfiguration = function (configuration) {
         if (!this.hub)

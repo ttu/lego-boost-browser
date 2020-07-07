@@ -1,5 +1,5 @@
 import { BoostConnector } from './boostConnector';
-import { HubAsync, IConfiguration } from './hub/hubAsync';
+import { HubAsync, BoostConfiguration } from './hub/hubAsync';
 import { HubControl } from './ai/hub-control';
 
 export default class LegoBoost {
@@ -7,7 +7,7 @@ export default class LegoBoost {
   private hubControl: HubControl;
   private color: string;
   private updateTimer: any;
-  private configuration: IConfiguration;
+  private configuration: BoostConfiguration;
 
   private logDebug: (message?: any, ...optionalParams: any[]) => void = (s) => {};
 
@@ -48,10 +48,10 @@ export default class LegoBoost {
   /**
    * Drive forward until wall is reaced or drive backwards 100meters
    * @method LegoBoost#connect
-   * @param {IConfiguration} [configuration={}] Lego boost motor and control configuration
+   * @param {BoostConfiguration} [configuration={}] Lego boost motor and control configuration
    * @returns {Promise}
    */
-  async connect(configuration: IConfiguration = {}): Promise<void> {
+  async connect(configuration: BoostConfiguration = {}): Promise<void> {
     try {
       this.configuration = configuration;
       const characteristic = await BoostConnector.connect(this.handleGattDisconnect.bind(this));
@@ -170,9 +170,9 @@ export default class LegoBoost {
   /**
    * Update Boost motor and control configuration
    * @method LegoBoost#updateConfiguration
-   * @param {IConfiguration} configuration Boost motor and control configuration
+   * @param {BoostConfiguration} configuration Boost motor and control configuration
    */
-  updateConfiguration(configuration: IConfiguration): void {
+  updateConfiguration(configuration: BoostConfiguration): void {
     if (!this.hub) return;
     this.hub.updateConfiguration(configuration);
     this.hubControl.updateConfiguration(configuration);

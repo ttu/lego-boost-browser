@@ -11,7 +11,7 @@ export declare const DEFAULT_CONFIG: {
     RIGHT_MOTOR: string;
     VALID_MOTORS: string[];
 };
-export interface IConfiguration {
+export interface BoostConfiguration {
     distanceModifier?: any;
     turnModifier?: any;
     defaultClearDistance?: any;
@@ -23,12 +23,12 @@ export interface IConfiguration {
 }
 export declare class HubAsync extends Hub {
     hubDisconnected: boolean;
-    configuration: IConfiguration;
+    configuration: BoostConfiguration;
     portData: any;
     useMetric: boolean;
     modifier: number;
     distance: number;
-    constructor(charasteristics: BluetoothRemoteGATTCharacteristic, configuration: IConfiguration);
+    constructor(charasteristics: BluetoothRemoteGATTCharacteristic, configuration: BoostConfiguration);
     /**
      * Disconnect Hub
      * @method Hub#disconnectAsync
@@ -145,6 +145,6 @@ export declare class HubAsync extends Hub {
      * @returns {Promise}
      */
     turnUntil(direction?: number, wait?: boolean): Promise<any>;
-    updateConfiguration(configuration: IConfiguration): void;
+    updateConfiguration(configuration: BoostConfiguration): void;
 }
 //# sourceMappingURL=hubAsync.d.ts.map

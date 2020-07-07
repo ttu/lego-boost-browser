@@ -1,4 +1,4 @@
-import { IConfiguration } from './hub/hubAsync';
+import { BoostConfiguration } from './hub/hubAsync';
 export default class LegoBoost {
     private hub;
     private hubControl;
@@ -65,10 +65,10 @@ export default class LegoBoost {
     /**
      * Drive forward until wall is reaced or drive backwards 100meters
      * @method LegoBoost#connect
-     * @param {IConfiguration} [configuration={}] Lego boost motor and control configuration
+     * @param {BoostConfiguration} [configuration={}] Lego boost motor and control configuration
      * @returns {Promise}
      */
-    connect(configuration?: IConfiguration): Promise<void>;
+    connect(configuration?: BoostConfiguration): Promise<void>;
     private initHub;
     private handleGattDisconnect;
     /**
@@ -104,9 +104,9 @@ export default class LegoBoost {
     /**
      * Update Boost motor and control configuration
      * @method LegoBoost#updateConfiguration
-     * @param {IConfiguration} configuration Boost motor and control configuration
+     * @param {BoostConfiguration} configuration Boost motor and control configuration
      */
-    updateConfiguration(configuration: IConfiguration): void;
+    updateConfiguration(configuration: BoostConfiguration): void;
     /**
      * Control the LED on the Move Hub
      * @method LegoBoost#led

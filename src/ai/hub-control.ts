@@ -1,12 +1,12 @@
 import { manual } from './states/manual';
 import { stop, back, drive, turn, seek } from './states/ai';
-import { IConfiguration, HubAsync } from '../hub/hubAsync';
+import { BoostConfiguration, HubAsync } from '../hub/hubAsync';
 
 class HubControl {
   hub: HubAsync;
   device: any;
   control: any;
-  configuration: IConfiguration;
+  configuration: BoostConfiguration;
   prevControl: any;
   states: {
     Turn: any;
@@ -19,7 +19,7 @@ class HubControl {
   currentState: any;
   prevDevice: any;
 
-  constructor(deviceInfo, controlData, configuration: IConfiguration) {
+  constructor(deviceInfo, controlData, configuration: BoostConfiguration) {
     this.hub = null;
     this.device = deviceInfo;
     this.control = controlData;
@@ -38,7 +38,7 @@ class HubControl {
     this.currentState = this.states['Manual'];
   }
 
-  updateConfiguration(configuration: IConfiguration): void {
+  updateConfiguration(configuration: BoostConfiguration): void {
     this.configuration = configuration;
   }
 

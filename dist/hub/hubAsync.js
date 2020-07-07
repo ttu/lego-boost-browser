@@ -61,16 +61,6 @@ exports.DEFAULT_CONFIG = {
     RIGHT_MOTOR: 'B',
     VALID_MOTORS: ['A', 'B'],
 };
-// const METRIC_MODIFIER = 28.5;
-// const IMPERIAL_MODIFIER = METRIC_MODIFIER / 4;
-// const TURN_MODIFIER = 2.56;
-// const DRIVE_SPEED = 25;
-// const TURN_SPEED = 20;
-// const DEFAULT_STOP_DISTANCE = 105;
-// const DEFAULT_CLEAR_DISTANCE = 120;
-// const LEFT_MOTOR = 'B';
-// const RIGHT_MOTOR = 'A';
-// const VALID_MOTORS = ['A', 'B'];
 var validateConfiguration = function (configuration) {
     configuration.leftMotor = configuration.leftMotor || exports.DEFAULT_CONFIG.LEFT_MOTOR;
     configuration.rightMotor = configuration.rightMotor || exports.DEFAULT_CONFIG.RIGHT_MOTOR;

@@ -14,18 +14,7 @@ export const DEFAULT_CONFIG = {
   VALID_MOTORS: ['A', 'B'],
 };
 
-// const METRIC_MODIFIER = 28.5;
-// const IMPERIAL_MODIFIER = METRIC_MODIFIER / 4;
-// const TURN_MODIFIER = 2.56;
-// const DRIVE_SPEED = 25;
-// const TURN_SPEED = 20;
-// const DEFAULT_STOP_DISTANCE = 105;
-// const DEFAULT_CLEAR_DISTANCE = 120;
-// const LEFT_MOTOR = 'B';
-// const RIGHT_MOTOR = 'A';
-// const VALID_MOTORS = ['A', 'B'];
-
-const validateConfiguration = (configuration: IConfiguration) => {
+const validateConfiguration = (configuration: BoostConfiguration) => {
   configuration.leftMotor = configuration.leftMotor || DEFAULT_CONFIG.LEFT_MOTOR;
   configuration.rightMotor = configuration.rightMotor || DEFAULT_CONFIG.RIGHT_MOTOR;
 
@@ -60,7 +49,7 @@ const waitForValueToSet = function(
   });
 };
 
-export interface IConfiguration {
+export interface BoostConfiguration {
   distanceModifier?: any;
   turnModifier?: any;
   defaultClearDistance?: any;
@@ -73,13 +62,13 @@ export interface IConfiguration {
 
 export class HubAsync extends Hub {
   hubDisconnected: boolean;
-  configuration: IConfiguration;
+  configuration: BoostConfiguration;
   portData: any;
   useMetric: boolean;
   modifier: number;
   distance: number;
 
-  constructor(charasteristics: BluetoothRemoteGATTCharacteristic, configuration: IConfiguration) {
+  constructor(charasteristics: BluetoothRemoteGATTCharacteristic, configuration: BoostConfiguration) {
     super(charasteristics);
     validateConfiguration(configuration);
     this.configuration = configuration;
@@ -331,7 +320,7 @@ export class HubAsync extends Hub {
     }
   }
 
-  updateConfiguration(configuration: IConfiguration): void {
+  updateConfiguration(configuration: BoostConfiguration): void {
     validateConfiguration(configuration);
     this.configuration = configuration;
   }
