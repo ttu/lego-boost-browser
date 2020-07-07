@@ -78,7 +78,7 @@ export class HubAsync extends Hub {
    * @method Hub#disconnectAsync
    * @returns {Promise<boolean>} disconnection successful
    */
-  disconnectAsync() {
+  disconnectAsync(): Promise<boolean> {
     this.setDisconnected();
     return waitForValueToSet.bind(this)('hubDisconnected');
   }
@@ -114,7 +114,7 @@ export class HubAsync extends Hub {
    * `white`
    * @returns {Promise}
    */
-  ledAsync(color) {
+  ledAsync(color: boolean | number | string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.led(color, () => {
         // Callback is executed when command is sent and it will take some time before MoveHub executes the command
@@ -128,13 +128,13 @@ export class HubAsync extends Hub {
    * @method Hub#motorTimeAsync
    * @param {string|number} port possible string values: `A`, `B`, `AB`, `C`, `D`.
    * @param {number} seconds
-   * @param {number} [dutyCycle=100] motor power percentage from `-100` to `100`. If a negative value is given rotation
+   * @param {number} [dutyCycle=100] motor power percentsage from `-100` to `100`. If a negative value is given rotation
    * is counterclockwise.
    * @param {boolean} [wait=false] will promise wait unitll motorTime run time has elapsed
    * @returns {Promise}
    */
-  motorTimeAsync(port, seconds, dutyCycle = 100, wait = false) {
-    return new Promise((resolve, reject) => {
+  motorTimeAsync(port: string | number, seconds: number, dutyCycle: number = 100, wait: boolean = false): Promise<any> {
+    return new Promise((resolve, _) => {
       this.motorTime(port, seconds, dutyCycle, () => {
         setTimeout(resolve, wait ? CALLBACK_TIMEOUT_MS + seconds * 1000 : CALLBACK_TIMEOUT_MS);
       });
@@ -152,8 +152,8 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=false] will promise wait unitll motorTime run time has elapsed
    * @returns {Promise}
    */
-  motorTimeMultiAsync(seconds, dutyCycleA = 100, dutyCycleB = 100, wait = false) {
-    return new Promise((resolve, reject) => {
+  motorTimeMultiAsync(seconds: number, dutyCycleA: number = 100, dutyCycleB: number = 100, wait: boolean = false): Promise<any> {
+    return new Promise((resolve, _) => {
       this.motorTimeMulti(seconds, dutyCycleA, dutyCycleB, () => {
         setTimeout(resolve, wait ? CALLBACK_TIMEOUT_MS + seconds * 1000 : CALLBACK_TIMEOUT_MS);
       });
@@ -170,8 +170,8 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=false] will promise wait unitll motorAngle has turned
    * @returns {Promise}
    */
-  motorAngleAsync(port, angle, dutyCycle = 100, wait = false) {
-    return new Promise((resolve, reject) => {
+  motorAngleAsync(port: string | number, angle: number, dutyCycle: number = 100, wait: boolean = false): Promise<any> {
+    return new Promise((resolve, _) => {
       this.motorAngle(port, angle, dutyCycle, async () => {
         if (wait) {
           let beforeTurn;
@@ -198,8 +198,8 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=false] will promise wait unitll motorAngle has turned
    * @returns {Promise}
    */
-  motorAngleMultiAsync(angle, dutyCycleA = 100, dutyCycleB = 100, wait = false) {
-    return new Promise((resolve, reject) => {
+  motorAngleMultiAsync(angle: number, dutyCycleA: number = 100, dutyCycleB: number = 100, wait: boolean = false): Promise<any> {
+    return new Promise((resolve, _) => {
       this.motorAngleMulti(angle, dutyCycleA, dutyCycleB, async () => {
         if (wait) {
           let beforeTurn;
@@ -236,7 +236,7 @@ export class HubAsync extends Hub {
    * @method Hub#setFrictionModifier
    * @param {number} modifier friction modifier
    */
-  setFrictionModifier(modifier) {
+  setFrictionModifier(modifier: number) {
     this.modifier = modifier;
   }
 
@@ -247,7 +247,7 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=true] will promise wait untill the drive has completed.
    * @returns {Promise}
    */
-  drive(distance, wait = true) {
+  drive(distance: number, wait: boolean = true): Promise<any> {
     const angle =
       Math.abs(distance) *
       ((this.useMetric ? this.configuration.distanceModifier : this.configuration.distanceModifier / 4) *
@@ -266,7 +266,7 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=true] will promise wait untill the turn has completed.
    * @returns {Promise}
    */
-  turn(degrees, wait = true) {
+  turn(degrees: number, wait: boolean = true): Promise<any> {
     const angle = Math.abs(degrees) * this.configuration.turnModifier;
     const turnMotorModifier = this.configuration.leftMotor === 'A' ? 1 : -1;
     const leftTurn = this.configuration.turnSpeed * (degrees > 0 ? 1 : -1) * turnMotorModifier;
@@ -284,7 +284,7 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=true] will promise wait untill the bot will stop.
    * @returns {Promise}
    */
-  async driveUntil(distance = 0, wait = true) {
+  async driveUntil(distance: number = 0, wait: boolean = true): Promise<any> {
     const distanceCheck =
       distance !== 0 ? (this.useMetric ? distance : distance * 2.54) : this.configuration.defaultStopDistance;
     const direction = this.configuration.leftMotor === 'A' ? 1 : -1;
@@ -307,7 +307,7 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=true] will promise wait untill the bot will stop.
    * @returns {Promise}
    */
-  async turnUntil(direction = 1, wait = true) {
+  async turnUntil(direction: number = 1, wait: boolean = true): Promise<any> {
     const directionModifier = direction > 0 ? 1 : -1;
     this.turn(360 * directionModifier, false);
     if (wait) {

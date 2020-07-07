@@ -37,7 +37,7 @@ export declare class Hub {
      * is counterclockwise.
      * @param {function} [callback]
      */
-    motorTime(port: any, seconds: any, dutyCycle: any, callback?: any): void;
+    motorTime(port: string | number, seconds: number, dutyCycle: number, callback?: () => void): void;
     /**
      * Run both motors (A and B) for specific time
      * @param {number} seconds
@@ -47,7 +47,7 @@ export declare class Hub {
      * is counterclockwise.
      * @param {function} callback
      */
-    motorTimeMulti(seconds: any, dutyCycleA: any, dutyCycleB: any, callback?: any): void;
+    motorTimeMulti(seconds: number, dutyCycleA: number, dutyCycleB: number, callback?: () => void): void;
     /**
      * Turn a motor by specific angle
      * @param {string|number} port possible string values: `A`, `B`, `AB`, `C`, `D`.
@@ -56,7 +56,7 @@ export declare class Hub {
      * rotation is counterclockwise.
      * @param {function} [callback]
      */
-    motorAngle(port: any, angle: any, dutyCycle: any, callback?: any): void;
+    motorAngle(port: string | number, angle: number, dutyCycle: number, callback?: () => void): void;
     /**
      * Turn both motors (A and B) by specific angle
      * @param {number} angle degrees to turn from `0` to `2147483647`
@@ -66,9 +66,9 @@ export declare class Hub {
      * rotation is counterclockwise.
      * @param {function} callback
      */
-    motorAngleMulti(angle: any, dutyCycleA: any, dutyCycleB: any, callback?: any): void;
-    motorPowerCommand(port: any, power: any): void;
-    encodeMotorPower(port: any, dutyCycle?: number): any;
+    motorAngleMulti(angle: number, dutyCycleA: number, dutyCycleB: number, callback?: () => void): void;
+    motorPowerCommand(port: any, power: number): void;
+    encodeMotorPower(port: string | number, dutyCycle?: number): any;
     /**
      * Control the LED on the Move Hub
      * @method Hub#led
@@ -78,21 +78,21 @@ export declare class Hub {
      * `white`
      * @param {function} [callback]
      */
-    led(color: any, callback?: any): void;
+    led(color: string | number | boolean, callback?: () => void): void;
     /**
      * Subscribe for sensor notifications
      * @param {string|number} port - e.g. call `.subscribe('C')` if you have your distance/color sensor on port C.
      * @param {number} [option=0] Unknown meaning. Needs to be 0 for distance/color, 2 for motors, 8 for tilt
      * @param {function} [callback]
      */
-    subscribe(port: any, option?: number, callback?: any): void;
+    subscribe(port: string | number, option?: number, callback?: () => void): void;
     /**
      * Unsubscribe from sensor notifications
      * @param {string|number} port
      * @param {number} [option=0] Unknown meaning. Needs to be 0 for distance/color, 2 for motors, 8 for tilt
      * @param {function} [callback]
      */
-    unsubscribe(port: any, option: number, callback: any): void;
+    unsubscribe(port: string | number, option: number, callback: () => void): void;
     subscribeAll(): void;
     /**
      * Send data over BLE
@@ -100,12 +100,12 @@ export declare class Hub {
      * @param {string|Buffer} data If a string is given it has to have hex bytes separated by spaces, e.g. `0a 01 c3 b2`
      * @param {function} callback
      */
-    write(data: any, callback?: any): void;
+    write(data: any, callback?: () => void): void;
     writeFromCue(): void;
-    encodeMotorTimeMulti(port: any, seconds: any, dutyCycleA?: number, dutyCycleB?: number): any;
-    encodeMotorTime(port: any, seconds: any, dutyCycle?: number): any;
-    encodeMotorAngleMulti(port: any, angle: any, dutyCycleA?: number, dutyCycleB?: number): any;
-    encodeMotorAngle(port: any, angle: any, dutyCycle?: number): any;
-    encodeLed(color: any): any;
+    encodeMotorTimeMulti(port: number, seconds: number, dutyCycleA?: number, dutyCycleB?: number): any;
+    encodeMotorTime(port: number, seconds: number, dutyCycle?: number): any;
+    encodeMotorAngleMulti(port: number, angle: number, dutyCycleA?: number, dutyCycleB?: number): any;
+    encodeMotorAngle(port: number, angle: number, dutyCycle?: number): any;
+    encodeLed(color: string | number | boolean): any;
 }
 //# sourceMappingURL=hub.d.ts.map

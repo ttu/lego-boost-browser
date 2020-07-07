@@ -238,15 +238,13 @@ export class Hub {
    * is counterclockwise.
    * @param {function} [callback]
    */
-  motorTime(port, seconds, dutyCycle, callback?) {
+  motorTime(port: string | number, seconds: number, dutyCycle: number, callback?: () => void) {
     if (typeof dutyCycle === 'function') {
       callback = dutyCycle;
       dutyCycle = 100;
     }
-    if (typeof port === 'string') {
-      port = this.port2num[port];
-    }
-    this.write(this.encodeMotorTime(port, seconds, dutyCycle), callback);
+    const portNum = typeof port === 'string' ? this.port2num[port] : port;
+    this.write(this.encodeMotorTime(portNum, seconds, dutyCycle), callback);
   }
 
   /**
@@ -258,7 +256,7 @@ export class Hub {
    * is counterclockwise.
    * @param {function} callback
    */
-  motorTimeMulti(seconds, dutyCycleA, dutyCycleB, callback?) {
+  motorTimeMulti(seconds: number, dutyCycleA: number, dutyCycleB: number, callback?: () => void) {
     this.write(this.encodeMotorTimeMulti(this.port2num['AB'], seconds, dutyCycleA, dutyCycleB), callback);
   }
 
@@ -270,15 +268,13 @@ export class Hub {
    * rotation is counterclockwise.
    * @param {function} [callback]
    */
-  motorAngle(port, angle, dutyCycle, callback?) {
+  motorAngle(port: string | number, angle: number, dutyCycle: number, callback?: () => void) {
     if (typeof dutyCycle === 'function') {
       callback = dutyCycle;
       dutyCycle = 100;
     }
-    if (typeof port === 'string') {
-      port = this.port2num[port];
-    }
-    this.write(this.encodeMotorAngle(port, angle, dutyCycle), callback);
+    const portNum = typeof port === 'string' ? this.port2num[port] : port;
+    this.write(this.encodeMotorAngle(portNum, angle, dutyCycle), callback);
   }
 
   /**
@@ -290,16 +286,16 @@ export class Hub {
    * rotation is counterclockwise.
    * @param {function} callback
    */
-  motorAngleMulti(angle, dutyCycleA, dutyCycleB, callback?) {
+  motorAngleMulti(angle: number, dutyCycleA: number, dutyCycleB: number, callback?: () => void) {
     this.write(this.encodeMotorAngleMulti(this.port2num['AB'], angle, dutyCycleA, dutyCycleB), callback);
   }
 
-  motorPowerCommand(port, power) {
+  motorPowerCommand(port: any, power: number) {
     this.write(this.encodeMotorPower(port, power));
   }
 
   //[0x09, 0x00, 0x81, 0x39, 0x11, 0x07, 0x00, 0x64, 0x03]
-  encodeMotorPower(port, dutyCycle = 100) {
+  encodeMotorPower(port: string | number, dutyCycle = 100) {
     const p = this.port2num[port];
     // @ts-ignore
     const buf = Buffer.from([0x09, 0x00, 0x81, p, 0x11, 0x07, 0x00, 0x64, 0x03]);
@@ -319,7 +315,7 @@ export class Hub {
    * `white`
    * @param {function} [callback]
    */
-  led(color, callback?) {
+  led(color: string | number | boolean, callback?: () => void) {
     this.write(this.encodeLed(color), callback);
   }
 
@@ -329,18 +325,16 @@ export class Hub {
    * @param {number} [option=0] Unknown meaning. Needs to be 0 for distance/color, 2 for motors, 8 for tilt
    * @param {function} [callback]
    */
-  subscribe(port, option = 0, callback?) {
+  subscribe(port: string | number, option: number = 0, callback?: () => void) {
     if (typeof option === 'function') {
+      // TODO: Why we have function check here?
       callback = option;
       option = 0x00;
     }
-    if (typeof port === 'string') {
-      port = this.port2num[port];
-    }
-
+    const portNum = typeof port === 'string' ? this.port2num[port] : port;
     this.write(
       // @ts-ignore
-      Buffer.from([0x0a, 0x00, 0x41, port, option, 0x01, 0x00, 0x00, 0x00, 0x01]),
+      Buffer.from([0x0a, 0x00, 0x41, portNum, option, 0x01, 0x00, 0x00, 0x00, 0x01]),
       callback
     );
   }
@@ -351,17 +345,15 @@ export class Hub {
    * @param {number} [option=0] Unknown meaning. Needs to be 0 for distance/color, 2 for motors, 8 for tilt
    * @param {function} [callback]
    */
-  unsubscribe(port, option = 0, callback) {
+  unsubscribe(port: string | number, option: number = 0, callback: () => void) {
     if (typeof option === 'function') {
       callback = option;
       option = 0x00;
     }
-    if (typeof port === 'string') {
-      port = this.port2num[port];
-    }
+    const portNum = typeof port === 'string' ? this.port2num[port] : port;
     this.write(
       // @ts-ignore
-      Buffer.from([0x0a, 0x00, 0x41, port, option, 0x01, 0x00, 0x00, 0x00, 0x00]),
+      Buffer.from([0x0a, 0x00, 0x41, portNum, option, 0x01, 0x00, 0x00, 0x00, 0x00]),
       callback
     );
   }
@@ -388,7 +380,7 @@ export class Hub {
    * @param {string|Buffer} data If a string is given it has to have hex bytes separated by spaces, e.g. `0a 01 c3 b2`
    * @param {function} callback
    */
-  write(data, callback?) {
+  write(data: any, callback?: () => void) {
     if (typeof data === 'string') {
       const arr = [];
       data.split(' ').forEach(c => {
@@ -429,7 +421,7 @@ export class Hub {
     }
   }
 
-  encodeMotorTimeMulti(port, seconds, dutyCycleA = 100, dutyCycleB = -100) {
+  encodeMotorTimeMulti(port: number, seconds: number, dutyCycleA = 100, dutyCycleB = -100) {
     // @ts-ignore
     const buf = Buffer.from([0x0d, 0x00, 0x81, port, 0x11, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x64, 0x7f, 0x03]);
     buf.writeUInt16LE(seconds * 1000, 6);
@@ -438,7 +430,7 @@ export class Hub {
     return buf;
   }
 
-  encodeMotorTime(port, seconds, dutyCycle = 100) {
+  encodeMotorTime(port: number, seconds: number, dutyCycle = 100) {
     // @ts-ignore
     const buf = Buffer.from([0x0c, 0x00, 0x81, port, 0x11, 0x09, 0x00, 0x00, 0x00, 0x64, 0x7f, 0x03]);
     buf.writeUInt16LE(seconds * 1000, 6);
@@ -446,7 +438,7 @@ export class Hub {
     return buf;
   }
 
-  encodeMotorAngleMulti(port, angle, dutyCycleA = 100, dutyCycleB = -100) {
+  encodeMotorAngleMulti(port: number, angle: number, dutyCycleA = 100, dutyCycleB = -100) {
     // @ts-ignore
     const buf = Buffer.from([0x0f, 0x00, 0x81, port, 0x11, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x64, 0x7f, 0x03]);
     buf.writeUInt32LE(angle, 6);
@@ -455,7 +447,7 @@ export class Hub {
     return buf;
   }
 
-  encodeMotorAngle(port, angle, dutyCycle = 100) {
+  encodeMotorAngle(port: number, angle: number, dutyCycle = 100) {
     // @ts-ignore
     const buf = Buffer.from([0x0e, 0x00, 0x81, port, 0x11, 0x0b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x64, 0x7f, 0x03]);
     buf.writeUInt32LE(angle, 6);
@@ -463,7 +455,7 @@ export class Hub {
     return buf;
   }
 
-  encodeLed(color) {
+  encodeLed(color: string | number | boolean) {
     if (color === false) {
       color = 'off';
     } else if (color === true) {

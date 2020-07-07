@@ -219,10 +219,8 @@ var Hub = /** @class */ (function () {
             callback = dutyCycle;
             dutyCycle = 100;
         }
-        if (typeof port === 'string') {
-            port = this.port2num[port];
-        }
-        this.write(this.encodeMotorTime(port, seconds, dutyCycle), callback);
+        var portNum = typeof port === 'string' ? this.port2num[port] : port;
+        this.write(this.encodeMotorTime(portNum, seconds, dutyCycle), callback);
     };
     /**
      * Run both motors (A and B) for specific time
@@ -249,10 +247,8 @@ var Hub = /** @class */ (function () {
             callback = dutyCycle;
             dutyCycle = 100;
         }
-        if (typeof port === 'string') {
-            port = this.port2num[port];
-        }
-        this.write(this.encodeMotorAngle(port, angle, dutyCycle), callback);
+        var portNum = typeof port === 'string' ? this.port2num[port] : port;
+        this.write(this.encodeMotorAngle(portNum, angle, dutyCycle), callback);
     };
     /**
      * Turn both motors (A and B) by specific angle
@@ -301,15 +297,14 @@ var Hub = /** @class */ (function () {
     Hub.prototype.subscribe = function (port, option, callback) {
         if (option === void 0) { option = 0; }
         if (typeof option === 'function') {
+            // TODO: Why we have function check here?
             callback = option;
             option = 0x00;
         }
-        if (typeof port === 'string') {
-            port = this.port2num[port];
-        }
+        var portNum = typeof port === 'string' ? this.port2num[port] : port;
         this.write(
         // @ts-ignore
-        buffer_1.Buffer.from([0x0a, 0x00, 0x41, port, option, 0x01, 0x00, 0x00, 0x00, 0x01]), callback);
+        buffer_1.Buffer.from([0x0a, 0x00, 0x41, portNum, option, 0x01, 0x00, 0x00, 0x00, 0x01]), callback);
     };
     /**
      * Unsubscribe from sensor notifications
@@ -323,12 +318,10 @@ var Hub = /** @class */ (function () {
             callback = option;
             option = 0x00;
         }
-        if (typeof port === 'string') {
-            port = this.port2num[port];
-        }
+        var portNum = typeof port === 'string' ? this.port2num[port] : port;
         this.write(
         // @ts-ignore
-        buffer_1.Buffer.from([0x0a, 0x00, 0x41, port, option, 0x01, 0x00, 0x00, 0x00, 0x00]), callback);
+        buffer_1.Buffer.from([0x0a, 0x00, 0x41, portNum, option, 0x01, 0x00, 0x00, 0x00, 0x00]), callback);
     };
     Hub.prototype.subscribeAll = function () {
         var _this = this;

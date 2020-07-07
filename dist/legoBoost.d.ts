@@ -115,7 +115,7 @@ export default class LegoBoost {
      * Possible string values: `off`, `pink`, `purple`, `blue`, `lightblue`, `cyan`, `green`, `yellow`, `orange`, `red`,
      * `white`
      */
-    led(color: any): void;
+    led(color: boolean | number | string): void;
     /**
      * Control the LED on the Move Hub
      * @method LegoBoost#ledAsync
@@ -125,7 +125,7 @@ export default class LegoBoost {
      * `white`
      * @returns {Promise}
      */
-    ledAsync(color: any): Promise<{}>;
+    ledAsync(color: boolean | number | string): Promise<{}>;
     /**
      * Run a motor for specific time
      * @param {string|number} port possible string values: `A`, `B`, `AB`, `C`, `D`.
@@ -133,7 +133,7 @@ export default class LegoBoost {
      * @param {number} [dutyCycle=100] motor power percentage from `-100` to `100`. If a negative value is given rotation
      * is counterclockwise.
      */
-    motorTime(port: any, seconds: any, dutyCycle?: number): void;
+    motorTime(port: string | number, seconds: number, dutyCycle?: number): void;
     /**
      * Run a motor for specific time
      * @method LegoBoost#motorTimeAsync
@@ -144,7 +144,7 @@ export default class LegoBoost {
      * @param {boolean} [wait=false] will promise wait unitll motorTime run time has elapsed
      * @returns {Promise}
      */
-    motorTimeAsync(port: any, seconds: any, dutyCycle?: number, wait?: boolean): Promise<void>;
+    motorTimeAsync(port: string | number, seconds: number, dutyCycle?: number, wait?: boolean): Promise<void>;
     /**
      * Run both motors (A and B) for specific time
      * @param {number} seconds
@@ -154,7 +154,7 @@ export default class LegoBoost {
      * is counterclockwise.
      * @param {function} callback
      */
-    motorTimeMulti(seconds: any, dutyCycleA?: number, dutyCycleB?: number): void;
+    motorTimeMulti(seconds: number, dutyCycleA?: number, dutyCycleB?: number): void;
     /**
      * Run both motors (A and B) for specific time
      * @method LegoBoost#motorTimeMultiAsync
@@ -166,7 +166,7 @@ export default class LegoBoost {
      * @param {boolean} [wait=false] will promise wait unitll motorTime run time has elapsed
      * @returns {Promise}
      */
-    motorTimeMultiAsync(seconds: any, dutyCycleA?: number, dutyCycleB?: number, wait?: boolean): Promise<void>;
+    motorTimeMultiAsync(seconds: number, dutyCycleA?: number, dutyCycleB?: number, wait?: boolean): Promise<void>;
     /**
      * Turn a motor by specific angle
      * @param {string|number} port possible string values: `A`, `B`, `AB`, `C`, `D`.
@@ -174,7 +174,7 @@ export default class LegoBoost {
      * @param {number} [dutyCycle=100] motor power percentage from `-100` to `100`. If a negative value is given
      * rotation is counterclockwise.
      */
-    motorAngle(port: any, angle: any, dutyCycle?: number): void;
+    motorAngle(port: string | number, angle: number, dutyCycle?: number): void;
     /**
      * Turn a motor by specific angle
      * @method LegoBoost#motorAngleAsync
@@ -185,7 +185,7 @@ export default class LegoBoost {
      * @param {boolean} [wait=false] will promise wait unitll motorAngle has turned
      * @returns {Promise}
      */
-    motorAngleAsync(port: any, angle: any, dutyCycle?: number, wait?: boolean): Promise<void>;
+    motorAngleAsync(port: string | number, angle: number, dutyCycle?: number, wait?: boolean): Promise<void>;
     /**
      * Turn both motors (A and B) by specific angle
      * @method LegoBoost#motorAngleMulti
@@ -195,7 +195,7 @@ export default class LegoBoost {
      * @param {number} dutyCycleB motor power percentage from `-100` to `100`. If a negative value is given
      * rotation is counterclockwise.
      */
-    motorAngleMulti(angle: any, dutyCycleA?: number, dutyCycleB?: number): void;
+    motorAngleMulti(angle: number, dutyCycleA?: number, dutyCycleB?: number): void;
     /**
      * Turn both motors (A and B) by specific angle
      * @method LegoBoost#motorAngleMultiAsync
@@ -207,7 +207,7 @@ export default class LegoBoost {
      * @param {boolean} [wait=false] will promise wait unitll motorAngle has turned
      * @returns {Promise}
      */
-    motorAngleMultiAsync(angle: any, dutyCycleA?: number, dutyCycleB?: number, wait?: boolean): Promise<void>;
+    motorAngleMultiAsync(angle: number, dutyCycleA?: number, dutyCycleB?: number, wait?: boolean): Promise<void>;
     /**
      * Drive specified distance
      * @method LegoBoost#drive
@@ -215,7 +215,7 @@ export default class LegoBoost {
      * @param {boolean} [wait=true] will promise wait untill the drive has completed.
      * @returns {Promise}
      */
-    drive(distance: any, wait?: boolean): Promise<{}>;
+    drive(distance: number, wait?: boolean): Promise<{}>;
     /**
      * Turn robot specified degrees
      * @method LegoBoost#turn
@@ -223,7 +223,7 @@ export default class LegoBoost {
      * @param {boolean} [wait=true] will promise wait untill the turn has completed.
      * @returns {Promise}
      */
-    turn(degrees: any, wait?: boolean): Promise<{}>;
+    turn(degrees: number, wait?: boolean): Promise<{}>;
     /**
      * Drive untill sensor shows object in defined distance
      * @method LegoBoost#driveUntil

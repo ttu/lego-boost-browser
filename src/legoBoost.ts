@@ -9,7 +9,7 @@ export default class LegoBoost {
   private updateTimer: any;
   private configuration: BoostConfiguration;
 
-  private logDebug: (message?: any, ...optionalParams: any[]) => void = (s) => {};
+  private logDebug: (message?: any, ...optionalParams: any[]) => void = s => {};
 
   /**
    * Information from Lego Boost motos and sensors
@@ -61,7 +61,7 @@ export default class LegoBoost {
     }
   }
 
-  private async initHub(characteristic, configuration) {
+  private async initHub(characteristic: BluetoothRemoteGATTCharacteristic, configuration: BoostConfiguration) {
     this.hub = new HubAsync(characteristic, configuration);
     this.hub.logDebug = this.logDebug;
 
@@ -188,7 +188,7 @@ export default class LegoBoost {
    * Possible string values: `off`, `pink`, `purple`, `blue`, `lightblue`, `cyan`, `green`, `yellow`, `orange`, `red`,
    * `white`
    */
-  led(color): void {
+  led(color: boolean | number | string): void {
     if (!this.preCheck()) return;
     this.hub.led(color);
   }
@@ -202,7 +202,7 @@ export default class LegoBoost {
    * `white`
    * @returns {Promise}
    */
-  async ledAsync(color): Promise<{}> {
+  async ledAsync(color: boolean | number | string): Promise<{}> {
     if (!this.preCheck()) return;
     return await this.hub.ledAsync(color);
   }
@@ -214,7 +214,7 @@ export default class LegoBoost {
    * @param {number} [dutyCycle=100] motor power percentage from `-100` to `100`. If a negative value is given rotation
    * is counterclockwise.
    */
-  motorTime(port, seconds, dutyCycle = 100): void {
+  motorTime(port: string | number, seconds: number, dutyCycle = 100): void {
     if (!this.preCheck()) return;
     this.hub.motorTime(port, seconds, dutyCycle);
   }
@@ -229,7 +229,7 @@ export default class LegoBoost {
    * @param {boolean} [wait=false] will promise wait unitll motorTime run time has elapsed
    * @returns {Promise}
    */
-  async motorTimeAsync(port, seconds, dutyCycle = 100, wait = true): Promise<void> {
+  async motorTimeAsync(port: string | number, seconds: number, dutyCycle: number = 100, wait: boolean = true): Promise<void> {
     if (!this.preCheck()) return;
     await this.hub.motorTimeAsync(port, seconds, dutyCycle, wait);
   }
@@ -243,7 +243,7 @@ export default class LegoBoost {
    * is counterclockwise.
    * @param {function} callback
    */
-  motorTimeMulti(seconds, dutyCycleA = 100, dutyCycleB = 100): void {
+  motorTimeMulti(seconds: number, dutyCycleA: number = 100, dutyCycleB: number = 100): void {
     if (!this.preCheck()) return;
     this.hub.motorTimeMulti(seconds, dutyCycleA, dutyCycleB);
   }
@@ -259,7 +259,7 @@ export default class LegoBoost {
    * @param {boolean} [wait=false] will promise wait unitll motorTime run time has elapsed
    * @returns {Promise}
    */
-  async motorTimeMultiAsync(seconds, dutyCycleA = 100, dutyCycleB = 100, wait = true): Promise<void> {
+  async motorTimeMultiAsync(seconds: number, dutyCycleA: number = 100, dutyCycleB: number = 100, wait: boolean = true): Promise<void> {
     if (!this.preCheck()) return;
     await this.hub.motorTimeMultiAsync(seconds, dutyCycleA, dutyCycleB, wait);
   }
@@ -271,7 +271,7 @@ export default class LegoBoost {
    * @param {number} [dutyCycle=100] motor power percentage from `-100` to `100`. If a negative value is given
    * rotation is counterclockwise.
    */
-  motorAngle(port, angle, dutyCycle = 100): void {
+  motorAngle(port: string | number, angle: number, dutyCycle: number = 100): void {
     if (!this.preCheck()) return;
     this.hub.motorAngle(port, angle, dutyCycle);
   }
@@ -286,7 +286,7 @@ export default class LegoBoost {
    * @param {boolean} [wait=false] will promise wait unitll motorAngle has turned
    * @returns {Promise}
    */
-  async motorAngleAsync(port, angle, dutyCycle = 100, wait = true): Promise<void> {
+  async motorAngleAsync(port: string | number, angle: number, dutyCycle: number = 100, wait: boolean = true): Promise<void> {
     if (!this.preCheck()) return;
     await this.hub.motorAngleAsync(port, angle, dutyCycle, wait);
   }
@@ -300,7 +300,7 @@ export default class LegoBoost {
    * @param {number} dutyCycleB motor power percentage from `-100` to `100`. If a negative value is given
    * rotation is counterclockwise.
    */
-  motorAngleMulti(angle, dutyCycleA = 100, dutyCycleB = 100): void {
+  motorAngleMulti(angle: number, dutyCycleA: number = 100, dutyCycleB: number = 100): void {
     if (!this.preCheck()) return;
     this.hub.motorAngleMulti(angle, dutyCycleA, dutyCycleB);
   }
@@ -316,7 +316,7 @@ export default class LegoBoost {
    * @param {boolean} [wait=false] will promise wait unitll motorAngle has turned
    * @returns {Promise}
    */
-  async motorAngleMultiAsync(angle, dutyCycleA = 100, dutyCycleB = 100, wait = true): Promise<void> {
+  async motorAngleMultiAsync(angle: number, dutyCycleA: number = 100, dutyCycleB: number = 100, wait: boolean = true): Promise<void> {
     if (!this.preCheck()) return;
     await this.hub.motorAngleMultiAsync(angle, dutyCycleA, dutyCycleB, wait);
   }
@@ -328,7 +328,7 @@ export default class LegoBoost {
    * @param {boolean} [wait=true] will promise wait untill the drive has completed.
    * @returns {Promise}
    */
-  async drive(distance, wait = true): Promise<{}> {
+  async drive(distance: number, wait: boolean = true): Promise<{}> {
     if (!this.preCheck()) return;
     return await this.hub.drive(distance, wait);
   }
@@ -340,7 +340,7 @@ export default class LegoBoost {
    * @param {boolean} [wait=true] will promise wait untill the turn has completed.
    * @returns {Promise}
    */
-  async turn(degrees, wait = true): Promise<{}> {
+  async turn(degrees: number, wait: boolean = true): Promise<{}> {
     if (!this.preCheck()) return;
     return await this.hub.turn(degrees, wait);
   }
@@ -353,7 +353,7 @@ export default class LegoBoost {
    * @param {boolean} [wait=true] will promise wait untill the bot will stop.
    * @returns {Promise}
    */
-  async driveUntil(distance = 0, wait = true): Promise<any> {
+  async driveUntil(distance: number = 0, wait: boolean = true): Promise<any> {
     if (!this.preCheck()) return;
     return await this.hub.driveUntil(distance, wait);
   }
@@ -365,7 +365,7 @@ export default class LegoBoost {
    * @param {boolean} [wait=true] will promise wait untill the bot will stop.
    * @returns {Promise}
    */
-  async turnUntil(direction = 1, wait = true): Promise<any> {
+  async turnUntil(direction: number = 1, wait: boolean = true): Promise<any> {
     if (!this.preCheck()) return;
     return await this.hub.turnUntil(direction, wait);
   }

@@ -34,7 +34,7 @@ export declare class HubAsync extends Hub {
      * @method Hub#disconnectAsync
      * @returns {Promise<boolean>} disconnection successful
      */
-    disconnectAsync(): any;
+    disconnectAsync(): Promise<boolean>;
     /**
      * Execute this method after new instance of Hub is created
      * @method Hub#afterInitialization
@@ -49,18 +49,18 @@ export declare class HubAsync extends Hub {
      * `white`
      * @returns {Promise}
      */
-    ledAsync(color: any): Promise<{}>;
+    ledAsync(color: boolean | number | string): Promise<any>;
     /**
      * Run a motor for specific time
      * @method Hub#motorTimeAsync
      * @param {string|number} port possible string values: `A`, `B`, `AB`, `C`, `D`.
      * @param {number} seconds
-     * @param {number} [dutyCycle=100] motor power percentage from `-100` to `100`. If a negative value is given rotation
+     * @param {number} [dutyCycle=100] motor power percentsage from `-100` to `100`. If a negative value is given rotation
      * is counterclockwise.
      * @param {boolean} [wait=false] will promise wait unitll motorTime run time has elapsed
      * @returns {Promise}
      */
-    motorTimeAsync(port: any, seconds: any, dutyCycle?: number, wait?: boolean): Promise<{}>;
+    motorTimeAsync(port: string | number, seconds: number, dutyCycle?: number, wait?: boolean): Promise<any>;
     /**
      * Run both motors (A and B) for specific time
      * @method Hub#motorTimeMultiAsync
@@ -72,7 +72,7 @@ export declare class HubAsync extends Hub {
      * @param {boolean} [wait=false] will promise wait unitll motorTime run time has elapsed
      * @returns {Promise}
      */
-    motorTimeMultiAsync(seconds: any, dutyCycleA?: number, dutyCycleB?: number, wait?: boolean): Promise<{}>;
+    motorTimeMultiAsync(seconds: number, dutyCycleA?: number, dutyCycleB?: number, wait?: boolean): Promise<any>;
     /**
      * Turn a motor by specific angle
      * @method Hub#motorAngleAsync
@@ -83,7 +83,7 @@ export declare class HubAsync extends Hub {
      * @param {boolean} [wait=false] will promise wait unitll motorAngle has turned
      * @returns {Promise}
      */
-    motorAngleAsync(port: any, angle: any, dutyCycle?: number, wait?: boolean): Promise<{}>;
+    motorAngleAsync(port: string | number, angle: number, dutyCycle?: number, wait?: boolean): Promise<any>;
     /**
      * Turn both motors (A and B) by specific angle
      * @method Hub#motorAngleMultiAsync
@@ -95,7 +95,7 @@ export declare class HubAsync extends Hub {
      * @param {boolean} [wait=false] will promise wait unitll motorAngle has turned
      * @returns {Promise}
      */
-    motorAngleMultiAsync(angle: any, dutyCycleA?: number, dutyCycleB?: number, wait?: boolean): Promise<{}>;
+    motorAngleMultiAsync(angle: number, dutyCycleA?: number, dutyCycleB?: number, wait?: boolean): Promise<any>;
     /**
      * Use metric units (default)
      * @method Hub#useMetricUnits
@@ -111,7 +111,7 @@ export declare class HubAsync extends Hub {
      * @method Hub#setFrictionModifier
      * @param {number} modifier friction modifier
      */
-    setFrictionModifier(modifier: any): void;
+    setFrictionModifier(modifier: number): void;
     /**
      * Drive specified distance
      * @method Hub#drive
@@ -119,7 +119,7 @@ export declare class HubAsync extends Hub {
      * @param {boolean} [wait=true] will promise wait untill the drive has completed.
      * @returns {Promise}
      */
-    drive(distance: any, wait?: boolean): Promise<{}>;
+    drive(distance: number, wait?: boolean): Promise<any>;
     /**
      * Turn robot specified degrees
      * @method Hub#turn
@@ -127,7 +127,7 @@ export declare class HubAsync extends Hub {
      * @param {boolean} [wait=true] will promise wait untill the turn has completed.
      * @returns {Promise}
      */
-    turn(degrees: any, wait?: boolean): Promise<{}>;
+    turn(degrees: number, wait?: boolean): Promise<any>;
     /**
      * Drive untill sensor shows object in defined distance
      * @method Hub#driveUntil

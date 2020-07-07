@@ -157,7 +157,7 @@ var HubAsync = /** @class */ (function (_super) {
      * @method Hub#motorTimeAsync
      * @param {string|number} port possible string values: `A`, `B`, `AB`, `C`, `D`.
      * @param {number} seconds
-     * @param {number} [dutyCycle=100] motor power percentage from `-100` to `100`. If a negative value is given rotation
+     * @param {number} [dutyCycle=100] motor power percentsage from `-100` to `100`. If a negative value is given rotation
      * is counterclockwise.
      * @param {boolean} [wait=false] will promise wait unitll motorTime run time has elapsed
      * @returns {Promise}
@@ -166,7 +166,7 @@ var HubAsync = /** @class */ (function (_super) {
         var _this = this;
         if (dutyCycle === void 0) { dutyCycle = 100; }
         if (wait === void 0) { wait = false; }
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve, _) {
             _this.motorTime(port, seconds, dutyCycle, function () {
                 setTimeout(resolve, wait ? CALLBACK_TIMEOUT_MS + seconds * 1000 : CALLBACK_TIMEOUT_MS);
             });
@@ -188,7 +188,7 @@ var HubAsync = /** @class */ (function (_super) {
         if (dutyCycleA === void 0) { dutyCycleA = 100; }
         if (dutyCycleB === void 0) { dutyCycleB = 100; }
         if (wait === void 0) { wait = false; }
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve, _) {
             _this.motorTimeMulti(seconds, dutyCycleA, dutyCycleB, function () {
                 setTimeout(resolve, wait ? CALLBACK_TIMEOUT_MS + seconds * 1000 : CALLBACK_TIMEOUT_MS);
             });
@@ -208,7 +208,7 @@ var HubAsync = /** @class */ (function (_super) {
         var _this = this;
         if (dutyCycle === void 0) { dutyCycle = 100; }
         if (wait === void 0) { wait = false; }
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve, _) {
             _this.motorAngle(port, angle, dutyCycle, function () { return __awaiter(_this, void 0, void 0, function () {
                 var beforeTurn;
                 return __generator(this, function (_a) {
@@ -254,7 +254,7 @@ var HubAsync = /** @class */ (function (_super) {
         if (dutyCycleA === void 0) { dutyCycleA = 100; }
         if (dutyCycleB === void 0) { dutyCycleB = 100; }
         if (wait === void 0) { wait = false; }
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve, _) {
             _this.motorAngleMulti(angle, dutyCycleA, dutyCycleB, function () { return __awaiter(_this, void 0, void 0, function () {
                 var beforeTurn;
                 return __generator(this, function (_a) {
