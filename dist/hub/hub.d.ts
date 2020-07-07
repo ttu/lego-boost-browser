@@ -18,7 +18,7 @@ export declare class Hub {
     rssi: number;
     reconnect: boolean;
     writeCue: any;
-    isWritting: boolean;
+    isWriting: boolean;
     private emit;
     constructor(characteristic: BluetoothRemoteGATTCharacteristic);
     private addListeners;

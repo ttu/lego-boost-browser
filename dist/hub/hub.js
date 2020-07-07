@@ -8,7 +8,7 @@ var Hub = /** @class */ (function () {
         this.emitter = new eventEmitter_1.EventEmitter();
         this.autoSubscribe = true;
         this.writeCue = [];
-        this.isWritting = false;
+        this.isWriting = false;
         this.characteristic = characteristic;
         this.log = console.log;
         this.autoSubscribe = true;
@@ -368,21 +368,21 @@ var Hub = /** @class */ (function () {
     };
     Hub.prototype.writeFromCue = function () {
         var _this = this;
-        if (this.writeCue.length > 0 && !this.isWritting) {
+        if (this.writeCue.length > 0 && !this.isWriting) {
             var el_1 = this.writeCue.shift();
             this.logDebug('Writing to device', el_1);
-            this.isWritting = true;
+            this.isWriting = true;
             this.characteristic
                 .writeValue(el_1.data)
                 .then(function () {
-                _this.isWritting = false;
+                _this.isWriting = false;
                 if (typeof el_1.callback === 'function')
                     el_1.callback();
                 _this.writeFromCue();
             })
                 .catch(function (err) {
                 _this.log("Error while writing: " + el_1.data + " - Error " + err.toString());
-                _this.isWritting = false;
+                _this.isWriting = false;
                 // TODO: Notify of failure
                 _this.writeFromCue();
             });

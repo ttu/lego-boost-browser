@@ -22,7 +22,7 @@ export class Hub {
   reconnect: boolean;
 
   writeCue: any = [];
-  isWritting: boolean = false;
+  isWriting: boolean = false;
 
   private emit(type: string, data: any = null) {
     this.emitter.emit(type, data);
@@ -401,20 +401,20 @@ export class Hub {
   }
 
   writeFromCue() {
-    if (this.writeCue.length > 0 && !this.isWritting) {
+    if (this.writeCue.length > 0 && !this.isWriting) {
       const el: any = this.writeCue.shift();
       this.logDebug('Writing to device', el);
-      this.isWritting = true;
+      this.isWriting = true;
       this.characteristic
         .writeValue(el.data)
         .then(() => {
-          this.isWritting = false;
+          this.isWriting = false;
           if (typeof el.callback === 'function') el.callback();
           this.writeFromCue();
         })
         .catch(err => {
           this.log(`Error while writing: ${el.data} - Error ${err.toString()}`);
-          this.isWritting = false;
+          this.isWriting = false;
           // TODO: Notify of failure
           this.writeFromCue();
         });
