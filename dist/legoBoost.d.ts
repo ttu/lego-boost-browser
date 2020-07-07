@@ -87,9 +87,9 @@ export default class LegoBoost {
     /**
      * Disconnect Lego Boost
      * @method LegoBoost#disconnect
-     * @returns {Promise<boolean>}
+     * @returns {boolean|undefined}
      */
-    disconnect(): Promise<boolean>;
+    disconnect(): boolean | undefined;
     /**
      * Start AI mode
      * @method LegoBoost#ai

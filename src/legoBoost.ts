@@ -136,12 +136,12 @@ export default class LegoBoost {
   /**
    * Disconnect Lego Boost
    * @method LegoBoost#disconnect
-   * @returns {Promise<boolean>}
+   * @returns {boolean|undefined}
    */
-  async disconnect(): Promise<boolean> {
+  disconnect(): boolean | undefined {
     if (!this.hub || this.hub.connected === false) return;
     this.hub.setDisconnected();
-    const success = await BoostConnector.disconnect();
+    const success = BoostConnector.disconnect();
     return success;
   }
 

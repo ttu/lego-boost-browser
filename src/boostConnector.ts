@@ -43,9 +43,9 @@ export class BoostConnector {
     return [false, null];
   }
 
-  public static async disconnect(): Promise<boolean> {
+  public static disconnect(): boolean {
     if (this.device) {
-      await this.device.gatt.disconnect();
+      this.device.gatt.disconnect();
       return true;
     }
     return false;

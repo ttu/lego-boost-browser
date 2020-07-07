@@ -202,24 +202,14 @@ var LegoBoost = /** @class */ (function () {
     /**
      * Disconnect Lego Boost
      * @method LegoBoost#disconnect
-     * @returns {Promise<boolean>}
+     * @returns {boolean|undefined}
      */
     LegoBoost.prototype.disconnect = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var success;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!this.hub || this.hub.connected === false)
-                            return [2 /*return*/];
-                        this.hub.setDisconnected();
-                        return [4 /*yield*/, boostConnector_1.BoostConnector.disconnect()];
-                    case 1:
-                        success = _a.sent();
-                        return [2 /*return*/, success];
-                }
-            });
-        });
+        if (!this.hub || this.hub.connected === false)
+            return;
+        this.hub.setDisconnected();
+        var success = boostConnector_1.BoostConnector.disconnect();
+        return success;
     };
     /**
      * Start AI mode

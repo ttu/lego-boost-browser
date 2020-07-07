@@ -110,19 +110,11 @@ var BoostConnector = /** @class */ (function () {
         });
     };
     BoostConnector.disconnect = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!this.device) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this.device.gatt.disconnect()];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/, true];
-                    case 2: return [2 /*return*/, false];
-                }
-            });
-        });
+        if (this.device) {
+            this.device.gatt.disconnect();
+            return true;
+        }
+        return false;
     };
     BoostConnector.isWebBluetoothSupported = navigator.bluetooth ? true : false;
     return BoostConnector;

@@ -5,6 +5,6 @@ export declare class BoostConnector {
     static connect(disconnectCallback: () => Promise<void>): Promise<BluetoothRemoteGATTCharacteristic>;
     private static getCharacteristic;
     static reconnect(): Promise<[boolean, BluetoothRemoteGATTCharacteristic]>;
-    static disconnect(): Promise<boolean>;
+    static disconnect(): boolean;
 }
 //# sourceMappingURL=boostConnector.d.ts.map
