@@ -21,16 +21,15 @@ declare namespace Buffer {
     var poolSize: number;
     var from: (value: any, encodingOrOffset: any, length: any) => any;
     var __proto__: Uint8ArrayConstructor;
-    var alloc: (size: any, fill: any, encoding: any) => any;
+    var alloc: (size: any, fill: any, encoding: any) => Uint8Array;
     var allocUnsafe: (size: any) => Uint8Array;
     var allocUnsafeSlow: (size: any) => Uint8Array;
     var isBuffer: (b: any) => boolean;
     var compare: (a: any, b: any) => 1 | -1 | 0;
     var isEncoding: (encoding: any) => boolean;
-    var concat: (list: any, length: any) => any;
-    var byteLength: typeof byteLength;
+    var concat: (list: any, length: any) => Uint8Array;
+    var byteLength: (string: any, encoding: any) => any;
 }
-declare function SlowBuffer(length: any): any;
-declare function byteLength(string: any, encoding: any): any;
+declare function SlowBuffer(length: any): Uint8Array;
 export { Buffer, SlowBuffer, INSPECT_MAX_BYTES, kMaxLength };
 //# sourceMappingURL=buffer.d.ts.map

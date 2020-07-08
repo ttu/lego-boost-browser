@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Hub = void 0;
 var eventEmitter_1 = require("../helpers/eventEmitter");
 var buffer_1 = require("../helpers/buffer");
 var Hub = /** @class */ (function () {

@@ -1,6 +1,14 @@
 "use strict";
 // https://gist.github.com/mudge/5830382#gistcomment-2658721
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.EventEmitter = void 0;
 var EventEmitter = /** @class */ (function () {
     function EventEmitter() {
         this.events = {};
@@ -35,7 +43,7 @@ var EventEmitter = /** @class */ (function () {
         if (typeof this.events[event] !== 'object') {
             return;
         }
-        this.events[event].slice().forEach(function (listener) { return listener.apply(_this, args); });
+        __spreadArrays(this.events[event]).forEach(function (listener) { return listener.apply(_this, args); });
     };
     EventEmitter.prototype.once = function (event, listener) {
         var _this = this;

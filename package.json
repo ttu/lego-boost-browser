@@ -8,7 +8,7 @@
     "build": "rm -rf dist && tsc",
     "build:browser": "mkdirp dist && browserify ./src/browser.ts --debug -p [ tsify ] > ./dist/bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "tslint --project ./tsconfig.json",
+    "lint": "tsc --noEmit && tslint --project ./tsconfig.json",
     "prettier": "cross-env prettier --check './src/**/*'"
   },
   "author": "Tomi Tuhkanen",
@@ -18,17 +18,17 @@
   },
   "homepage": "https://github.com/ttu/lego-boost-browser#readme",
   "devDependencies": {
-    "browserify": "^16.2.3",
-    "cross-env": "^5.2.0",
-    "mkdirp": "^0.5.1",
-    "prettier": "^1.17.0",
-    "ts-node": "^8.1.0",
-    "tsify": "^4.0.1",
-    "tslint": "^5.16.0",
+    "browserify": "^16.5.1",
+    "cross-env": "^5.2.1",
+    "mkdirp": "^0.5.5",
+    "prettier": "^1.19.1",
+    "ts-node": "^8.10.2",
+    "tsify": "^4.0.2",
+    "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.4.4"
+    "typescript": "^3.9.6"
   },
   "dependencies": {
-    "@types/web-bluetooth": "^0.0.4"
+    "@types/web-bluetooth": "^0.0.7"
   }
 }

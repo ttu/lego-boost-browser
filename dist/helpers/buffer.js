@@ -7,6 +7,7 @@
 /* eslint-disable no-proto */
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.kMaxLength = exports.INSPECT_MAX_BYTES = exports.SlowBuffer = exports.Buffer = void 0;
 var base64 = Promise.resolve().then(function () { return require('base64-js'); });
 var ieee754 = Promise.resolve().then(function () { return require('ieee754'); });
 var INSPECT_MAX_BYTES = 50;

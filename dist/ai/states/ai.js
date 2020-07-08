@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.seek = exports.turn = exports.drive = exports.back = exports.stop = void 0;
 var MIN_DISTANCE = 75;
 var OK_DISTANCE = 100;
 var EXECUTE_TIME_SEC = 60;
