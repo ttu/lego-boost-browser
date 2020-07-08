@@ -1,6 +1,21 @@
 import { EventEmitter } from '../helpers/eventEmitter';
 import { Buffer } from '../helpers/buffer';
 
+type Device = 'LED' | 'DISTANCE' | 'IMOTOR' | 'MOTOR' | 'TILT';
+type Port = 'A' | 'B' | 'C' | 'D' | 'AB' | 'LED' | 'TILT';
+type LedColor =
+  | 'off'
+  | 'pink'
+  | 'purple'
+  | 'blue'
+  | 'lightblue'
+  | 'cyan'
+  | 'green'
+  | 'yellow'
+  | 'orange'
+  | 'red'
+  | 'white';
+
 export class Hub {
   emitter: EventEmitter<any> = new EventEmitter<any>();
   characteristic: BluetoothRemoteGATTCharacteristic;
@@ -9,13 +24,14 @@ export class Hub {
   logDebug: (message?: any, ...optionalParams: any[]) => void;
 
   autoSubscribe: boolean = true;
-  ports: any;
-  num2type: any;
-  port2num: any;
-  num2port: any;
-  num2action: any;
-  num2color: any;
-  portInfoTimeout: any;
+  ports: { [key: string]: any };
+  num2type: { [key: number]: Device };
+  port2num: { [key in Port]: number };
+  num2port: { [key: number]: string };
+  num2action: { [key: number]: string };
+  num2color: { [key: number]: string };
+  ledColors: LedColor[];
+  portInfoTimeout: number;
   noReconnect: boolean;
   connected: boolean;
   rssi: number;
@@ -49,10 +65,10 @@ export class Hub {
       LED: 0x32,
       TILT: 0x3a,
     };
-    this.num2port = {};
-    Object.keys(this.port2num).forEach(p => {
-      this.num2port[this.port2num[p]] = p;
-    });
+    this.num2port = Object.entries(this.port2num).reduce((acc, [port, portNum]) => {
+      acc[portNum] = port;
+      return acc;
+    }, {});
     this.num2action = {
       1: 'start',
       5: 'conflict',
@@ -66,6 +82,19 @@ export class Hub {
       9: 'red',
       10: 'white',
     };
+    this.ledColors = [
+      'off',
+      'pink',
+      'purple',
+      'blue',
+      'lightblue',
+      'cyan',
+      'green',
+      'yellow',
+      'orange',
+      'red',
+      'white',
+    ];
 
     this.addListeners();
   }
@@ -169,8 +198,8 @@ export class Hub {
          */
         this.emit('color', this.num2color[data[4]]);
 
-        // TODO improve distance calculation!
-        let distance;
+        // TODO: improve distance calculation!
+        let distance: number;
         if (data[7] > 0 && data[5] < 2) {
           distance = Math.floor(20 - data[7] * 2.85);
         } else if (data[5] > 9) {
@@ -296,9 +325,9 @@ export class Hub {
 
   //[0x09, 0x00, 0x81, 0x39, 0x11, 0x07, 0x00, 0x64, 0x03]
   encodeMotorPower(port: string | number, dutyCycle = 100) {
-    const p = this.port2num[port];
+    const portNum = typeof port === 'string' ? this.port2num[port] : port;
     // @ts-ignore
-    const buf = Buffer.from([0x09, 0x00, 0x81, p, 0x11, 0x07, 0x00, 0x64, 0x03]);
+    const buf = Buffer.from([0x09, 0x00, 0x81, portNum, 0x11, 0x07, 0x00, 0x64, 0x03]);
     //buf.writeUInt16LE(seconds * 1000, 6);
     buf.writeInt8(dutyCycle, 6);
     return buf;
@@ -359,14 +388,14 @@ export class Hub {
   }
 
   subscribeAll() {
-    Object.keys(this.ports).forEach(port => {
-      if (this.ports[port].deviceType === 'DISTANCE') {
+    Object.entries(this.ports).forEach(([port, data]) => {
+      if (data.deviceType === 'DISTANCE') {
         this.subscribe(parseInt(port, 10), 8);
-      } else if (this.ports[port].deviceType === 'TILT') {
+      } else if (data.deviceType === 'TILT') {
         this.subscribe(parseInt(port, 10), 0);
-      } else if (this.ports[port].deviceType === 'IMOTOR') {
+      } else if (data.deviceType === 'IMOTOR') {
         this.subscribe(parseInt(port, 10), 2);
-      } else if (this.ports[port].deviceType === 'MOTOR') {
+      } else if (data.deviceType === 'MOTOR') {
         this.subscribe(parseInt(port, 10), 2);
       } else {
         this.logDebug(`Port subscribtion not sent: ${port}`);
@@ -401,24 +430,25 @@ export class Hub {
   }
 
   writeFromCue() {
-    if (this.writeCue.length > 0 && !this.isWriting) {
-      const el: any = this.writeCue.shift();
-      this.logDebug('Writing to device', el);
-      this.isWriting = true;
-      this.characteristic
-        .writeValue(el.data)
-        .then(() => {
-          this.isWriting = false;
-          if (typeof el.callback === 'function') el.callback();
-          this.writeFromCue();
-        })
-        .catch(err => {
-          this.log(`Error while writing: ${el.data} - Error ${err.toString()}`);
-          this.isWriting = false;
-          // TODO: Notify of failure
-          this.writeFromCue();
-        });
-    }
+    if (this.writeCue.length === 0 || this.isWriting) return;
+
+    const el: any = this.writeCue.shift();
+    this.logDebug('Writing to device', el);
+    this.isWriting = true;
+    this.characteristic
+      .writeValue(el.data)
+      .then(() => {
+        this.isWriting = false;
+        if (typeof el.callback === 'function') el.callback();
+      })
+      .catch(err => {
+        this.isWriting = false;
+        this.log(`Error while writing: ${el.data} - Error ${err.toString()}`);
+        // TODO: Notify of failure
+      })
+      .finally(() => {
+        this.writeFromCue();
+      });
   }
 
   encodeMotorTimeMulti(port: number, seconds: number, dutyCycleA = 100, dutyCycleB = -100) {
@@ -456,28 +486,11 @@ export class Hub {
   }
 
   encodeLed(color: string | number | boolean) {
-    if (color === false) {
-      color = 'off';
-    } else if (color === true) {
-      color = 'white';
+    if (typeof color === 'boolean') {
+      color = color ? 'white' : 'off';
     }
-    if (typeof color === 'string') {
-      const colors = [
-        'off',
-        'pink',
-        'purple',
-        'blue',
-        'lightblue',
-        'cyan',
-        'green',
-        'yellow',
-        'orange',
-        'red',
-        'white',
-      ];
-      color = colors.indexOf(color);
-    }
+    const colorNum = typeof color === 'string' ? this.ledColors.indexOf(color as LedColor) : color;
     // @ts-ignore
-    return Buffer.from([0x08, 0x00, 0x81, 0x32, 0x11, 0x51, 0x00, color]);
+    return Buffer.from([0x08, 0x00, 0x81, 0x32, 0x11, 0x51, 0x00, colorNum]);
   }
 }

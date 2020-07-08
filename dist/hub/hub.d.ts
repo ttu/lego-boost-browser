@@ -1,18 +1,34 @@
 /// <reference types="web-bluetooth" />
 import { EventEmitter } from '../helpers/eventEmitter';
+declare type Device = 'LED' | 'DISTANCE' | 'IMOTOR' | 'MOTOR' | 'TILT';
+declare type Port = 'A' | 'B' | 'C' | 'D' | 'AB' | 'LED' | 'TILT';
+declare type LedColor = 'off' | 'pink' | 'purple' | 'blue' | 'lightblue' | 'cyan' | 'green' | 'yellow' | 'orange' | 'red' | 'white';
 export declare class Hub {
     emitter: EventEmitter<any>;
     characteristic: BluetoothRemoteGATTCharacteristic;
     log: (message?: any, ...optionalParams: any[]) => void;
     logDebug: (message?: any, ...optionalParams: any[]) => void;
     autoSubscribe: boolean;
-    ports: any;
-    num2type: any;
-    port2num: any;
-    num2port: any;
-    num2action: any;
-    num2color: any;
-    portInfoTimeout: any;
+    ports: {
+        [key: string]: any;
+    };
+    num2type: {
+        [key: number]: Device;
+    };
+    port2num: {
+        [key in Port]: number;
+    };
+    num2port: {
+        [key: number]: string;
+    };
+    num2action: {
+        [key: number]: string;
+    };
+    num2color: {
+        [key: number]: string;
+    };
+    ledColors: LedColor[];
+    portInfoTimeout: number;
     noReconnect: boolean;
     connected: boolean;
     rssi: number;
@@ -108,4 +124,5 @@ export declare class Hub {
     encodeMotorAngle(port: number, angle: number, dutyCycle?: number): any;
     encodeLed(color: string | number | boolean): any;
 }
+export {};
 //# sourceMappingURL=hub.d.ts.map

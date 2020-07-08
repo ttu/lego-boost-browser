@@ -5,7 +5,6 @@ var eventEmitter_1 = require("../helpers/eventEmitter");
 var buffer_1 = require("../helpers/buffer");
 var Hub = /** @class */ (function () {
     function Hub(characteristic) {
-        var _this = this;
         this.emitter = new eventEmitter_1.EventEmitter();
         this.autoSubscribe = true;
         this.writeCue = [];
@@ -30,10 +29,11 @@ var Hub = /** @class */ (function () {
             LED: 0x32,
             TILT: 0x3a,
         };
-        this.num2port = {};
-        Object.keys(this.port2num).forEach(function (p) {
-            _this.num2port[_this.port2num[p]] = p;
-        });
+        this.num2port = Object.entries(this.port2num).reduce(function (acc, _a) {
+            var port = _a[0], portNum = _a[1];
+            acc[portNum] = port;
+            return acc;
+        }, {});
         this.num2action = {
             1: 'start',
             5: 'conflict',
@@ -47,6 +47,19 @@ var Hub = /** @class */ (function () {
             9: 'red',
             10: 'white',
         };
+        this.ledColors = [
+            'off',
+            'pink',
+            'purple',
+            'blue',
+            'lightblue',
+            'cyan',
+            'green',
+            'yellow',
+            'orange',
+            'red',
+            'white',
+        ];
         this.addListeners();
     }
     Hub.prototype.emit = function (type, data) {
@@ -148,7 +161,7 @@ var Hub = /** @class */ (function () {
                  * @param color {string}
                  */
                 this.emit('color', this.num2color[data[4]]);
-                // TODO improve distance calculation!
+                // TODO: improve distance calculation!
                 var distance = void 0;
                 if (data[7] > 0 && data[5] < 2) {
                     distance = Math.floor(20 - data[7] * 2.85);
@@ -269,9 +282,9 @@ var Hub = /** @class */ (function () {
     //[0x09, 0x00, 0x81, 0x39, 0x11, 0x07, 0x00, 0x64, 0x03]
     Hub.prototype.encodeMotorPower = function (port, dutyCycle) {
         if (dutyCycle === void 0) { dutyCycle = 100; }
-        var p = this.port2num[port];
+        var portNum = typeof port === 'string' ? this.port2num[port] : port;
         // @ts-ignore
-        var buf = buffer_1.Buffer.from([0x09, 0x00, 0x81, p, 0x11, 0x07, 0x00, 0x64, 0x03]);
+        var buf = buffer_1.Buffer.from([0x09, 0x00, 0x81, portNum, 0x11, 0x07, 0x00, 0x64, 0x03]);
         //buf.writeUInt16LE(seconds * 1000, 6);
         buf.writeInt8(dutyCycle, 6);
         return buf;
@@ -326,17 +339,18 @@ var Hub = /** @class */ (function () {
     };
     Hub.prototype.subscribeAll = function () {
         var _this = this;
-        Object.keys(this.ports).forEach(function (port) {
-            if (_this.ports[port].deviceType === 'DISTANCE') {
+        Object.entries(this.ports).forEach(function (_a) {
+            var port = _a[0], data = _a[1];
+            if (data.deviceType === 'DISTANCE') {
                 _this.subscribe(parseInt(port, 10), 8);
             }
-            else if (_this.ports[port].deviceType === 'TILT') {
+            else if (data.deviceType === 'TILT') {
                 _this.subscribe(parseInt(port, 10), 0);
             }
-            else if (_this.ports[port].deviceType === 'IMOTOR') {
+            else if (data.deviceType === 'IMOTOR') {
                 _this.subscribe(parseInt(port, 10), 2);
             }
-            else if (_this.ports[port].deviceType === 'MOTOR') {
+            else if (data.deviceType === 'MOTOR') {
                 _this.subscribe(parseInt(port, 10), 2);
             }
             else {
@@ -369,25 +383,26 @@ var Hub = /** @class */ (function () {
     };
     Hub.prototype.writeFromCue = function () {
         var _this = this;
-        if (this.writeCue.length > 0 && !this.isWriting) {
-            var el_1 = this.writeCue.shift();
-            this.logDebug('Writing to device', el_1);
-            this.isWriting = true;
-            this.characteristic
-                .writeValue(el_1.data)
-                .then(function () {
-                _this.isWriting = false;
-                if (typeof el_1.callback === 'function')
-                    el_1.callback();
-                _this.writeFromCue();
-            })
-                .catch(function (err) {
-                _this.log("Error while writing: " + el_1.data + " - Error " + err.toString());
-                _this.isWriting = false;
-                // TODO: Notify of failure
-                _this.writeFromCue();
-            });
-        }
+        if (this.writeCue.length === 0 || this.isWriting)
+            return;
+        var el = this.writeCue.shift();
+        this.logDebug('Writing to device', el);
+        this.isWriting = true;
+        this.characteristic
+            .writeValue(el.data)
+            .then(function () {
+            _this.isWriting = false;
+            if (typeof el.callback === 'function')
+                el.callback();
+        })
+            .catch(function (err) {
+            _this.isWriting = false;
+            _this.log("Error while writing: " + el.data + " - Error " + err.toString());
+            // TODO: Notify of failure
+        })
+            .finally(function () {
+            _this.writeFromCue();
+        });
     };
     Hub.prototype.encodeMotorTimeMulti = function (port, seconds, dutyCycleA, dutyCycleB) {
         if (dutyCycleA === void 0) { dutyCycleA = 100; }
@@ -426,30 +441,12 @@ var Hub = /** @class */ (function () {
         return buf;
     };
     Hub.prototype.encodeLed = function (color) {
-        if (color === false) {
-            color = 'off';
+        if (typeof color === 'boolean') {
+            color = color ? 'white' : 'off';
         }
-        else if (color === true) {
-            color = 'white';
-        }
-        if (typeof color === 'string') {
-            var colors = [
-                'off',
-                'pink',
-                'purple',
-                'blue',
-                'lightblue',
-                'cyan',
-                'green',
-                'yellow',
-                'orange',
-                'red',
-                'white',
-            ];
-            color = colors.indexOf(color);
-        }
+        var colorNum = typeof color === 'string' ? this.ledColors.indexOf(color) : color;
         // @ts-ignore
-        return buffer_1.Buffer.from([0x08, 0x00, 0x81, 0x32, 0x11, 0x51, 0x00, color]);
+        return buffer_1.Buffer.from([0x08, 0x00, 0x81, 0x32, 0x11, 0x51, 0x00, colorNum]);
     };
     return Hub;
 }());
