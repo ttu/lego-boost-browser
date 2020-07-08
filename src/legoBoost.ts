@@ -54,15 +54,15 @@ export default class LegoBoost {
   async connect(configuration: BoostConfiguration = {}): Promise<void> {
     try {
       this.configuration = configuration;
-      const characteristic = await BoostConnector.connect(this.handleGattDisconnect.bind(this));
-      this.initHub(characteristic, this.configuration);
+      const bluetooth = await BoostConnector.connect(this.handleGattDisconnect.bind(this));
+      this.initHub(bluetooth, this.configuration);
     } catch (e) {
       console.log('Error from connect: ' + e);
     }
   }
 
-  private async initHub(characteristic: BluetoothRemoteGATTCharacteristic, configuration: BoostConfiguration) {
-    this.hub = new HubAsync(characteristic, configuration);
+  private async initHub(bluetooth: BluetoothRemoteGATTCharacteristic, configuration: BoostConfiguration) {
+    this.hub = new HubAsync(bluetooth, configuration);
     this.hub.logDebug = this.logDebug;
 
     this.hub.emitter.on('disconnect', async evt => {

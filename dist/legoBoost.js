@@ -84,7 +84,7 @@ var LegoBoost = /** @class */ (function () {
     LegoBoost.prototype.connect = function (configuration) {
         if (configuration === void 0) { configuration = {}; }
         return __awaiter(this, void 0, void 0, function () {
-            var characteristic, e_1;
+            var bluetooth, e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -92,8 +92,8 @@ var LegoBoost = /** @class */ (function () {
                         this.configuration = configuration;
                         return [4 /*yield*/, boostConnector_1.BoostConnector.connect(this.handleGattDisconnect.bind(this))];
                     case 1:
-                        characteristic = _a.sent();
-                        this.initHub(characteristic, this.configuration);
+                        bluetooth = _a.sent();
+                        this.initHub(bluetooth, this.configuration);
                         return [3 /*break*/, 3];
                     case 2:
                         e_1 = _a.sent();
@@ -104,13 +104,13 @@ var LegoBoost = /** @class */ (function () {
             });
         });
     };
-    LegoBoost.prototype.initHub = function (characteristic, configuration) {
+    LegoBoost.prototype.initHub = function (bluetooth, configuration) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        this.hub = new hubAsync_1.HubAsync(characteristic, configuration);
+                        this.hub = new hubAsync_1.HubAsync(bluetooth, configuration);
                         this.hub.logDebug = this.logDebug;
                         this.hub.emitter.on('disconnect', function (evt) { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {

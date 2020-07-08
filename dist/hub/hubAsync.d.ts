@@ -28,7 +28,7 @@ export declare class HubAsync extends Hub {
     useMetric: boolean;
     modifier: number;
     distance: number;
-    constructor(charasteristics: BluetoothRemoteGATTCharacteristic, configuration: BoostConfiguration);
+    constructor(bluetooth: BluetoothRemoteGATTCharacteristic, configuration: BoostConfiguration);
     /**
      * Disconnect Hub
      * @method Hub#disconnectAsync

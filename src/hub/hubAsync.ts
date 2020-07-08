@@ -68,8 +68,8 @@ export class HubAsync extends Hub {
   modifier: number;
   distance: number;
 
-  constructor(charasteristics: BluetoothRemoteGATTCharacteristic, configuration: BoostConfiguration) {
-    super(charasteristics);
+  constructor(bluetooth: BluetoothRemoteGATTCharacteristic, configuration: BoostConfiguration) {
+    super(bluetooth);
     validateConfiguration(configuration);
     this.configuration = configuration;
   }

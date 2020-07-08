@@ -97,15 +97,15 @@ var BoostConnector = /** @class */ (function () {
     };
     BoostConnector.reconnect = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var char;
+            var bluetooth;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         if (!this.device) return [3 /*break*/, 2];
                         return [4 /*yield*/, BoostConnector.getCharacteristic(this.device)];
                     case 1:
-                        char = _a.sent();
-                        return [2 /*return*/, [true, char]];
+                        bluetooth = _a.sent();
+                        return [2 /*return*/, [true, bluetooth]];
                     case 2: return [2 /*return*/, [false, null]];
                 }
             });

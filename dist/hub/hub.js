@@ -4,12 +4,12 @@ exports.Hub = void 0;
 var eventEmitter_1 = require("../helpers/eventEmitter");
 var buffer_1 = require("../helpers/buffer");
 var Hub = /** @class */ (function () {
-    function Hub(characteristic) {
+    function Hub(bluetooth) {
         this.emitter = new eventEmitter_1.EventEmitter();
         this.autoSubscribe = true;
         this.writeCue = [];
         this.isWriting = false;
-        this.characteristic = characteristic;
+        this.bluetooth = bluetooth;
         this.log = console.log;
         this.autoSubscribe = true;
         this.ports = {};
@@ -68,7 +68,7 @@ var Hub = /** @class */ (function () {
     };
     Hub.prototype.addListeners = function () {
         var _this = this;
-        this.characteristic.addEventListener('characteristicvaluechanged', function (event) {
+        this.bluetooth.addEventListener('characteristicvaluechanged', function (event) {
             // https://googlechrome.github.io/samples/web-bluetooth/read-characteristic-value-changed.html
             // @ts-ignore
             var data = buffer_1.Buffer.from(event.target.value.buffer);
@@ -76,7 +76,7 @@ var Hub = /** @class */ (function () {
         });
         setTimeout(function () {
             // Without timout missed first characteristicvaluechanged events
-            _this.characteristic.startNotifications();
+            _this.bluetooth.startNotifications();
         }, 1000);
     };
     Hub.prototype.parseMessage = function (data) {
@@ -388,7 +388,7 @@ var Hub = /** @class */ (function () {
         var el = this.writeCue.shift();
         this.logDebug('Writing to device', el);
         this.isWriting = true;
-        this.characteristic
+        this.bluetooth
             .writeValue(el.data)
             .then(function () {
             _this.isWriting = false;

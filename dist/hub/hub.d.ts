@@ -5,7 +5,7 @@ declare type Port = 'A' | 'B' | 'C' | 'D' | 'AB' | 'LED' | 'TILT';
 declare type LedColor = 'off' | 'pink' | 'purple' | 'blue' | 'lightblue' | 'cyan' | 'green' | 'yellow' | 'orange' | 'red' | 'white';
 export declare class Hub {
     emitter: EventEmitter<any>;
-    characteristic: BluetoothRemoteGATTCharacteristic;
+    bluetooth: BluetoothRemoteGATTCharacteristic;
     log: (message?: any, ...optionalParams: any[]) => void;
     logDebug: (message?: any, ...optionalParams: any[]) => void;
     autoSubscribe: boolean;
@@ -36,7 +36,7 @@ export declare class Hub {
     writeCue: any;
     isWriting: boolean;
     private emit;
-    constructor(characteristic: BluetoothRemoteGATTCharacteristic);
+    constructor(bluetooth: BluetoothRemoteGATTCharacteristic);
     private addListeners;
     private parseMessage;
     private parseSensor;

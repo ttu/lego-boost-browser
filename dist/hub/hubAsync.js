@@ -100,8 +100,8 @@ var waitForValueToSet = function (valueName, compareFunc, timeoutMs) {
 };
 var HubAsync = /** @class */ (function (_super) {
     __extends(HubAsync, _super);
-    function HubAsync(charasteristics, configuration) {
-        var _this = _super.call(this, charasteristics) || this;
+    function HubAsync(bluetooth, configuration) {
+        var _this = _super.call(this, bluetooth) || this;
         validateConfiguration(configuration);
         _this.configuration = configuration;
         return _this;

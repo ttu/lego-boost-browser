@@ -37,8 +37,8 @@ export class BoostConnector {
 
   public static async reconnect(): Promise<[boolean, BluetoothRemoteGATTCharacteristic]> {
     if (this.device) {
-      const char = await BoostConnector.getCharacteristic(this.device);
-      return [true, char];
+      const bluetooth = await BoostConnector.getCharacteristic(this.device);
+      return [true, bluetooth];
     }
     return [false, null];
   }
