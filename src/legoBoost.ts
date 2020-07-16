@@ -1,6 +1,7 @@
 import { BoostConnector } from './boostConnector';
 import { HubAsync, BoostConfiguration } from './hub/hubAsync';
 import { HubControl } from './ai/hub-control';
+import { RawData } from './hub/hub';
 
 export default class LegoBoost {
   private hub: HubAsync;
@@ -229,7 +230,12 @@ export default class LegoBoost {
    * @param {boolean} [wait=false] will promise wait unitll motorTime run time has elapsed
    * @returns {Promise}
    */
-  async motorTimeAsync(port: string | number, seconds: number, dutyCycle: number = 100, wait: boolean = true): Promise<void> {
+  async motorTimeAsync(
+    port: string | number,
+    seconds: number,
+    dutyCycle: number = 100,
+    wait: boolean = true
+  ): Promise<void> {
     if (!this.preCheck()) return;
     await this.hub.motorTimeAsync(port, seconds, dutyCycle, wait);
   }
@@ -259,7 +265,12 @@ export default class LegoBoost {
    * @param {boolean} [wait=false] will promise wait unitll motorTime run time has elapsed
    * @returns {Promise}
    */
-  async motorTimeMultiAsync(seconds: number, dutyCycleA: number = 100, dutyCycleB: number = 100, wait: boolean = true): Promise<void> {
+  async motorTimeMultiAsync(
+    seconds: number,
+    dutyCycleA: number = 100,
+    dutyCycleB: number = 100,
+    wait: boolean = true
+  ): Promise<void> {
     if (!this.preCheck()) return;
     await this.hub.motorTimeMultiAsync(seconds, dutyCycleA, dutyCycleB, wait);
   }
@@ -286,7 +297,12 @@ export default class LegoBoost {
    * @param {boolean} [wait=false] will promise wait unitll motorAngle has turned
    * @returns {Promise}
    */
-  async motorAngleAsync(port: string | number, angle: number, dutyCycle: number = 100, wait: boolean = true): Promise<void> {
+  async motorAngleAsync(
+    port: string | number,
+    angle: number,
+    dutyCycle: number = 100,
+    wait: boolean = true
+  ): Promise<void> {
     if (!this.preCheck()) return;
     await this.hub.motorAngleAsync(port, angle, dutyCycle, wait);
   }
@@ -316,7 +332,12 @@ export default class LegoBoost {
    * @param {boolean} [wait=false] will promise wait unitll motorAngle has turned
    * @returns {Promise}
    */
-  async motorAngleMultiAsync(angle: number, dutyCycleA: number = 100, dutyCycleB: number = 100, wait: boolean = true): Promise<void> {
+  async motorAngleMultiAsync(
+    angle: number,
+    dutyCycleA: number = 100,
+    dutyCycleB: number = 100,
+    wait: boolean = true
+  ): Promise<void> {
     if (!this.preCheck()) return;
     await this.hub.motorAngleMultiAsync(angle, dutyCycleA, dutyCycleB, wait);
   }
@@ -368,6 +389,15 @@ export default class LegoBoost {
   async turnUntil(direction: number = 1, wait: boolean = true): Promise<any> {
     if (!this.preCheck()) return;
     return await this.hub.turnUntil(direction, wait);
+  }
+
+  /**
+   * Send raw data
+   * @param {object} raw raw data
+   */
+  rawCommand(raw: RawData): void {
+    if (!this.preCheck()) return;
+    return this.hub.rawCommand(raw);
   }
 
   private preCheck(): boolean {

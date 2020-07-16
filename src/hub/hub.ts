@@ -2,7 +2,9 @@ import { EventEmitter } from '../helpers/eventEmitter';
 import { Buffer } from '../helpers/buffer';
 
 type Device = 'LED' | 'DISTANCE' | 'IMOTOR' | 'MOTOR' | 'TILT';
+
 type Port = 'A' | 'B' | 'C' | 'D' | 'AB' | 'LED' | 'TILT';
+
 type LedColor =
   | 'off'
   | 'pink'
@@ -15,6 +17,24 @@ type LedColor =
   | 'orange'
   | 'red'
   | 'white';
+
+export type RawData = {
+  0: number;
+  1: number;
+  2: number;
+  3: number;
+  4: number;
+  5: number;
+  6: number;
+  7: number;
+  8: number;
+  9?: number;
+  10?: number;
+  11?: number;
+  12?: number;
+  13?: number;
+  14?: number;
+};
 
 export class Hub {
   emitter: EventEmitter<any> = new EventEmitter<any>();
@@ -317,6 +337,22 @@ export class Hub {
    */
   motorAngleMulti(angle: number, dutyCycleA: number, dutyCycleB: number, callback?: () => void) {
     this.write(this.encodeMotorAngleMulti(this.port2num['AB'], angle, dutyCycleA, dutyCycleB), callback);
+  }
+
+  /**
+   * Send raw data
+   * @param {object} raw raw data
+   * @param {function} callback 
+   */
+  rawCommand(raw: RawData, callback?: () => void) {
+    // @ts-ignore
+    const buf = Buffer.from([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+
+    for (const idx in raw) {
+      buf.writeIntLE(raw[idx], idx);
+    }
+
+    this.write(buf, callback);
   }
 
   motorPowerCommand(port: any, power: number) {

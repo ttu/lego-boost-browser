@@ -276,6 +276,19 @@ var Hub = /** @class */ (function () {
     Hub.prototype.motorAngleMulti = function (angle, dutyCycleA, dutyCycleB, callback) {
         this.write(this.encodeMotorAngleMulti(this.port2num['AB'], angle, dutyCycleA, dutyCycleB), callback);
     };
+    /**
+     * Send raw data
+     * @param {object} raw raw data
+     * @param {function} callback
+     */
+    Hub.prototype.rawCommand = function (raw, callback) {
+        // @ts-ignore
+        var buf = buffer_1.Buffer.from([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+        for (var idx in raw) {
+            buf.writeIntLE(raw[idx], idx);
+        }
+        this.write(buf, callback);
+    };
     Hub.prototype.motorPowerCommand = function (port, power) {
         this.write(this.encodeMotorPower(port, power));
     };

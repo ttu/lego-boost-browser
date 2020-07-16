@@ -32,4 +32,22 @@ window.driveBackward = boost.driveToDirection.bind(boost, -1);
 window.turnAPositive = boost.motorAngle.bind(boost, 'A', 3600, 10);
 // @ts-ignore
 window.turnANegative = boost.motorAngle.bind(boost, 'A', 3600, -10);
+// @ts-ignore
+window.rawCommand = boost.rawCommand.bind(boost, {
+    0: 0x08,
+    1: 0x00,
+    2: 0x81,
+    3: 0x32,
+    4: 0x11,
+    5: 0x51,
+    6: 0x00,
+    7: 0x02,
+    8: 0x00,
+    9: 0x00,
+    10: 0x00,
+    11: 0x00,
+    12: 0x00,
+    13: 0x00,
+    14: 0x00,
+});
 //# sourceMappingURL=browser.js.map

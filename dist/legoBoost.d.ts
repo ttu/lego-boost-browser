@@ -1,4 +1,5 @@
 import { BoostConfiguration } from './hub/hubAsync';
+import { RawData } from './hub/hub';
 export default class LegoBoost {
     private hub;
     private hubControl;
@@ -241,6 +242,11 @@ export default class LegoBoost {
      * @returns {Promise}
      */
     turnUntil(direction?: number, wait?: boolean): Promise<any>;
+    /**
+     * Send raw data
+     * @param {object} raw raw data
+     */
+    rawCommand(raw: RawData): void;
     private preCheck;
 }
 //# sourceMappingURL=legoBoost.d.ts.map

@@ -16,7 +16,9 @@
     "member-ordering": false,
     "comment-format": false,
     "interface-name": false,
-    "no-empty": false
+    "no-empty": false,
+    "interface-over-type-literal": false,
+    "forin": false
   },
   "linterOptions": {
     "exclude": ["src/helpers/buffer.ts", "config/**/*.js", "node_modules/**/*.ts", "coverage/lcov-report/*.js"]

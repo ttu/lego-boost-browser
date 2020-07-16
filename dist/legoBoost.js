@@ -547,6 +547,15 @@ var LegoBoost = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Send raw data
+     * @param {object} raw raw data
+     */
+    LegoBoost.prototype.rawCommand = function (raw) {
+        if (!this.preCheck())
+            return;
+        return this.hub.rawCommand(raw);
+    };
     LegoBoost.prototype.preCheck = function () {
         if (!this.hub || this.hub.connected === false)
             return false;
