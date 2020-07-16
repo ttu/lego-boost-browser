@@ -1,5 +1,56 @@
 import { BoostConfiguration } from './hub/hubAsync';
 import { RawData } from './hub/hub';
+export declare type DeviceInfo = {
+    ports: {
+        A: {
+            action: string;
+            angle: number;
+        };
+        B: {
+            action: string;
+            angle: number;
+        };
+        AB: {
+            action: string;
+            angle: number;
+        };
+        C: {
+            action: string;
+            angle: number;
+        };
+        D: {
+            action: string;
+            angle: number;
+        };
+        LED: {
+            action: string;
+            angle: number;
+        };
+    };
+    tilt: {
+        roll: 0;
+        pitch: 0;
+    };
+    distance: number;
+    rssi: number;
+    color: string;
+    error: string;
+    connected: boolean;
+    err?: any;
+};
+export declare type ControlData = {
+    input: any;
+    speed: number;
+    turnAngle: number;
+    tilt: {
+        roll: number;
+        pitch: number;
+    };
+    forceState: any;
+    updateInputMode: any;
+    driveInput?: number;
+    state?: string;
+};
 export default class LegoBoost {
     private hub;
     private hubControl;
@@ -11,58 +62,12 @@ export default class LegoBoost {
      * Information from Lego Boost motos and sensors
      * @property LegoBoost#deviceInfo
      */
-    deviceInfo: {
-        ports: {
-            A: {
-                action: string;
-                angle: number;
-            };
-            B: {
-                action: string;
-                angle: number;
-            };
-            AB: {
-                action: string;
-                angle: number;
-            };
-            C: {
-                action: string;
-                angle: number;
-            };
-            D: {
-                action: string;
-                angle: number;
-            };
-            LED: {
-                action: string;
-                angle: number;
-            };
-        };
-        tilt: {
-            roll: number;
-            pitch: number;
-        };
-        distance: number;
-        rssi: number;
-        color: string;
-        error: string;
-        connected: boolean;
-    };
+    deviceInfo: DeviceInfo;
     /**
      * Input data to used on manual control
      * @property LegoBoost#controlData
      */
-    controlData: {
-        input: any;
-        speed: number;
-        turnAngle: number;
-        tilt: {
-            roll: number;
-            pitch: number;
-        };
-        forceState: any;
-        updateInputMode: any;
-    };
+    controlData: ControlData;
     /**
      * Drive forward until wall is reaced or drive backwards 100meters
      * @method LegoBoost#connect

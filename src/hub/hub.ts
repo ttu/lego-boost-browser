@@ -1,5 +1,6 @@
 import { EventEmitter } from '../helpers/eventEmitter';
 import { Buffer } from '../helpers/buffer';
+import { RawData } from '../types';
 
 type Device = 'LED' | 'DISTANCE' | 'IMOTOR' | 'MOTOR' | 'TILT';
 
@@ -17,24 +18,6 @@ type LedColor =
   | 'orange'
   | 'red'
   | 'white';
-
-export type RawData = {
-  0: number;
-  1: number;
-  2: number;
-  3: number;
-  4: number;
-  5: number;
-  6: number;
-  7: number;
-  8: number;
-  9?: number;
-  10?: number;
-  11?: number;
-  12?: number;
-  13?: number;
-  14?: number;
-};
 
 export class Hub {
   emitter: EventEmitter<any> = new EventEmitter<any>();
@@ -342,7 +325,7 @@ export class Hub {
   /**
    * Send raw data
    * @param {object} raw raw data
-   * @param {function} callback 
+   * @param {function} callback
    */
   rawCommand(raw: RawData, callback?: () => void) {
     // @ts-ignore

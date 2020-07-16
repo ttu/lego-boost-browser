@@ -73,6 +73,8 @@ var LegoBoost = /** @class */ (function () {
             tilt: { roll: 0, pitch: 0 },
             forceState: null,
             updateInputMode: null,
+            driveInput: undefined,
+            state: undefined,
         };
     }
     /**

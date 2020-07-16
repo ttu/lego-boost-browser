@@ -136,7 +136,7 @@ var HubControl = /** @class */ (function () {
         });
     };
     HubControl.prototype.setNextState = function (state) {
-        this.control.driveInput = null;
+        this.control.driveInput = undefined;
         this.control.state = state;
         this.currentState = this.states[state];
     };

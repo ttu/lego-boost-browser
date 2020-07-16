@@ -1,7 +1,7 @@
 import { BoostConnector } from './boostConnector';
 import { HubAsync, BoostConfiguration } from './hub/hubAsync';
 import { HubControl } from './ai/hub-control';
-import { RawData } from './hub/hub';
+import { DeviceInfo, ControlData, RawData } from './types';
 
 export default class LegoBoost {
   private hub: HubAsync;
@@ -16,7 +16,7 @@ export default class LegoBoost {
    * Information from Lego Boost motos and sensors
    * @property LegoBoost#deviceInfo
    */
-  public deviceInfo = {
+  public deviceInfo: DeviceInfo = {
     ports: {
       A: { action: '', angle: 0 },
       B: { action: '', angle: 0 },
@@ -37,13 +37,15 @@ export default class LegoBoost {
    * Input data to used on manual control
    * @property LegoBoost#controlData
    */
-  public controlData = {
+  public controlData: ControlData = {
     input: null,
     speed: 0,
     turnAngle: 0,
     tilt: { roll: 0, pitch: 0 },
     forceState: null,
     updateInputMode: null,
+    driveInput: undefined,
+    state: undefined,
   };
 
   /**
