@@ -16,8 +16,30 @@
     <a href="#" onclick="turnAPositive();">turnAPositive</a>
     <a href="#" onclick="turnANegative();">turnANegative</a>
     <a href="#" onclick="rawCommand();">RAW command (change LED)</a>
+    <a href="#" onclick="testAll();">TEST ALL</a>
   </body>
   <script>
     console.log('Is Web Bluetooth supported: ' + isWebBluetoothSupported);
+
+    const funcs = [
+      led,
+      drive,
+      turnLeft,
+      turnRight,
+      driveForward,
+      driveBackward,
+      turnAPositive,
+      turnANegative,
+      rawCommand,
+      ai,
+      stop,
+      disconnect
+    ];
+
+    const testAll = () => {
+      funcs.forEach((value, idx) => {
+        this.setTimeout(() => value(), idx * 2000);
+      });
+    };
   </script>
 </html>
