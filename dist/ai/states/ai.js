@@ -10,77 +10,77 @@ var TURN_SPEED = 30;
 var TURN_SPEED_OPPOSITE = -10;
 var DRIVE_SPEED = 30;
 var REVERSE_SPEED = -15;
-function seek() {
-    if (!this.control.driveInput || Date.now() - this.control.driveInput > CHECK_TIME_MS) {
-        this.control.driveInput = Date.now();
-        this.hub.motorTimeMulti(EXECUTE_TIME_SEC, TURN_SPEED, TURN_SPEED_OPPOSITE);
+var seek = function (hubControl) {
+    if (!hubControl.control.controlUpdateTime || Date.now() - hubControl.control.controlUpdateTime > CHECK_TIME_MS) {
+        hubControl.control.controlUpdateTime = Date.now();
+        hubControl.hub.motorTimeMulti(EXECUTE_TIME_SEC, TURN_SPEED, TURN_SPEED_OPPOSITE);
     }
-    if (Date.now() - this.control.driveInput < 250)
+    if (Date.now() - hubControl.control.controlUpdateTime < 250)
         return;
-    if (this.device.distance > this.prevDevice.distance) {
-        this.control.turnDirection = 'right';
-        this.setNextState('Turn');
+    if (hubControl.device.distance > hubControl.prevDevice.distance) {
+        hubControl.control.turnDirection = 'right';
+        hubControl.setNextState('Turn');
     }
     else {
-        this.control.turnDirection = 'left';
-        this.setNextState('Turn');
+        hubControl.control.turnDirection = 'left';
+        hubControl.setNextState('Turn');
     }
-}
+};
 exports.seek = seek;
-function turn() {
-    if (this.device.distance < MIN_DISTANCE) {
-        this.control.turnDirection = null;
-        this.setNextState('Back');
+var turn = function (hubControl) {
+    if (hubControl.device.distance < MIN_DISTANCE) {
+        hubControl.control.turnDirection = null;
+        hubControl.setNextState('Back');
         return;
     }
-    else if (this.device.distance > OK_DISTANCE) {
-        this.control.turnDirection = null;
-        this.setNextState('Drive');
+    else if (hubControl.device.distance > OK_DISTANCE) {
+        hubControl.control.turnDirection = null;
+        hubControl.setNextState('Drive');
         return;
     }
-    if (!this.control.driveInput || Date.now() - this.control.driveInput > CHECK_TIME_MS) {
-        var motorA = this.control.turnDirection === 'right' ? TURN_SPEED : TURN_SPEED_OPPOSITE;
-        var motorB = this.control.turnDirection === 'right' ? TURN_SPEED_OPPOSITE : TURN_SPEED;
-        this.control.driveInput = Date.now();
-        this.hub.motorTimeMulti(EXECUTE_TIME_SEC, motorA, motorB);
+    if (!hubControl.control.controlUpdateTime || Date.now() - hubControl.control.controlUpdateTime > CHECK_TIME_MS) {
+        var motorA = hubControl.control.turnDirection === 'right' ? TURN_SPEED : TURN_SPEED_OPPOSITE;
+        var motorB = hubControl.control.turnDirection === 'right' ? TURN_SPEED_OPPOSITE : TURN_SPEED;
+        hubControl.control.controlUpdateTime = Date.now();
+        hubControl.hub.motorTimeMulti(EXECUTE_TIME_SEC, motorA, motorB);
     }
-}
+};
 exports.turn = turn;
-function drive() {
-    if (this.device.distance < MIN_DISTANCE) {
-        this.setNextState('Back');
+var drive = function (hubControl) {
+    if (hubControl.device.distance < MIN_DISTANCE) {
+        hubControl.setNextState('Back');
         return;
     }
-    else if (this.device.distance < OK_DISTANCE) {
-        this.setNextState('Seek');
+    else if (hubControl.device.distance < OK_DISTANCE) {
+        hubControl.setNextState('Seek');
         return;
     }
-    if (!this.control.driveInput || Date.now() - this.control.driveInput > CHECK_TIME_MS) {
-        this.control.driveInput = Date.now();
-        var speed = this.configuration.leftMotor === 'A' ? DRIVE_SPEED : DRIVE_SPEED * -1;
-        this.hub.motorTimeMulti(EXECUTE_TIME_SEC, speed, speed);
+    if (!hubControl.control.controlUpdateTime || Date.now() - hubControl.control.controlUpdateTime > CHECK_TIME_MS) {
+        hubControl.control.controlUpdateTime = Date.now();
+        var speed = hubControl.configuration.leftMotor === 'A' ? DRIVE_SPEED : DRIVE_SPEED * -1;
+        hubControl.hub.motorTimeMulti(EXECUTE_TIME_SEC, speed, speed);
     }
-}
+};
 exports.drive = drive;
-function back() {
-    if (this.device.distance > OK_DISTANCE) {
-        this.setNextState('Seek');
+var back = function (hubControl) {
+    if (hubControl.device.distance > OK_DISTANCE) {
+        hubControl.setNextState('Seek');
         return;
     }
-    if (!this.control.driveInput || Date.now() - this.control.driveInput > CHECK_TIME_MS) {
-        this.control.driveInput = Date.now();
-        var speed = this.configuration.leftMotor === 'A' ? REVERSE_SPEED : REVERSE_SPEED * -1;
-        this.hub.motorTimeMulti(EXECUTE_TIME_SEC, speed, speed);
+    if (!hubControl.control.controlUpdateTime || Date.now() - hubControl.control.controlUpdateTime > CHECK_TIME_MS) {
+        hubControl.control.controlUpdateTime = Date.now();
+        var speed = hubControl.configuration.leftMotor === 'A' ? REVERSE_SPEED : REVERSE_SPEED * -1;
+        hubControl.hub.motorTimeMulti(EXECUTE_TIME_SEC, speed, speed);
     }
-}
+};
 exports.back = back;
-function stop() {
-    this.control.speed = 0;
-    this.control.turnAngle = 0;
-    if (!this.control.driveInput || Date.now() - this.control.driveInput > CHECK_TIME_MS) {
-        this.control.driveInput = Date.now();
-        this.hub.motorTimeMulti(EXECUTE_TIME_SEC, 0, 0);
+var stop = function (hubControl) {
+    hubControl.control.speed = 0;
+    hubControl.control.turnAngle = 0;
+    if (!hubControl.control.controlUpdateTime || Date.now() - hubControl.control.controlUpdateTime > CHECK_TIME_MS) {
+        hubControl.control.controlUpdateTime = Date.now();
+        hubControl.hub.motorTimeMulti(EXECUTE_TIME_SEC, 0, 0);
     }
-}
+};
 exports.stop = stop;
 //# sourceMappingURL=ai.js.map

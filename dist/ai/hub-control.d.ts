@@ -1,5 +1,8 @@
 import { BoostConfiguration, HubAsync } from '../hub/hubAsync';
-import { ControlData, DeviceInfo } from '../legoBoost';
+import { ControlData, DeviceInfo, State } from '../types';
+declare type States = {
+    [key in State]: (hub: HubControl) => void;
+};
 declare class HubControl {
     hub: HubAsync;
     device: DeviceInfo;
@@ -7,20 +10,13 @@ declare class HubControl {
     control: ControlData;
     prevControl: ControlData;
     configuration: BoostConfiguration;
-    states: {
-        Turn: () => void;
-        Drive: () => void;
-        Stop: () => void;
-        Back: () => void;
-        Manual: () => void;
-        Seek: () => void;
-    };
-    currentState: () => void;
+    states: States;
+    currentState: (hub: HubControl) => void;
     constructor(deviceInfo: DeviceInfo, controlData: ControlData, configuration: BoostConfiguration);
     updateConfiguration(configuration: BoostConfiguration): void;
     start(hub: HubAsync): Promise<void>;
     disconnect(): Promise<void>;
-    setNextState(state: string): void;
+    setNextState(state: State): void;
     update(): void;
 }
 export { HubControl };

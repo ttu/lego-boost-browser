@@ -13,7 +13,7 @@ export default class LegoBoost {
   private logDebug: (message?: any, ...optionalParams: any[]) => void = s => {};
 
   /**
-   * Information from Lego Boost motos and sensors
+   * Information from Lego Boost motors and sensors
    * @property LegoBoost#deviceInfo
    */
   public deviceInfo: DeviceInfo = {
@@ -34,7 +34,7 @@ export default class LegoBoost {
   };
 
   /**
-   * Input data to used on manual control
+   * Input data to used on manual and AI control
    * @property LegoBoost#controlData
    */
   public controlData: ControlData = {
@@ -44,7 +44,7 @@ export default class LegoBoost {
     tilt: { roll: 0, pitch: 0 },
     forceState: null,
     updateInputMode: null,
-    driveInput: undefined,
+    controlUpdateTime: undefined,
     state: undefined,
   };
 

@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.manual = void 0;
-function manual() {
-    if (this.control.speed !== this.prevControl.speed || this.control.turnAngle !== this.prevControl.turnAngle) {
-        var motorA = this.control.speed + (this.control.turnAngle > 0 ? Math.abs(this.control.turnAngle) : 0);
-        var motorB = this.control.speed + (this.control.turnAngle < 0 ? Math.abs(this.control.turnAngle) : 0);
+function manual(hubControl) {
+    if (hubControl.control.speed !== hubControl.prevControl.speed || hubControl.control.turnAngle !== hubControl.prevControl.turnAngle) {
+        var motorA = hubControl.control.speed + (hubControl.control.turnAngle > 0 ? Math.abs(hubControl.control.turnAngle) : 0);
+        var motorB = hubControl.control.speed + (hubControl.control.turnAngle < 0 ? Math.abs(hubControl.control.turnAngle) : 0);
         if (motorA > 100) {
             motorB -= motorA - 100;
             motorA = 100;
@@ -13,15 +13,15 @@ function manual() {
             motorA -= motorB - 100;
             motorB = 100;
         }
-        this.control.motorA = motorA;
-        this.control.motorB = motorB;
-        this.hub.motorTimeMulti(60, motorA, motorB);
+        hubControl.control.motorA = motorA;
+        hubControl.control.motorB = motorB;
+        hubControl.hub.motorTimeMulti(60, motorA, motorB);
     }
-    if (this.control.tilt.pitch !== this.prevControl.tilt.pitch) {
-        this.hub.motorTime('C', 60, this.control.tilt.pitch);
+    if (hubControl.control.tilt.pitch !== hubControl.prevControl.tilt.pitch) {
+        hubControl.hub.motorTime('C', 60, hubControl.control.tilt.pitch);
     }
-    if (this.control.tilt.roll !== this.prevControl.tilt.roll) {
-        this.hub.motorTime('D', 60, this.control.tilt.roll);
+    if (hubControl.control.tilt.roll !== hubControl.prevControl.tilt.roll) {
+        hubControl.hub.motorTime('D', 60, hubControl.control.tilt.roll);
     }
 }
 exports.manual = manual;

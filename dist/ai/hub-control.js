@@ -58,12 +58,12 @@ var HubControl = /** @class */ (function () {
         this.configuration = configuration;
         this.prevControl = __assign({}, this.control);
         this.states = {
-            Turn: ai_1.turn.bind(this),
-            Drive: ai_1.drive.bind(this),
-            Stop: ai_1.stop.bind(this),
-            Back: ai_1.back.bind(this),
-            Manual: manual_1.manual.bind(this),
-            Seek: ai_1.seek.bind(this),
+            Turn: ai_1.turn,
+            Drive: ai_1.drive,
+            Stop: ai_1.stop,
+            Back: ai_1.back,
+            Manual: manual_1.manual,
+            Seek: ai_1.seek,
         };
         this.currentState = this.states['Manual'];
     }
@@ -136,12 +136,13 @@ var HubControl = /** @class */ (function () {
         });
     };
     HubControl.prototype.setNextState = function (state) {
-        this.control.driveInput = undefined;
+        this.control.controlUpdateTime = undefined;
         this.control.state = state;
         this.currentState = this.states[state];
     };
     HubControl.prototype.update = function () {
-        this.currentState();
+        // TODO: After removing bind, this requires some more refactoring
+        this.currentState(this);
         // TODO: Deep clone
         this.prevControl = __assign({}, this.control);
         this.prevControl.tilt = __assign({}, this.control.tilt);

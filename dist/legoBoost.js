@@ -43,7 +43,7 @@ var LegoBoost = /** @class */ (function () {
     function LegoBoost() {
         this.logDebug = function (s) { };
         /**
-         * Information from Lego Boost motos and sensors
+         * Information from Lego Boost motors and sensors
          * @property LegoBoost#deviceInfo
          */
         this.deviceInfo = {
@@ -63,7 +63,7 @@ var LegoBoost = /** @class */ (function () {
             connected: false,
         };
         /**
-         * Input data to used on manual control
+         * Input data to used on manual and AI control
          * @property LegoBoost#controlData
          */
         this.controlData = {
@@ -73,7 +73,7 @@ var LegoBoost = /** @class */ (function () {
             tilt: { roll: 0, pitch: 0 },
             forceState: null,
             updateInputMode: null,
-            driveInput: undefined,
+            controlUpdateTime: undefined,
             state: undefined,
         };
     }

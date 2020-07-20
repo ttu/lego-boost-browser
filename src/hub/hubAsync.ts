@@ -1,4 +1,5 @@
 import { Hub } from './hub';
+import { Motor } from '../types'
 
 const CALLBACK_TIMEOUT_MS = 1000 / 3;
 
@@ -9,9 +10,9 @@ export const DEFAULT_CONFIG = {
   TURN_SPEED: 20,
   DEFAULT_STOP_DISTANCE: 105,
   DEFAULT_CLEAR_DISTANCE: 120,
-  LEFT_MOTOR: 'A',
-  RIGHT_MOTOR: 'B',
-  VALID_MOTORS: ['A', 'B'],
+  LEFT_MOTOR: 'A' as Motor,
+  RIGHT_MOTOR: 'B' as Motor,
+  VALID_MOTORS: ['A' as Motor, 'B' as Motor],
 };
 
 const validateConfiguration = (configuration: BoostConfiguration) => {
@@ -54,8 +55,8 @@ export interface BoostConfiguration {
   turnModifier?: any;
   defaultClearDistance?: any;
   defaultStopDistance?: any;
-  leftMotor?: string;
-  rightMotor?: string;
+  leftMotor?: Motor;
+  rightMotor?: Motor;
   driveSpeed?: number;
   turnSpeed?: number;
 }

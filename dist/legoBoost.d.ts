@@ -1,56 +1,5 @@
 import { BoostConfiguration } from './hub/hubAsync';
-import { RawData } from './hub/hub';
-export declare type DeviceInfo = {
-    ports: {
-        A: {
-            action: string;
-            angle: number;
-        };
-        B: {
-            action: string;
-            angle: number;
-        };
-        AB: {
-            action: string;
-            angle: number;
-        };
-        C: {
-            action: string;
-            angle: number;
-        };
-        D: {
-            action: string;
-            angle: number;
-        };
-        LED: {
-            action: string;
-            angle: number;
-        };
-    };
-    tilt: {
-        roll: 0;
-        pitch: 0;
-    };
-    distance: number;
-    rssi: number;
-    color: string;
-    error: string;
-    connected: boolean;
-    err?: any;
-};
-export declare type ControlData = {
-    input: any;
-    speed: number;
-    turnAngle: number;
-    tilt: {
-        roll: number;
-        pitch: number;
-    };
-    forceState: any;
-    updateInputMode: any;
-    driveInput?: number;
-    state?: string;
-};
+import { DeviceInfo, ControlData, RawData } from './types';
 export default class LegoBoost {
     private hub;
     private hubControl;
@@ -59,12 +8,12 @@ export default class LegoBoost {
     private configuration;
     private logDebug;
     /**
-     * Information from Lego Boost motos and sensors
+     * Information from Lego Boost motors and sensors
      * @property LegoBoost#deviceInfo
      */
     deviceInfo: DeviceInfo;
     /**
-     * Input data to used on manual control
+     * Input data to used on manual and AI control
      * @property LegoBoost#controlData
      */
     controlData: ControlData;

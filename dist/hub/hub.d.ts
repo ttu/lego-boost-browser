@@ -1,25 +1,9 @@
 /// <reference types="web-bluetooth" />
 import { EventEmitter } from '../helpers/eventEmitter';
+import { RawData } from '../types';
 declare type Device = 'LED' | 'DISTANCE' | 'IMOTOR' | 'MOTOR' | 'TILT';
 declare type Port = 'A' | 'B' | 'C' | 'D' | 'AB' | 'LED' | 'TILT';
 declare type LedColor = 'off' | 'pink' | 'purple' | 'blue' | 'lightblue' | 'cyan' | 'green' | 'yellow' | 'orange' | 'red' | 'white';
-export declare type RawData = {
-    0: number;
-    1: number;
-    2: number;
-    3: number;
-    4: number;
-    5: number;
-    6: number;
-    7: number;
-    8: number;
-    9?: number;
-    10?: number;
-    11?: number;
-    12?: number;
-    13?: number;
-    14?: number;
-};
 export declare class Hub {
     emitter: EventEmitter<any>;
     bluetooth: BluetoothRemoteGATTCharacteristic;

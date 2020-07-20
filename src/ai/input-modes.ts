@@ -1,4 +1,6 @@
-function stepByStep(controlData) {
+import { ControlData } from '../types';
+
+function stepByStep(controlData: ControlData) {
   switch (controlData.input) {
     case 'up':
       controlData.speed += 10;
@@ -31,7 +33,7 @@ function stepByStep(controlData) {
       controlData.tilt.pitch = 0;
       break;
     case 't':
-      controlData.forceState = controlData.state == 'Manual' ? 'Drive' : 'Manual';
+      controlData.forceState = controlData.state === 'Manual' ? 'Drive' : 'Manual';
       break;
     case 'y':
       controlData.updateInputMode = manualDrive;
@@ -41,7 +43,7 @@ function stepByStep(controlData) {
   checkMaximums(controlData);
 }
 
-function manualDrive(controlData) {
+function manualDrive(controlData: ControlData) {
   switch (controlData.input) {
     case 'up':
       if (controlData.speed < 0) controlData.speed = 0;
@@ -86,7 +88,7 @@ function manualDrive(controlData) {
       controlData.tilt.pitch = 0;
       break;
     case 't':
-      controlData.forceState = controlData.state == 'Manual' ? 'Drive' : 'Manual';
+      controlData.forceState = controlData.state === 'Manual' ? 'Drive' : 'Manual';
       break;
     case 'y':
       controlData.updateInputMode = arcadeDrive;
@@ -97,7 +99,7 @@ function manualDrive(controlData) {
 }
 
 // TODO: Handle for keyup/keydown events, so control can handle forward and turning at the same time
-function arcadeDrive(controlData) {
+function arcadeDrive(controlData: ControlData) {
   controlData.speed = 0;
   controlData.turnAngle = 0;
   controlData.tilt.roll = 0;
@@ -131,7 +133,7 @@ function arcadeDrive(controlData) {
     case 'z':
       break;
     case 't':
-      controlData.forceState = controlData.state == 'Manual' ? 'Drive' : 'Manual';
+      controlData.forceState = controlData.state === 'Manual' ? 'Drive' : 'Manual';
       break;
     case 'y':
       controlData.updateInputMode = stepByStep;
@@ -139,7 +141,7 @@ function arcadeDrive(controlData) {
   }
 }
 
-function checkMaximums(controlData) {
+function checkMaximums(controlData: ControlData) {
   // These values have to be between -100 and 100
   controlData.speed = controlData.speed > 100 ? 100 : controlData.speed;
   controlData.speed = controlData.speed < -100 ? -100 : controlData.speed;

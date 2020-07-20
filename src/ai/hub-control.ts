@@ -1,7 +1,11 @@
 import { manual } from './states/manual';
 import { stop, back, drive, turn, seek } from './states/ai';
 import { BoostConfiguration, HubAsync } from '../hub/hubAsync';
-import { ControlData, DeviceInfo } from '../types';
+import { ControlData, DeviceInfo, State } from '../types';
+
+type States = {
+  [key in State]: (hub: HubControl) => void;
+};
 
 class HubControl {
   hub: HubAsync;
@@ -10,15 +14,8 @@ class HubControl {
   control: ControlData;
   prevControl: ControlData;
   configuration: BoostConfiguration;
-  states: {
-    Turn: () => void;
-    Drive: () => void;
-    Stop: () => void;
-    Back: () => void;
-    Manual: () => void;
-    Seek: () => void;
-  };
-  currentState: () => void;
+  states: States;
+  currentState: (hub: HubControl) => void;
 
   constructor(deviceInfo: DeviceInfo, controlData: ControlData, configuration: BoostConfiguration) {
     this.hub = null;
@@ -28,12 +25,12 @@ class HubControl {
     this.prevControl = { ...this.control };
 
     this.states = {
-      Turn: turn.bind(this),
-      Drive: drive.bind(this),
-      Stop: stop.bind(this),
-      Back: back.bind(this),
-      Manual: manual.bind(this),
-      Seek: seek.bind(this),
+      Turn: turn,
+      Drive: drive,
+      Stop: stop,
+      Back: back,
+      Manual: manual,
+      Seek: seek,
     };
 
     this.currentState = this.states['Manual'];
@@ -94,14 +91,15 @@ class HubControl {
     }
   }
 
-  setNextState(state: string) {
-    this.control.driveInput = undefined;
+  setNextState(state: State) {
+    this.control.controlUpdateTime = undefined;
     this.control.state = state;
     this.currentState = this.states[state];
   }
 
   update() {
-    this.currentState();
+    // TODO: After removing bind, this requires some more refactoring
+    this.currentState(this);
 
     // TODO: Deep clone
     this.prevControl = { ...this.control };

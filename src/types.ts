@@ -1,3 +1,10 @@
+export type State = 'Turn' | 'Drive' | 'Stop' | 'Back' | 'Manual' | 'Seek';
+
+export type Motor = 'A' | 'B';
+
+export type TurnDirection = 'left' | 'right';
+
+/** Information from Lego Boost motors and sensors */
 export type DeviceInfo = {
   ports: {
     A: { action: string; angle: number };
@@ -7,7 +14,7 @@ export type DeviceInfo = {
     D: { action: string; angle: number };
     LED: { action: string; angle: number };
   };
-  tilt: { roll: 0; pitch: 0 };
+  tilt: { roll: number; pitch: number };
   distance: number;
   rssi: number;
   color: string;
@@ -16,15 +23,22 @@ export type DeviceInfo = {
   err?: any;
 };
 
+/** Input data to used on manual and AI control */
 export type ControlData = {
-  input: any;
+  input: string;
   speed: number;
   turnAngle: number;
+  turnDirection?: TurnDirection;
   tilt: { roll: number; pitch: number };
-  forceState: any;
-  updateInputMode: any;
-  driveInput?: number;
-  state?: string;
+  /** Force state change manually */
+  forceState: State;
+  /** Manually toggle input mode */
+  updateInputMode: (controlData: ControlData) => void;
+  /** Time stamp when control data was updated */
+  controlUpdateTime?: number;
+  state?: State;
+  motorA?: number;
+  motorB?: number;
 };
 
 export type RawData = {

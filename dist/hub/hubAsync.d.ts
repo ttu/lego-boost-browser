@@ -1,5 +1,6 @@
 /// <reference types="web-bluetooth" />
 import { Hub } from './hub';
+import { Motor } from '../types';
 export declare const DEFAULT_CONFIG: {
     METRIC_MODIFIER: number;
     TURN_MODIFIER: number;
@@ -7,17 +8,17 @@ export declare const DEFAULT_CONFIG: {
     TURN_SPEED: number;
     DEFAULT_STOP_DISTANCE: number;
     DEFAULT_CLEAR_DISTANCE: number;
-    LEFT_MOTOR: string;
-    RIGHT_MOTOR: string;
-    VALID_MOTORS: string[];
+    LEFT_MOTOR: Motor;
+    RIGHT_MOTOR: Motor;
+    VALID_MOTORS: Motor[];
 };
 export interface BoostConfiguration {
     distanceModifier?: any;
     turnModifier?: any;
     defaultClearDistance?: any;
     defaultStopDistance?: any;
-    leftMotor?: string;
-    rightMotor?: string;
+    leftMotor?: Motor;
+    rightMotor?: Motor;
     driveSpeed?: number;
     turnSpeed?: number;
 }
